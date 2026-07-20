@@ -4,115 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-   <title>גמ"ח אירועים נריה - השאלת ציוד לאירועים ושמחות | הזמנה אונליין</title>
-    <meta name="description" content='השאלת ציוד לאירועים בנריה והסביבה. גמ"ח נריה מציע מגוון רחב של ציוד: שולחנות, כיסאות, מפות, כלי הגשה ועוד. בדקו זמינות והזמינו אונליין בקלות.'>
-    <meta name="keywords" content='גמח נריה, ציוד לאירועים, השאלת כיסאות, השאלת שולחנות, גמ"ח אירועים, נריה, ציוד לשמחות, השכרת ציוד לאירועים, טלמון, דולב, גוש טלמונים, בנימין, מפות לאירועים'>
-    <meta name="author" content="גמח אירועים נריה">
+    <title>מערכת ניהול והזמנת מלאי</title>
+    <meta name="description" content="מערכת חכמה לניהול מלאי, קטלוג פריטים והזמנות אונליין בקלות.">
     <meta name="robots" content="noindex, nofollow">
     
-    <!-- === SEO & Performance Enhancements === -->
     <link rel="preconnect" href="https://script.google.com" crossorigin>
     <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
       
-    <link rel="canonical" href="https://gmach-eruim-nerya.vercel.app/" />
-    
-    <meta property="og:title" content='גמ"ח אירועים נריה - קטלוג והזמנות ציוד'>
-    <meta property="og:description" content="מערכת הזמנות חכמה לציוד אירועים ביישוב נריה. שולחנות, כיסאות, מפות וכלים. היכנסו לצפייה בקטלוג ובדיקת זמינות.">
-    <meta property="og:image" content="https://gmach-eruim-nerya.vercel.app/preview.jpg">
-    <meta property="og:url" content="https://gmach-eruim-nerya.vercel.app/">
+    <meta property="og:title" content="קטלוג ומערכת הזמנות">
+    <meta property="og:description" content="מערכת הזמנות חכמה ונוחה אונליין.">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="גמ\"ח אירועים נריה">
     <meta property="og:locale" content="he_IL">
-    <!-- === End SEO Tags === -->
 
-    <!-- Schema.org Markup for Local Business/Organization -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "גמ\"ח אירועים נריה",
-      "image": "https://gmach-eruim-nerya.vercel.app/preview.jpg",
-      "url": "https://gmach-eruim-nerya.vercel.app/",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Neria",
-        "addressRegion": "Binyamin",
-        "addressCountry": "IL"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 31.936,
-        "longitude": 35.138
-      },
-      "description": "השאלת ציוד לאירועים, שמחות ושבתות ביישוב נריה. שולחנות, כיסאות, מפות וציוד נלווה להשאלה נוחה אונליין.",
-      "openingHours": "Su-Th 10:00-17:30",
-      "telephone": "+972-54-3040965",
-      "priceRange": "$",
-      "makesOffer": [
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "השאלת כיסאות לאירועים" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "השאלת שולחנות מתקפלים" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "השאלת מפות בד לאירועים" } },
-        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "כלי הגשה ומיחמים לשבת" } }
-      ]
-    }
-    </script>
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
         :root {
-    /* צבעים עבור מצב בהיר (ברירת מחדל) */
-    --gold: #C5A059;
-    --navy: #1A1C2C;
-    --bg-color: #fcfcfc;
-    --text-color: #1A1C2C;
-    --card-bg: #ffffff;
-    --border-color: #e2e8f0;
-    --input-bg: #f9fafb;
-    --text-muted: #64748b; /* text-gray-500 */
-}
+            --gold: #C5A059;
+            --navy: #1A1C2C;
+            --bg-color: #fcfcfc;
+            --text-color: #1A1C2C;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --input-bg: #f9fafb;
+            --text-muted: #64748b;
+        }
 
-/* מצב כהה */
-body.dark {
-    --gold: #F1D27B; /* זהב בהיר יותר בכהה */
-    --navy: #0b1f3a; /* כחול כהה יותר בכהה */
-    --bg-color: #121212; /* רקע כהה */
-    --text-color: #e0e0e0; /* טקסט בהיר */
-    --card-bg: #1e1e1e; /* רקע כרטיס כהה */
-    --border-color: #333333; /* גבולות כהים */
-    --input-bg: #2c2c2c; /* רקע קלט כהה */
-    --text-muted: #a0a0a0;
-}
+        body.dark {
+            --gold: #F1D27B;
+            --navy: #0b1f3a;
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --input-bg: #2c2c2c;
+            --text-muted: #a0a0a0;
+        }
 
-body {
-    font-family: 'Assistant', sans-serif;
-    background-color: var(--bg-color); /* שימוש במשתנה */
-    color: var(--text-color); /* שימוש במשתנה */
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-}
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
 
-/* עדכן את ה-CSS הכללי להשתמש במשתנים החדשים */
-.text-slate-800 { color: var(--text-color); }
-.bg-white { background-color: var(--card-bg); }
-.border-gray-100 { border-color: var(--border-color); }
-.bg-gray-50 { background-color: var(--input-bg); }
-.text-gray-500 { color: var(--text-muted); }
-/* עליך לעבור על כל שאר ה-classים שמשתמשים בצבעים כמו bg-white, text-navy, border-gray-100 וכו' */
-/* ולשנות אותם להשתמש במשתני CSS (var(--variable-name)) */
-/* לדוגמה: אם יש לך .some-div { background-color: #fff; }, שנה ל- .some-div { background-color: var(--card-bg); } */
-/* זו משימה ארוכה שדורשת מעבר על כל ה-CSS שלך. */
+        .text-slate-800 { color: var(--text-color); }
+        .bg-white { background-color: var(--card-bg); }
+        .border-gray-100 { border-color: var(--border-color); }
+        .bg-gray-50 { background-color: var(--input-bg); }
+        .text-gray-500 { color: var(--text-muted); }
         .serif { font-family: 'Playfair Display', serif; }
         .gold-gradient { background: linear-gradient(135deg, #C5A059 0%, #F1D27B 50%, #C5A059 100%); }
         .card-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); }
         
-        /* יש להחליף את ה-URL הזה בתמונה אמיתית של הגמ"ח שלך */
-       .hero-section {
-            background: linear-gradient(to bottom, rgba(26, 28, 44, 0.2), rgba(26, 28, 44, 0.5)),
-                        url('preview.jpg');
+        .hero-section {
+            background: linear-gradient(to bottom, rgba(26, 28, 44, 0.2), rgba(26, 28, 44, 0.5)), url('preview.jpg');
             background-size: cover; 
             background-position: center; 
             background-repeat: no-repeat;
@@ -120,70 +70,63 @@ body {
         }
 
         #current-greeting {
-            font-size: 2rem; /* קטן יותר מ-3xl/5xl */
-            font-weight: 600; /* קצת פחות מודגש */
-            color: rgba(255, 255, 255, 0.8); /* צבע בהיר יותר */
-            margin-bottom: 0.5rem; /* צמצם רווח תחתון */
-            font-family: 'Assistant', sans-serif; /* שימוש בפונט הראשי במקום Serif */
-            letter-spacing: 0.05em; /* רווח קטן בין אותיות */
-            text-shadow: none; /* הסר צל טקסט אם קיים */
+            font-size: 2rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+            font-family: 'Assistant', sans-serif;
+            letter-spacing: 0.05em;
         }
         
-       .step-item {
-    color: var(--text-muted); /* צבע טקסט רגיל */
-    position: relative;
-    overflow: hidden;
-}
-.step-item.step-active {
-    color: var(--gold);
-}
-.step-item.step-completed {
-    color: var(--navy); /* צבע כהה יותר לשלבים שהושלמו */
-    font-weight: 800; /* מודגש יותר */
-}
-.step-item .step-progress-bar {
-    position: absolute;
-    bottom: 0;
-    right: 0; /* ב-RTL */
-    height: 3px; /* עובי הקו */
-    background-color: var(--gold);
-    width: 0%;
-    transition: width 0.5s ease-out;
-}
-.step-item.step-active .step-progress-bar {
-    width: 50%; /* חצי התקדמות כשהוא אקטיבי */
-}
-.step-item.step-completed .step-progress-bar {
-    width: 100%; /* התקדמות מלאה כשהושלם */
-}
+        .step-item {
+            color: var(--text-muted);
+            position: relative;
+            overflow: hidden;
+        }
+        .step-item.step-active { color: var(--gold); }
+        .step-item.step-completed {
+            color: var(--navy);
+            font-weight: 800;
+        }
+        .step-item .step-progress-bar {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--gold);
+            width: 0%;
+            transition: width 0.5s ease-out;
+        }
+        .step-item.step-active .step-progress-bar { width: 50%; }
+        .step-item.step-completed .step-progress-bar { width: 100%; }
+        
         .loader {
-    border: 4px solid rgba(255, 255, 255, 0.2); /* צבע בהיר יותר */
-    border-top: 4px solid var(--gold); /* צבע זהב בולט */
-    border-radius: 50%;
-    width: 30px; /* קצת יותר גדול */
-    height: 30px;
-    animation: spin 0.8s ease-in-out infinite; /* אנימציה חלקה יותר ומהירה קצת */
-    box-shadow: 0 0 5px rgba(197, 160, 89, 0.5); /* צל עדין */
-}
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-.full-page-loader {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(26, 28, 44, 0.8); /* רקע כהה שקוף */
-    backdrop-filter: blur(5px);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid var(--gold);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 0.8s ease-in-out infinite;
+            box-shadow: 0 0 5px rgba(197, 160, 89, 0.5);
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .full-page-loader {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(26, 28, 44, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
         #toast { position: fixed; bottom: 20px; right: 20px; transform: translateY(150%); transition: transform 0.3s ease; z-index: 1000; background-color: var(--navy); color: white; padding: 1rem 1.5rem; border-radius: 1rem; border-right: 4px solid var(--gold); }
         #toast.show { transform: translateY(0); }
         #whatsapp-float { position: fixed; bottom: 20px; left: 20px; z-index: 999; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2); animation: pulse 2s infinite; }
@@ -195,20 +138,6 @@ body {
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        .fly-item {
-            position: fixed;
-            z-index: 1000;
-            width: 20px;
-            height: 20px;
-            background: var(--gold);
-            border-radius: 50%;
-            pointer-events: none;
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.6s ease;
-        }
-        
-        input[type="date"] { cursor: pointer; }
-
-        /* סגנון עבור קופסאות הקטגוריות הגדולות */
         .category-box {
             position: relative;
             overflow: hidden;
@@ -233,9 +162,7 @@ body {
             transition: background 0.2s;
             z-index: 1;
         }
-        .category-box:hover::before {
-            background: rgba(26, 28, 44, 0.1);
-        }
+        .category-box:hover::before { background: rgba(26, 28, 44, 0.1); }
         .category-box img {
             position: absolute;
             inset: 0;
@@ -245,7 +172,7 @@ body {
             transition: transform 0.5s;
             z-index: 0;
         }
-     .category-box h3 {
+        .category-box h3 {
             position: relative;
             z-index: 2;
             color: white;
@@ -255,7 +182,6 @@ body {
             font-family: 'Playfair Display', serif;
         }
         
-     /* האנימציה החדשה שהוספנו: */
         @keyframes pop {
             0% { transform: scale(1); }
             50% { transform: scale(1.4); }
@@ -265,47 +191,41 @@ body {
             animation: pop 0.25s ease-out;
             display: inline-block;
         }
-</style>
-<style>
-    /* CSS עבור תצוגת רשימה/גריד */
-    #inventory-grid.grid-view {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 2rem;
-    }
-    #inventory-grid.list-view {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
 
-    /* התאמות לכרטיס פריט במצב רשימה */
-    #inventory-grid.list-view .item-card {
-        flex-direction: row;
-        align-items: center;
-        padding: 1rem 1.5rem;
-        border-radius: 1.5rem;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    }
-    #inventory-grid.list-view .item-card .item-image-wrapper {
-        width: 150px; /* תמונה גדולה יותר במצב רשימה */
-        height: 150px;
-        flex-shrink: 0;
-        margin-left: 1.5rem; /* רווח משמאל לתמונה ב-RTL */
-        margin-right: 0;
-    }
-    #inventory-grid.list-view .item-card .item-content {
-        flex-grow: 1;
-        text-align: right;
-    }
-    #inventory-grid.list-view .item-card .item-details { /* דיב חדש שנקיף איתו את השם והמלאי */
-        flex-grow: 1;
-    }
-    #inventory-grid.list-view .item-card .item-actions {
-        flex-direction: column;
-        gap: 0.5rem;
-        margin-right: 1.5rem; /* רווח משמאל לכפתורים ב-RTL */
-    }
+        #inventory-grid.grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        #inventory-grid.list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        #inventory-grid.list-view .item-card {
+            flex-direction: row;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        #inventory-grid.list-view .item-card .item-image-wrapper {
+            width: 150px;
+            height: 150px;
+            flex-shrink: 0;
+            margin-left: 1.5rem;
+            margin-right: 0;
+        }
+        #inventory-grid.list-view .item-card .item-content {
+            flex-grow: 1;
+            text-align: right;
+        }
+        #inventory-grid.list-view .item-card .item-details { flex-grow: 1; }
+        #inventory-grid.list-view .item-card .item-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-right: 1.5rem;
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -314,24 +234,6 @@ body {
     טוען נתונים...
 </div>    
 
-    <!-- SEO Fallback Content (Hidden visually, visible to text browsers and simple crawlers) -->
-    <noscript>
-        <div style="padding: 20px; background: #fff; color: #333; text-align: right; direction: rtl;">
-            <h1>גמ"ח אירועים נריה - קטלוג והזמנות ציוד לאירועים ושמחות</h1>
-            <p>ברוכים הבאים למערכת ההזמנות של גמ"ח נריה. אנו מציעים שירות השאלת ציוד לאירועים, שמחות, בריתות, בר מצווה, שבתות חתן ועוד ביישוב נריה ובגוש טלמונים (בנימין).</p>
-            <h2>הציוד שלנו כולל:</h2>
-            <ul>
-                <li>השאלת שולחנות פלסטיק מתקפלים</li>
-                <li>השאלת כיסאות כתר ופלסטיק לאורחים</li>
-                <li>מפות איכותיות במגוון צבעים (לבן, קרם ועוד) לשבתות ואירועים</li>
-                <li>כלי הגשה, כפות מזיגה, סכו"ם וצלחות</li>
-                <li>מיחמים לשבת ופלטות חימום</li>
-                <li>ציוד נלווה לשמחות מכל הסוגים</li>
-            </ul>
-            <p>השירות מיועד לתושבי נריה והסביבה. אנו פועלים בימים א'-ה' בין השעות 10:00 ל-17:30 בתיאום מראש. למידע נוסף והזמנות טלפוניות/וואטסאפ: 054-3040965.</p>
-        </div>
-    </noscript>
-
     <div id="toast" class="shadow-2xl flex items-center gap-3">
         <i data-lucide="info" class="text-gold"></i>
         <span id="toast-msg"></span>
@@ -339,108 +241,85 @@ body {
 
     <!-- Lightbox Modal -->
     <div id="lightbox" onclick="this.classList.add('hidden')" class="hidden fixed inset-0 bg-black/90 z-[300] flex items-center justify-center p-4 cursor-pointer backdrop-blur-sm no-print">
-        <img id="lightbox-img" src="" alt="תצוגה מוגדלת של ציוד לאירועים" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl border-2 border-gold object-contain transition-transform transform scale-95 duration-200" onclick="event.stopPropagation()">
+        <img id="lightbox-img" src="" alt="תצוגה מוגדלת" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl border-2 border-gold object-contain transition-transform transform scale-95 duration-200" onclick="event.stopPropagation()">
         <button onclick="document.getElementById('lightbox').classList.add('hidden')" class="absolute top-4 right-4 text-white/80 hover:text-white p-2 bg-white/10 rounded-full" aria-label="סגור תמונה"><i data-lucide="x"></i></button>
         <p class="absolute bottom-10 text-white/70 text-sm">לחץ בכל מקום לסגירה</p>
     </div>
 
-    <a href="https://wa.me/972543040965" target="_blank" id="whatsapp-float" class="no-print" aria-label="צור קשר בוואטסאפ עם גמ''ח נריה">
+    <a href="#" target="_blank" id="whatsapp-float" class="no-print hidden" aria-label="צור קשר בוואטסאפ">
         <i data-lucide="message-circle" class="w-8 h-8"></i>
     </a>
 
     <header class="hero-section min-h-[75vh] md:min-h-[85vh] flex flex-col relative text-white no-print">
         <nav class="p-4 md:p-6 flex justify-between items-center max-w-7xl mx-auto w-full z-20">
-    <div class="flex items-center gap-3">
-        <div class="w-10 h-10 md:w-12 md:h-12 gold-gradient rounded-full flex items-center justify-center shadow-lg">
-            <i data-lucide="sparkles" class="text-navy w-5 h-5 md:w-6 md:h-6"></i>
-        </div>
-        <div>
-            <div class="text-xl md:text-2xl font-bold serif italic leading-none">לשמחות בכל עת</div>
-            <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase opacity-70">Luxury Event Rentals</p>
-        </div>
-    </div>
-    
-    <div class="flex items-center gap-4 md:gap-6">
-
-        <button onclick="lookupOrder()" class="opacity-60 hover:opacity-100 transition-opacity text-xs font-bold tracking-widest border-l border-white/20 pl-6 hidden md:block">חיפוש/עריכת הזמנה</button>
-        <button onclick="showAdminLogin()" class="opacity-60 hover:opacity-100 transition-opacity text-xs font-bold tracking-widest transform md:translate-x-5 hidden md:block">ניהול מלאי</button>
-<button onclick="toggleDarkMode()" class="opacity-60 hover:opacity-100 transition-opacity text-xs font-bold tracking-widest hidden md:block" aria-label="החלף למצב כהה/בהיר">
-            <i data-lucide="moon" class="w-5 h-5 text-white"></i>
-        </button>        
-
-        <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors" aria-label="תפריט">
-            <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
-
-        <button id="cart-btn-icon" onclick="toggleCart(true)" class="relative bg-white/10 p-3 md:p-4 rounded-2xl backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all" aria-label="עגלת קניות ציוד אירועים">
-            <i data-lucide="shopping-cart" class="w-5 h-5 md:w-6 h-6"></i>
-            <span id="cart-count" class="absolute -top-2 -right-2 gold-gradient text-navy text-[11px] font-extrabold w-6 h-6 rounded-full flex items-center justify-center border-2 border-navy hidden">0</span>
-        </button>
-    </div>
-</nav>
-
-<div id="mobile-menu" class="hidden absolute top-[70px] left-0 right-0 bg-navy/95 backdrop-blur-xl border-t border-white/10 p-4 z-50 flex flex-col gap-4 md:hidden shadow-2xl">
-    <button onclick="lookupOrder(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
-        <i data-lucide="search" class="text-gold w-5 h-5"></i>
-        <span class="font-bold">חיפוש/עריכת הזמנה</span>
-    </button>
-    <button onclick="showAdminLogin(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
-        <i data-lucide="lock" class="text-gold w-5 h-5"></i>
-        <span class="font-bold">ניהול מלאי</span>
-    </button>
-    <button onclick="toggleDarkMode(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
-        <i data-lucide="moon" class="text-gold w-5 h-5"></i>
-        <span id="theme-text" class="font-bold">מצב כהה</span>
-    </button>
-</div>
-
-
-<!-- קטע התוכן המרכזי של ה-Hero -->
-        <div class="flex-1 flex flex-col items-center justify-center text-center px-4 z-10 max-w-4xl mx-auto w-full pb-12 mt-8 md:mt-16">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 md:w-12 md:h-12 gold-gradient rounded-full flex items-center justify-center shadow-lg">
+                    <i data-lucide="sparkles" class="text-navy w-5 h-5 md:w-6 md:h-6"></i>
+                </div>
+                <div>
+                    <div id="nav-brand-title" class="text-xl md:text-2xl font-bold serif italic leading-none">מערכת הזמנות</div>
+                    <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase opacity-70">Inventory Platform</p>
+                </div>
+            </div>
             
-            <!-- בלוק כותרות וברכה -->
+            <div class="flex items-center gap-4 md:gap-6">
+                <button onclick="lookupOrder()" class="opacity-60 hover:opacity-100 transition-opacity text-xs font-bold tracking-widest border-l border-white/20 pl-6 hidden md:block">חיפוש/עריכת הזמנה</button>
+                <button onclick="showAdminLogin()" class="opacity-60 hover:opacity-100 transition-opacity text-xs font-bold tracking-widest transform md:translate-x-5 hidden md:block">ניהול מלאי</button>
+                <button onclick="toggleDarkMode()" class="opacity-60 hover:opacity-100 transition-opacity text-xs font-bold tracking-widest hidden md:block" aria-label="החלף למצב כהה/בהיר">
+                    <i data-lucide="moon" class="w-5 h-5 text-white"></i>
+                </button>        
+
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors" aria-label="תפריט">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+
+                <button id="cart-btn-icon" onclick="toggleCart(true)" class="relative bg-white/10 p-3 md:p-4 rounded-2xl backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all" aria-label="עגלת קניות">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 md:w-6 h-6"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 gold-gradient text-navy text-[11px] font-extrabold w-6 h-6 rounded-full flex items-center justify-center border-2 border-navy hidden">0</span>
+                </button>
+            </div>
+        </nav>
+
+        <div id="mobile-menu" class="hidden absolute top-[70px] left-0 right-0 bg-navy/95 backdrop-blur-xl border-t border-white/10 p-4 z-50 flex flex-col gap-4 md:hidden shadow-2xl">
+            <button onclick="lookupOrder(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+                <i data-lucide="search" class="text-gold w-5 h-5"></i>
+                <span class="font-bold">חיפוש/עריכת הזמנה</span>
+            </button>
+            <button onclick="showAdminLogin(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+                <i data-lucide="lock" class="text-gold w-5 h-5"></i>
+                <span class="font-bold">ניהול מלאי</span>
+            </button>
+            <button onclick="toggleDarkMode(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+                <i data-lucide="moon" class="text-gold w-5 h-5"></i>
+                <span id="theme-text" class="font-bold">מצב כהה</span>
+            </button>
+        </div>
+
+        <div class="flex-1 flex flex-col items-center justify-center text-center px-4 z-10 max-w-4xl mx-auto w-full pb-12 mt-8 md:mt-16">
             <div class="space-y-3 mb-8 md:mb-10">
-                <!-- ברכת הבוקר/ערב טוב - תתעדכן דינמית -->
                 <h2 id="current-greeting" class="text-2xl md:text-4xl font-light tracking-wide text-white/90"></h2> 
-                
-                <!-- כותרת ראשית בלבן נקי וברור -->
-                <h1 class="text-4xl md:text-7xl font-bold mb-2 md:mb-4 serif text-white">
-                    גמ"ח אירועים נריה
-                </h1>
-                
-                <p class="text-base md:text-xl text-white/80 max-w-xl mx-auto font-light leading-relaxed">
-                    השאלת ציוד לשמחות, אירועים ושבתות ביישוב נריה.
-                </p>
+                <h1 id="hero-title" class="text-4xl md:text-7xl font-bold mb-2 md:mb-4 serif text-white">טוען...</h1>
+                <p id="hero-desc" class="text-base md:text-xl text-white/80 max-w-xl mx-auto font-light leading-relaxed"></p>
             </div>
 
-            <!-- לוח מידע מחולק לבלוקים בעיצוב זכוכית ניטרלי - מוגדל וקריא יותר -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
-                
-                <!-- בלוק 1: שעות פעילות -->
                 <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 md:p-6 flex items-center justify-between text-right shadow-lg">
                     <div class="flex items-center gap-4">
                         <i data-lucide="clock" class="w-6 h-6 text-white/80 shrink-0"></i>
                         <div>
                             <p class="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-wider">שעות פתיחה</p>
-                            <p class="text-base md:text-lg font-bold text-white mt-0.5">10:00 – 17:30</p>
+                            <p id="opening-hours-display" class="text-base md:text-lg font-bold text-white mt-0.5">---</p>
                         </div>
                     </div>
-                    <span class="text-xs md:text-sm font-semibold text-white border border-white/20 px-3 py-1.5 rounded-xl whitespace-nowrap">
-                        בתיאום מראש
-                    </span>
                 </div>
 
-                <!-- בלוק 2: הערה/אזהרה לגבי מפות -->
                 <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 md:p-6 flex items-center gap-4 text-right shadow-lg">
                     <i data-lucide="alert-circle" class="w-6 h-6 text-white/80 shrink-0"></i>
                     <div>
-                        <p class="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-wider">שימו לב</p>
-                        <p class="text-sm md:text-base text-white/90 font-medium leading-relaxed mt-0.5">
-                            לא ניתן לערבב בהזמנה אחת מפות עם ציוד אחר.
-                        </p>
+                        <p class="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-wider">מידע ואיסוף</p>
+                        <p id="location-text-display" class="text-sm md:text-base text-white/90 font-medium leading-relaxed mt-0.5">---</p>
                     </div>
                 </div>
-
             </div>
         </div>
     </header>
@@ -449,25 +328,24 @@ body {
         
         <!-- Smart Availability Check Section -->
         <div class="bg-white rounded-[2rem] p-6 mb-8 shadow-lg border border-gold/20 relative z-30 -mt-16 md:-mt-20">
-            <h2 class="sr-only">בדיקת זמינות ציוד אירועים להשאלה</h2>
             <div class="flex flex-col lg:flex-row items-end gap-4 lg:gap-6">
                 <div class="flex-1 w-full grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-navy mb-2 mr-1 uppercase tracking-wider flex items-center gap-1" for="filter-p-date">
-                            <i data-lucide="calendar" class="w-3 h-3 text-gold"></i> תאריך איסוף
+                            <i data-lucide="calendar" class="w-3 h-3 text-gold"></i> תאריך איסוף / התחלה
                         </label>
                         <input type="date" id="filter-p-date" onchange="handleDateFilter()" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gold focus:border-transparent outline-none text-sm transition-all">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-navy mb-2 mr-1 uppercase tracking-wider flex items-center gap-1" for="filter-r-date">
-                            <i data-lucide="calendar-check" class="w-3 h-3 text-gold"></i> תאריך החזרה
+                            <i data-lucide="calendar-check" class="w-3 h-3 text-gold"></i> תאריך החזרה / סיום
                         </label>
                         <input type="date" id="filter-r-date" onchange="handleDateFilter()" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gold focus:border-transparent outline-none text-sm transition-all">
                     </div>
                 </div>
                 <div class="flex gap-2 w-full lg:w-auto">
                     <button onclick="setNextShabbatFilter()" class="flex-1 lg:flex-none px-6 py-3 bg-navy/5 text-navy rounded-xl border border-navy/10 hover:bg-navy hover:text-white transition-all text-xs font-bold whitespace-nowrap">
-                        לשבת הקרובה
+                        לסוף השבוע הקרוב
                     </button>
                     <button onclick="clearDateFilter()" class="px-4 py-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all" title="נקה תאריכים" aria-label="נקה תאריכים">
                         <i data-lucide="x-circle" class="w-5 h-5"></i>
@@ -479,7 +357,7 @@ body {
             </div>
         </div>
 
-        <!-- Sticky Header Container (Hidden by default, shown inside category) -->
+        <!-- Sticky Header Container -->
         <div id="sticky-catalog-header" class="sticky top-0 z-40 bg-[#fcfcfc]/95 backdrop-blur-md py-4 -mx-4 px-4 border-b border-gray-100 transition-shadow mb-6 shadow-sm hidden">
             <div class="flex flex-col md:flex-row justify-between items-end gap-4 md:gap-6">
                 <div class="space-y-2 md:space-y-4 w-full md:w-auto overflow-hidden">
@@ -490,22 +368,22 @@ body {
                         <h2 class="text-sm font-bold uppercase tracking-widest text-gold" id="current-category-title">הקטלוג שלנו</h2>
                     </div>
                     <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar scroll-smooth" id="category-filters" style="max-width: 100vw;"></div>
-<div class="flex items-center gap-2 mt-4 md:mt-0">
-                <button onclick="setLayout('grid')" id="grid-view-btn" class="p-2 rounded-xl bg-navy text-gold shadow-md" aria-label="תצוגת גריד">
-                    <i data-lucide="layout-grid" class="w-5 h-5"></i>
-                </button>
-                <button onclick="setLayout('list')" id="list-view-btn" class="p-2 rounded-xl bg-gray-100 text-gray-400 hover:bg-gray-200" aria-label="תצוגת רשימה">
-                    <i data-lucide="list" class="w-5 h-5"></i>
-                </button>
-            </div>
+                    <div class="flex items-center gap-2 mt-4 md:mt-0">
+                        <button onclick="setLayout('grid')" id="grid-view-btn" class="p-2 rounded-xl bg-navy text-gold shadow-md" aria-label="תצוגת גריד">
+                            <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                        </button>
+                        <button onclick="setLayout('list')" id="list-view-btn" class="p-2 rounded-xl bg-gray-100 text-gray-400 hover:bg-gray-200" aria-label="תצוגת רשימה">
+                            <i data-lucide="list" class="w-5 h-5"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Search Container (Always visible) -->
+        <!-- Search Container -->
          <div class="relative w-full mb-8">
-            <label for="searchInput" class="sr-only">חפש ציוד לאירועים</label>
-            <input type="text" id="searchInput" oninput="handleSearch()" placeholder="חפש ציוד, שולחנות, מפות בקטלוג..."
+            <label for="searchInput" class="sr-only">חפש בקטלוג...</label>
+            <input type="text" id="searchInput" oninput="handleSearch()" placeholder="חפש מוצרים וקטגוריות בקטלוג..."
                 class="w-full pl-12 pr-6 py-3 md:py-3.5 rounded-2xl bg-white border border-gray-100 shadow-sm focus:ring-2 focus:ring-gold transition-all outline-none">
             <i data-lucide="search" class="absolute left-4 top-3 md:top-3.5 text-gray-400 w-5 h-5"></i>
         </div>
@@ -515,29 +393,29 @@ body {
             <div class="col-span-full text-center py-20"><div class="loader mx-auto mb-4"></div>טוען קטגוריות...</div>
         </div>
 
-        <!-- Items Grid (Hidden Initially) -->
+        <!-- Items Grid -->
         <div id="inventory-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12 md:mb-20 hidden">
             <div class="col-span-full text-center py-20"><div class="loader mx-auto mb-4"></div>טוען פריטים...</div>
         </div>
 
         <!-- Location Section -->
-        <div class="bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-xl border border-gray-100 flex flex-col md:flex-row gap-8 items-center justify-between">
+        <div id="location-block" class="bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-xl border border-gray-100 flex flex-col md:flex-row gap-8 items-center justify-between hidden">
             <div class="w-full md:w-1/2 space-y-6">
                 <div>
-                    <h2 class="text-2xl font-bold serif text-navy mb-2">מיקום הגמ"ח - אנחנו כאן בשבילכם</h2>
-                    <p class="text-gray-500 text-sm md:text-base">הגמ"ח ממוקם ביישוב נריה. האיסוף וההחזרה מתבצעים מהמחסן בתיאום מראש בלבד בשעות הפעילות.</p>
+                    <h2 id="location-title" class="text-2xl font-bold serif text-navy mb-2">מיקום ואיסוף</h2>
+                    <p id="location-desc" class="text-gray-500 text-sm md:text-base">האיסוף וההחזרה מתבצעים בתיאום מראש בלבד בשעות הפעילות.</p>
                 </div>
                 <div class="flex gap-3 md:gap-4">
-                    <a href="https://waze.com/ul?ll=31.936,35.138&navigate=yes" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 bg-[#33CCFF] hover:bg-[#2cb5e3] text-white py-3 px-4 md:px-6 rounded-xl font-bold transition-transform hover:scale-105 shadow-lg shadow-blue-200 text-sm md:text-base">
+                    <a id="waze-btn" href="#" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 bg-[#33CCFF] hover:bg-[#2cb5e3] text-white py-3 px-4 md:px-6 rounded-xl font-bold transition-transform hover:scale-105 shadow-lg shadow-blue-200 text-sm md:text-base hidden">
                         <i data-lucide="navigation" class="w-4 h-4 md:w-5 md:h-5"></i>
-                        נווט עם Waze לנריה
+                        נווט עם Waze
                     </a>
                 </div>
             </div>
             <div class="w-full md:w-1/2 h-56 md:h-80 bg-gray-200 rounded-[1.5rem] map-container shadow-inner overflow-hidden relative">
-                <iframe 
-                    title="מפת הגעה לגמ&quot;ח נריה בבנימין"
-                    src="https://maps.google.com/maps?q=נריה&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                <iframe id="map-iframe"
+                    title="מפת הגעה"
+                    src="" 
                     frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
                 </iframe>
                 <div class="absolute inset-0 pointer-events-none border-[6px] border-white/50 rounded-[1.5rem]"></div>
@@ -553,29 +431,29 @@ body {
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
-<div id="cart-stepper" class="flex border-b text-center text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 mt-2 md:mt-0">
-            <div id="step-1-header" class="flex-1 py-6 step-item step-active transition-all relative">
-                <span class="z-10 relative">01. סל פריטים</span>
-                <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
+            <div id="cart-stepper" class="flex border-b text-center text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 mt-2 md:mt-0">
+                <div id="step-1-header" class="flex-1 py-6 step-item step-active transition-all relative">
+                    <span class="z-10 relative">01. סל פריטים</span>
+                    <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
+                </div>
+                <div id="step-2-header" class="flex-1 py-6 step-item transition-all relative">
+                    <span class="z-10 relative">02. תזמון ופרטים</span>
+                    <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
+                </div>
+                <div id="step-3-header" class="flex-1 py-6 step-item transition-all relative">
+                    <span class="z-10 relative">03. אישור</span>
+                    <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
+                </div>
             </div>
-            <div id="step-2-header" class="flex-1 py-6 step-item transition-all relative">
-                <span class="z-10 relative">02. תזמון ופרטים</span>
-                <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
-            </div>
-            <div id="step-3-header" class="flex-1 py-6 step-item transition-all relative">
-                <span class="z-10 relative">03. אישור</span>
-                <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
-            </div>
-        </div>
             <div id="cart-content" class="flex-1 overflow-y-auto p-8"></div>
             <div id="mini-summary" class="hidden sticky bottom-0 z-50 px-8 py-3 bg-white border-t border-b text-xs flex justify-between items-center shadow-lg">
-            <div class="flex flex-col text-right">
-                <span class="font-bold text-navy">סיכום הזמנה: <span id="summary-count">0</span> פריטים</span>
-                <span class="text-[10px] text-gray-500" id="summary-dates"></span>
-                <span id="active-order-label" class="text-gold font-bold hidden text-[10px] mt-1">עריכת הזמנה פעילה</span>
+                <div class="flex flex-col text-right">
+                    <span class="font-bold text-navy">סיכום הזמנה: <span id="summary-count">0</span> פריטים</span>
+                    <span class="text-[10px] text-gray-500" id="summary-dates"></span>
+                    <span id="active-order-label" class="text-gold font-bold hidden text-[10px] mt-1">עריכת הזמנה פעילה</span>
+                </div>
+                <button onclick="goToStep(1)" class="text-gold underline text-xs font-bold">עריכה</button>
             </div>
-            <button onclick="goToStep(1)" class="text-gold underline text-xs font-bold">עריכה</button>
-        </div>
             <div id="cart-footer" class="p-8 bg-white border-t space-y-4">
                 <div id="cancel-order-area" class="hidden pb-4">
                     <button onclick="cancelCurrentOrder()" class="w-full py-3 text-red-500 text-xs font-bold border border-red-100 rounded-xl hover:bg-red-50 transition-colors">ביטול ומחיקת ההזמנה לחלוטין</button>
@@ -593,7 +471,7 @@ body {
         <div class="bg-white rounded-[2rem] w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
             <div class="p-8 bg-[#0b1f3a] text-[#f5d37a] flex justify-between items-center">
                 <div>
-                    <h2 class="text-2xl font-bold serif italic leading-none text-[#f5d37a]">ניהול הגמ"ח</h2>
+                    <h2 class="text-2xl font-bold serif italic leading-none text-[#f5d37a]">ניהול מלאי והזמנות</h2>
                     <p id="admin-subtitle" class="text-[10px] uppercase tracking-widest mt-2 text-[#e6c46f] opacity-70">Inventory & Order Management</p>
                 </div>
                 <div class="flex items-center gap-4">
@@ -611,7 +489,7 @@ body {
     <!-- Print Layout -->
     <div id="print-area" class="hidden text-right p-16">
         <div class="border-b-4 border-navy pb-4 mb-8">
-            <h1 class="text-4xl font-bold serif italic">גמ"ח אירועים נריה - אישור השאלה</h1>
+            <h1 id="print-brand-title" class="text-4xl font-bold serif italic">אישור הזמנה</h1>
             <p id="print-order-id" class="text-xl font-bold mt-2 text-gold"></p>
         </div>
         <div id="print-user-info" class="mb-8 space-y-2 text-lg"></div>
@@ -622,22 +500,23 @@ body {
     </div>
 
     <script>
+        // החליפו את ה-URL בקישור שלכם לאחר פריסת ה-Apps Script (Deploy Web App)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4f1QrovCOzIo8v3nhIfvhnjKGdh8Wh0vK4RZgPUkaPewzG2HTF8Wudh4GqUu0P79q/exec';
-        const DEFAULT_IMG = '                                                                       ';
+        const DEFAULT_IMG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%23cccccc" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
       
         let inventory = [];
         let orders = [];
+        let aboutConfig = {};
         let cart = JSON.parse(localStorage.getItem('gemach_cart')) || [];
         let currentStep = 1;
         let currentCategory = 'הכל';
         let activeOrderCode = null;
         let pendingFormData = {}; 
 
-        // משתנים לניהול הגלילה האינסופית
         let displayedItems = []; 
         let itemsToShow = 12;    
         const ITEMS_BATCH = 12;  
-let currentLayout = localStorage.getItem('inventoryLayout') || 'grid'; // ברירת מחדל או מה שנשמר
+        let currentLayout = localStorage.getItem('inventoryLayout') || 'grid';
 
         function formatImageUrl(url) {
             if (!url) return DEFAULT_IMG;
@@ -650,69 +529,96 @@ let currentLayout = localStorage.getItem('inventoryLayout') || 'grid'; // ברי
                         id = url.split('/d/')[1].split('/')[0];
                     }
                 } catch (e) { console.error("Error parsing Drive URL", e); }
-                
-                // שימוש ב-w800-rw לחיסכון בתעבורה ופורמט WebP
                 if (id) return `https://lh3.googleusercontent.com/u/0/d/${id}=w800-rw`;
             }
             return url;
         }
 
-        // פונקציה ליצירת Schema דינמי למוצרים כך שגוגל יסרוק אותם (תוספת עבור SEO)
-        function injectSEOData(inventoryData) {
-            const scriptTag = document.createElement('script');
-            scriptTag.type = 'application/ld+json';
-            const itemListElement = inventoryData.filter(i => i.status !== 'hidden').map((item, index) => ({
-                "@type": "ListItem",
-                "position": index + 1,
-                "item": {
-                    "@type": "Product",
-                    "name": item.שם_פריט,
-                    "description": `השאלת ${item.שם_פריט} לאירועים ושמחות מגמ"ח נריה. קטגוריה: ${item.קטגוריה || 'כללי'}`,
-                    "image": formatImageUrl(item.תמונה),
-                    "offers": {
-                        "@type": "Offer",
-                        "price": "0",
-                        "priceCurrency": "ILS",
-                        "availability": parseInt(item.מלאי) > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
-                    }
-                }
-            }));
+        async function init() {
+            const fullPageLoader = document.getElementById('full-page-loader');
+            fullPageLoader.classList.remove('hidden');
 
-            scriptTag.text = JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "ItemList",
-                "name": "קטלוג ציוד גמ\"ח נריה",
-                "description": "רשימת הציוד הזמין להשאלה בגמ\"ח אירועים נריה",
-                "itemListElement": itemListElement
-            });
-            document.head.appendChild(scriptTag);
+            try {
+                const res = await fetch(SCRIPT_URL);
+                const data = await res.json();
+                inventory = (data.Inventory || []).map(i => ({
+                    ...i,
+                    status: (i['תיאור_אפשרי'] && i['תיאור_אפשרי'].trim().toLowerCase() === 'hidden') ? 'hidden' : 'active',
+                    מלאי: parseInt(i.מלאי || i['מלאי'] || 0)
+                }));
+                orders = data.Orders || [];
+                aboutConfig = data.About || {};
+                
+                applyConfig();
+                renderHomeCategories();
+                updateCartUI();
+                updateCartSummary();
+                
+                if (window.lucide) lucide.createIcons();
+            } catch (e) { 
+                console.error(e);
+                showToast('שגיאה בטעינת הנתונים מהשרת'); 
+            } finally {
+                fullPageLoader.classList.add('hidden');
+            }
         }
 
-     async function init() {
-    const fullPageLoader = document.getElementById('full-page-loader');
-    fullPageLoader.classList.remove('hidden'); // הצג loader בתחילת טעינת הנתונים
+        function applyConfig() {
+            if (!aboutConfig) return;
+            
+            const name = aboutConfig['שם המקום'] || 'מערכת ניהול מלאי';
+            const desc = aboutConfig['תיאור'] || 'הזמנת פריטים אונליין בקלות';
+            const phone = aboutConfig['טלפון'] || '';
+            const whatsapp = aboutConfig['וואטסאפ'] || '';
+            const hours = aboutConfig['שעות פתיחה'] || 'בתיאום מראש';
+            const location = aboutConfig['מיקום'] || '';
+            const waze = aboutConfig['קישור וויז'] || '';
+            const bgImg = aboutConfig['תמונת רקע'] || '';
 
-    try {
-        const res = await fetch(SCRIPT_URL);
-        const data = await res.json();
-        inventory = (data.Inventory || []).map(i => ({
-            ...i,
-            status: (i['תיאור אפשרי'] && i['תיאור אפשרי'].trim().toLowerCase() === 'hidden') ? 'hidden' : 'active',
-            מלאי: parseInt(i.מלאי || i['מלאי'] || 0)
-        }));
-        orders = data.Orders || [];
-        renderHomeCategories();
-        updateCartUI();
-updateCartSummary(); // עדכן סיכום לאחר שינוי כמות
-        if (window.lucide) lucide.createIcons();
-        injectSEOData(inventory);
-    } catch (e) { 
-        console.error(e);
-        showToast('שגיאה בטעינת הנתונים'); 
-    } finally {
-        fullPageLoader.classList.add('hidden'); // הסתר loader בסיום, בין אם הצליח או נכשל
-    }
-}
+            // כותרות
+            document.title = `${name} | הזמנה אונליין`;
+            document.getElementById('nav-brand-title').innerText = name;
+            document.getElementById('hero-title').innerText = name;
+            document.getElementById('hero-desc').innerText = desc;
+            document.getElementById('print-brand-title').innerText = `אישור הזמנה - ${name}`;
+
+            // תמונת רקע ל-Hero
+            if (bgImg) {
+                document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(to bottom, rgba(26, 28, 44, 0.2), rgba(26, 28, 44, 0.5)), url('${formatImageUrl(bgImg)}')`;
+            }
+
+            // שעות ומיקום עליון
+            document.getElementById('opening-hours-display').innerText = hours;
+            document.getElementById('location-text-display').innerText = location || 'פרטי איסוף והחזרה';
+
+            // כפתור וואטסאפ צף
+            const waFloat = document.getElementById('whatsapp-float');
+            if (whatsapp && waFloat) {
+                const cleanPhone = whatsapp.replace(/\D/g, '');
+                const formattedPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.substring(1) : cleanPhone;
+                waFloat.href = `https://wa.me/${formattedPhone}`;
+                waFloat.classList.remove('hidden');
+            }
+
+            // בלוק מפה ואיסוף תחתון
+            if (location || waze) {
+                document.getElementById('location-block').classList.remove('hidden');
+                document.getElementById('location-title').innerText = `מיקום ואיסוף - ${name}`;
+                document.getElementById('location-desc').innerText = location || 'האיסוף וההחזרה מתבצעים בתיאום מראש בלבד.';
+                
+                const wazeBtn = document.getElementById('waze-btn');
+                if (waze) {
+                    wazeBtn.href = waze;
+                    wazeBtn.classList.remove('hidden');
+                    
+                    // מפה דינמית מבוססת מיקום
+                    const mapIframe = document.getElementById('map-iframe');
+                    mapIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(location || name)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+                } else {
+                    wazeBtn.classList.add('hidden');
+                }
+            }
+        }
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
@@ -720,7 +626,6 @@ updateCartSummary(); // עדכן סיכום לאחר שינוי כמות
         }
 
         function renderHomeCategories() {
-            // מסתיר את הגריד ואת הפילטרים הקטנים
             document.getElementById('inventory-grid').classList.add('hidden');
             document.getElementById('sticky-catalog-header').classList.add('hidden');
             const homeContainer = document.getElementById('home-categories-container');
@@ -729,13 +634,12 @@ updateCartSummary(); // עדכן סיכום לאחר שינוי כמות
             const categories = [...new Set(inventory.filter(i => i.status !== 'hidden').map(i => i.קטגוריה).filter(Boolean))];
             
             homeContainer.innerHTML = categories.map(cat => {
-                // מציאת תמונה מייצגת לקטגוריה (הפריט הראשון בקטגוריה)
                 const repItem = inventory.find(i => i.קטגוריה === cat && i.status !== 'hidden' && i.תמונה);
                 const bgImage = repItem ? formatImageUrl(repItem.תמונה) : DEFAULT_IMG;
 
                 return `
-                    <div role="button" tabindex="0" onclick="enterCategory('${cat}')" onkeypress="if(event.key === 'Enter') enterCategory('${cat}')" class="category-box" aria-label="צפה במוצרי קטגוריית ${cat}">
-                        <img src="${bgImage}" alt="השאלת ציוד אירועים - קטגוריית ${cat} בגמ״ח נריה">
+                    <div role="button" tabindex="0" onclick="enterCategory('${cat}')" onkeypress="if(event.key === 'Enter') enterCategory('${cat}')" class="category-box" aria-label="קטגוריית ${cat}">
+                        <img src="${bgImage}" alt="${cat}">
                         <h3>${cat}</h3>
                     </div>
                 `;
@@ -746,9 +650,7 @@ updateCartSummary(); // עדכן סיכום לאחר שינוי כמות
             document.getElementById('home-categories-container').classList.add('hidden');
             document.getElementById('inventory-grid').classList.remove('hidden');
             document.getElementById('sticky-catalog-header').classList.remove('hidden');
-            
             filterByCategory(cat);
-            // גלילה חלקה לתחילת הגריד
             document.getElementById('sticky-catalog-header').scrollIntoView({behavior: 'smooth'});
         }
 
@@ -781,7 +683,6 @@ updateCartSummary(); // עדכן סיכום לאחר שינוי כמות
             document.getElementById('current-category-title').innerText = cat;
             renderCategories();
             
-            // איפוס והעברה של המערך המסונן לפונקציית הגריד
             if (cat === 'הכל') {
                 renderGrid(inventory.filter(item => item.status !== 'hidden'));
             } else {
@@ -845,9 +746,6 @@ updateCartSummary(); // עדכן סיכום לאחר שינוי כמות
             if (!item) return 0;
             if (!pDate || !rDate) return item.מלאי;
 
-            const isTablecloth = (item['קטגוריה'] || '').includes('מפות');
-            const bufferDays = isTablecloth ? 1 : 0; 
-
             const normalizeDate = (dateInput) => {
                 if (!dateInput) return null;
                 let dateStr = dateInput;
@@ -867,7 +765,7 @@ updateCartSummary(); // עדכן סיכום לאחר שינוי כמות
             let totalInUse = 0;
 
             orders.forEach(order => {
-                const currentOrderCode = String(order.קוד_הזמנה || order.orderCode || order['קוד_הזמנה'] || '').trim();
+                const currentOrderCode = String(order.קוד_הזמנה || order.orderCode || '').trim();
                 const activeCode = String(activeOrderCode || '').trim();
                 if (activeOrderCode && currentOrderCode === activeCode) return;
                 
@@ -876,13 +774,10 @@ updateCartSummary(); // עדכן סיכום לאחר שינוי כמות
                 
                 if (!oStart || !oEnd) return;
 
-                const blockedUntil = new Date(oEnd);
-                blockedUntil.setDate(blockedUntil.getDate() + bufferDays);
-
-                if (reqStart <= blockedUntil && reqEnd >= oStart) {
+                if (reqStart <= oEnd && reqEnd >= oStart) {
                     try {
                         const rawCart = JSON.parse(order.raw_cart || '[]');
-                        const orderItem = rawCart.find(oi => oi.שם_פריט === itemName);
+                        const orderItem = rawCart.find(oi => oi.שם_פריט === itemName || oi.parentName === itemName);
                         if (orderItem) {
                             totalInUse += parseInt(orderItem.qty);
                         }
@@ -891,33 +786,34 @@ updateCartSummary(); // עדכן סיכום לאחר שינוי כמות
             });
             return Math.max(0, item.מלאי - totalInUse);
         }
-function setLayout(layout) {
-    currentLayout = layout;
-    localStorage.setItem('inventoryLayout', layout); // שמור ב-localStorage
 
-    const gridContainer = document.getElementById('inventory-grid');
-    const gridBtn = document.getElementById('grid-view-btn');
-    const listBtn = document.getElementById('list-view-btn');
+        function setLayout(layout) {
+            currentLayout = layout;
+            localStorage.setItem('inventoryLayout', layout);
 
-    if (layout === 'grid') {
-        gridContainer.classList.remove('list-view');
-        gridContainer.classList.add('grid-view');
-        gridBtn.classList.add('bg-navy', 'text-gold', 'shadow-md');
-        gridBtn.classList.remove('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
-        listBtn.classList.add('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
-        listBtn.classList.remove('bg-navy', 'text-gold', 'shadow-md');
-    } else {
-        gridContainer.classList.remove('grid-view');
-        gridContainer.classList.add('list-view');
-        listBtn.classList.add('bg-navy', 'text-gold', 'shadow-md');
-        listBtn.classList.remove('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
-        gridBtn.classList.add('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
-        gridBtn.classList.remove('bg-navy', 'text-gold', 'shadow-md');
-    }
-    renderGrid(displayedItems); // רנדר מחדש עם התצוגה החדשה
-    lucide.createIcons();
-}
-        // --- Infinite Scroll Render Function ---
+            const gridContainer = document.getElementById('inventory-grid');
+            const gridBtn = document.getElementById('grid-view-btn');
+            const listBtn = document.getElementById('list-view-btn');
+
+            if (layout === 'grid') {
+                gridContainer.classList.remove('list-view');
+                gridContainer.classList.add('grid-view');
+                gridBtn.classList.add('bg-navy', 'text-gold', 'shadow-md');
+                gridBtn.classList.remove('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
+                listBtn.classList.add('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
+                listBtn.classList.remove('bg-navy', 'text-gold', 'shadow-md');
+            } else {
+                gridContainer.classList.remove('grid-view');
+                gridContainer.classList.add('list-view');
+                listBtn.classList.add('bg-navy', 'text-gold', 'shadow-md');
+                listBtn.classList.remove('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
+                gridBtn.classList.add('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
+                gridBtn.classList.remove('bg-navy', 'text-gold', 'shadow-md');
+            }
+            renderGrid(displayedItems);
+            lucide.createIcons();
+        }
+
         function renderGrid(items = null, isAppend = false) {
             const grid = document.getElementById('inventory-grid');
             const hasDates = pendingFormData.pDate && pendingFormData.rDate;
@@ -929,7 +825,6 @@ function setLayout(layout) {
                     grid.innerHTML = ''; 
                 }
             } else if (!isAppend) {
-                // ברירת מחדל
                 displayedItems = inventory.filter(item => item.status !== 'hidden');
                 itemsToShow = ITEMS_BATCH;
                 grid.innerHTML = '';
@@ -951,60 +846,81 @@ function setLayout(layout) {
                     displayStock = getAvailableStock(item.שם_פריט, pendingFormData.pDate, pendingFormData.rDate);
                 }
 
-                const cartItem = cart.find(c => c.שם_פריט === item.שם_פריט);
-                const inCart = cartItem ? cartItem.qty : 0;
-                
                 const isOutOfStock = displayStock <= 0;
                 const itemNameSafe = item.שם_פריט.replace(/"/g, '&quot;');
                 const categorySafe = (item.קטגוריה || 'כללי').replace(/"/g, '&quot;');
-                
-                // יצירת ID ייחודי ל-SPAN של הכמות לעדכון מהיר
                 const qtySpanId = `qty-${item.שם_פריט.replace(/\s+/g, '-')}`;
+
+                // בניית וריאציות (Dropdown)
+                const variationsStr = item.וריאציות || item['וריאציות'] || '';
+                const variations = variationsStr ? variationsStr.split(',').map(v => v.trim()).filter(Boolean) : [];
+                
+                let variationDropdown = '';
+                if (variations.length > 0) {
+                    variationDropdown = `
+                        <div class="mb-3">
+                            <label class="block text-[10px] text-gray-400 mb-1">אפשרות / סוג:</label>
+                            <select id="select-var-${item.שם_פריט.replace(/\s+/g, '-')}" onchange="updateCardQtyDisplay('${item.שם_פריט.replace(/'/g, "\\'")}')" class="w-full p-2 text-xs bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-1 focus:ring-gold text-slate-800">
+                                ${variations.map(v => `<option value="${v}">${v}</option>`).join('')}
+                            </select>
+                        </div>
+                    `;
+                }
+
+                // בדיקת מוצר נוכחי בעגלה
+                const defaultSelectedVar = variations.length > 0 ? variations[0] : null;
+                const defaultDisplayName = defaultSelectedVar ? `${item.שם_פריט} (${defaultSelectedVar})` : item.שם_פריט;
+                const cartItem = cart.find(c => c.displayName === defaultDisplayName);
+                const inCart = cartItem ? cartItem.qty : 0;
 
                 return `
                     <div class="item-card bg-white rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75 grayscale' : ''}">
-                <div class="item-image-wrapper h-64 ${currentLayout === 'list' ? 'w-40 h-auto' : 'w-full'} overflow-hidden relative bg-gray-100 cursor-zoom-in" onclick="openImage('${formatImageUrl(item.תמונה)}')">
-                    <img src="${formatImageUrl(item.תמונה)}" 
-                         loading="lazy"
-                         decoding="async"
-                         alt="${itemNameSafe} - השאלת ציוד בגמ״ח נריה (קטגוריה: ${categorySafe})" 
-                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                    
-                    <div class="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-navy shadow-sm">
-                        ${item.קטגוריה || 'כללי'}
-                    </div>
-                    ${isOutOfStock ? `<div class="absolute inset-0 bg-navy/30 flex items-center justify-center"><span class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold text-xs shadow-lg transform -rotate-6">אזל לתאריכים אלו</span></div>` : ''}
-                </div>
-                <div class="item-content p-6 flex flex-col flex-1 ${currentLayout === 'list' ? 'justify-center' : ''}">
-                    <div class="item-details flex-1">
-                        <h3 class="font-bold text-lg text-navy">${item.שם_פריט}</h3>
-                        <p class="text-xs ${hasDates ? 'text-gold font-bold' : 'text-gray-500'} mb-4">
-                            ${hasDates ? `פנוי לתאריך הנבחר: ${displayStock}` : `במלאי כולל: ${item.מלאי}`}
-                        </p>
-                    </div>
-                    <div class="item-actions mt-auto flex ${currentLayout === 'list' ? 'flex-col' : 'flex-row'} items-center justify-between">
-                        <div class="flex items-center gap-3 bg-gray-50 p-1 rounded-xl">
-                            <button onclick="updateQty('${item.שם_פריט}', -1)" class="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors active:scale-95" aria-label="הפחת כמות">-</button>
-                            <span class="w-6 text-center font-bold" id="${qtySpanId}">${inCart}</span>
-                            <button onclick="updateQty('${item.שם_פריט}', 1)" 
-                                ${isOutOfStock ? 'disabled' : ''}
-                                class="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors active:scale-95 ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
+                        <div class="item-image-wrapper h-64 ${currentLayout === 'list' ? 'w-40 h-auto' : 'w-full'} overflow-hidden relative bg-gray-100 cursor-zoom-in" onclick="openImage('${formatImageUrl(item.תמונה)}')">
+                            <img src="${formatImageUrl(item.תמונה)}" loading="lazy" decoding="async" alt="${itemNameSafe}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                            <div class="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-navy shadow-sm">
+                                ${item.קטגוריה || 'כללי'}
+                            </div>
+                            ${isOutOfStock ? `<div class="absolute inset-0 bg-navy/30 flex items-center justify-center"><span class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold text-xs shadow-lg transform -rotate-6">אזל מהמלאי</span></div>` : ''}
                         </div>
-                        <button onclick="toggleCart(true)" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה"><i data-lucide="shopping-bag"></i></button>
-                    </div>
-                </div>
-            </div>`;
+                        <div class="item-content p-6 flex flex-col flex-1 ${currentLayout === 'list' ? 'justify-center' : ''}">
+                            <div class="item-details flex-1">
+                                <h3 class="font-bold text-lg text-navy">${item.שם_פריט}</h3>
+                                <p class="text-xs ${hasDates ? 'text-gold font-bold' : 'text-gray-500'} mb-3">
+                                    ${hasDates ? `פנוי לתאריך הנבחר: ${displayStock}` : `במלאי כולל: ${item.מלאי}`}
+                                </p>
+                                ${variationDropdown}
+                            </div>
+                            <div class="item-actions mt-auto flex ${currentLayout === 'list' ? 'flex-col' : 'flex-row'} items-center justify-between">
+                                <div class="flex items-center gap-3 bg-gray-50 p-1 rounded-xl">
+                                    <button onclick="updateQty('${item.שם_פריט.replace(/'/g, "\\'")}', -1)" class="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors active:scale-95 text-slate-800" aria-label="הפחת כמות">-</button>
+                                    <span class="w-6 text-center font-bold text-slate-800" id="${qtySpanId}">${inCart}</span>
+                                    <button onclick="updateQty('${item.שם_פריט.replace(/'/g, "\\'")}', 1)" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors active:scale-95 text-slate-800 ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
+                                </div>
+                                <button onclick="toggleCart(true)" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה"><i data-lucide="shopping-bag"></i></button>
+                            </div>
+                        </div>
+                    </div>`;
             }).join('');
             
             grid.insertAdjacentHTML('beforeend', html);
             lucide.createIcons();
         }
 
-        // --- Scroll Listener for Infinite Scroll ---
-        window.addEventListener('scroll', () => {
-            // פעיל רק אם הגריד מוצג
-            if(document.getElementById('inventory-grid').classList.contains('hidden')) return;
+        function updateCardQtyDisplay(name) {
+            const selectEl = document.getElementById(`select-var-${name.replace(/\s+/g, '-')}`);
+            const selectedVar = selectEl ? selectEl.value : null;
+            const displayName = selectedVar ? `${name} (${selectedVar})` : name;
+            
+            const cartItem = cart.find(c => c.displayName === displayName);
+            const qtySpanId = `qty-${name.replace(/\s+/g, '-')}`;
+            const qtySpan = document.getElementById(qtySpanId);
+            if (qtySpan) {
+                qtySpan.innerText = cartItem ? cartItem.qty : 0;
+            }
+        }
 
+        window.addEventListener('scroll', () => {
+            if(document.getElementById('inventory-grid').classList.contains('hidden')) return;
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
                 if (itemsToShow < displayedItems.length) {
                     itemsToShow += ITEMS_BATCH;
@@ -1012,32 +928,6 @@ function setLayout(layout) {
                 }
             }
         });
-
-        function animateFlyToCart(event) {
-            if(!event) return;
-            const btn = event.currentTarget;
-            const cartIcon = document.getElementById('cart-btn-icon');
-            if (!cartIcon) return;
-
-            const flyer = document.createElement('div');
-            flyer.classList.add('fly-item');
-            
-            const btnRect = btn.getBoundingClientRect();
-            flyer.style.top = `${btnRect.top}px`;
-            flyer.style.left = `${btnRect.left}px`;
-            document.body.appendChild(flyer);
-
-            const cartRect = cartIcon.getBoundingClientRect();
-            const xDiff = (cartRect.left + cartRect.width/2) - (btnRect.left + btnRect.width/2);
-            const yDiff = (cartRect.top + cartRect.height/2) - (btnRect.top + btnRect.height/2);
-
-            requestAnimationFrame(() => {
-                flyer.style.transform = `translate(${xDiff}px, ${yDiff}px) scale(0.2)`;
-                flyer.style.opacity = '0.5';
-            });
-
-            setTimeout(() => flyer.remove(), 600);
-        }
 
         function openImage(url) {
             const box = document.getElementById('lightbox');
@@ -1047,21 +937,19 @@ function setLayout(layout) {
             requestAnimationFrame(() => img.classList.replace('scale-95', 'scale-100'));
         }
 
-        function updateQty(name, delta) {
+        function updateQty(name, delta, displayNameFromCart = null) {
             const itemToAdd = inventory.find(i => i.שם_פריט === name);
-            const isTableclothItem = (itemToAdd.קטגוריה || '').includes('מפות');
+            if (!itemToAdd) return;
 
-            if (delta > 0 && cart.length > 0) {
-                const hasTableclothInCart = cart.some(c => (c.קטגוריה || '').includes('מפות'));
-                const hasRegularItemInCart = cart.some(c => !(c.קטגוריה || '').includes('מפות'));
-
-                if (isTableclothItem && hasRegularItemInCart) {
-                    return showToast('לא ניתן לערבב הזמנת מפות עם ציוד אחר. נא לפצל להזמנות נפרדות.');
-                }
-                
-                if (!isTableclothItem && hasTableclothInCart) {
-                    return showToast('הסל מכיל מפות. לא ניתן להוסיף ציוד אחר להזמנה זו.');
-                }
+            let displayName = displayNameFromCart;
+            let selectedVar = null;
+            if (!displayName) {
+                const selectEl = document.getElementById(`select-var-${name.replace(/\s+/g, '-')}`);
+                selectedVar = selectEl ? selectEl.value : null;
+                displayName = selectedVar ? `${name} (${selectedVar})` : name;
+            } else {
+                const cartItem = cart.find(c => c.displayName === displayName);
+                if (cartItem) selectedVar = cartItem.selectedVar;
             }
 
             const pDate = document.getElementById('p-date')?.value || pendingFormData.pDate;
@@ -1072,30 +960,49 @@ function setLayout(layout) {
                 limit = getAvailableStock(name, pDate, rDate);
             }
 
-            let cartItem = cart.find(c => c.שם_פריט === name);
+            const currentTotalInCart = cart
+                .filter(c => c.שם_פריט === name || c.parentName === name)
+                .reduce((sum, c) => sum + c.qty, 0);
+
+            let cartItem = cart.find(c => c.displayName === displayName);
+            
             if (!cartItem && delta > 0) {
-                if (limit < 1) return showToast('אין מלאי זמין לתאריכים אלו');
-                cart.push({...inventory.find(i => i.שם_פריט === name), qty: 1});
+                if (currentTotalInCart + 1 > limit) {
+                    return showToast(`אין מלאי פנוי. נותרו רק ${limit} יחידות זמינות.`);
+                }
+                cart.push({
+                    ...itemToAdd,
+                    displayName: displayName,
+                    selectedVar: selectedVar,
+                    parentName: name,
+                    qty: 1
+                });
             } else if (cartItem) {
                 const newQty = cartItem.qty + delta;
-                if (newQty > limit) return showToast(`זמינים רק ${limit} לתאריכים אלו`);
-                if (newQty <= 0) cart = cart.filter(c => c.שם_פריט !== name);
-                else cartItem.qty = newQty;
+                if (delta > 0 && currentTotalInCart + 1 > limit) {
+                    return showToast(`זמינים רק ${limit} לתאריכים אלו`);
+                }
+                if (newQty <= 0) {
+                    cart = cart.filter(c => c.displayName !== displayName);
+                } else {
+                    cartItem.qty = newQty;
+                }
             }
             saveCart();
             
-            // עדכון נקודתי של ה-DOM במקום רינדור מחדש
             const qtySpanId = `qty-${name.replace(/\s+/g, '-')}`;
             const qtySpan = document.getElementById(qtySpanId);
             if (qtySpan) {
-                const updatedItem = cart.find(c => c.שם_פריט === name);
-                qtySpan.innerText = updatedItem ? updatedItem.qty : 0;
+                const selectEl = document.getElementById(`select-var-${name.replace(/\s+/g, '-')}`);
+                const currentGridVar = selectEl ? selectEl.value : null;
+                const currentGridDisplayName = currentGridVar ? `${name} (${currentGridVar})` : name;
+                const currentVarItem = cart.find(c => c.displayName === currentGridDisplayName);
                 
-               // הפעלת האנימציה בכל שינוי של הכמות (הן בהוספה והן בהפחתה)
+                qtySpan.innerText = currentVarItem ? currentVarItem.qty : 0;
+                
                 qtySpan.classList.remove('pop-animation');
-                void qtySpan.offsetWidth; // מאלץ רענון של ה-DOM
+                void qtySpan.offsetWidth;
                 qtySpan.classList.add('pop-animation');
-               
             }
 
             if (currentStep === 1) renderCartStep1(document.getElementById('cart-content'));
@@ -1107,18 +1014,18 @@ function setLayout(layout) {
             s.classList.toggle('opacity-0', !show);
             s.classList.toggle('pointer-events-none', !show);
             s.querySelector('div').classList.toggle('-translate-x-full', !show);
-          if (show) {
-            if (!activeOrderCode) {
-                document.getElementById('cancel-order-area').classList.add('hidden');
+            if (show) {
+                if (!activeOrderCode) {
+                    document.getElementById('cancel-order-area').classList.add('hidden');
+                }
+                document.getElementById('cart-footer').classList.remove('hidden');
+                document.getElementById('cart-stepper').classList.remove('hidden');
+                document.getElementById('mini-summary').classList.remove('hidden');
+                goToStep(1);
+                updateCartSummary();
+            } else {
+                document.getElementById('mini-summary').classList.add('hidden');
             }
-            document.getElementById('cart-footer').classList.remove('hidden');
-            document.getElementById('cart-stepper').classList.remove('hidden');
-            document.getElementById('mini-summary').classList.remove('hidden'); // הצג את הסיכום
-            goToStep(1);
-            updateCartSummary(); // קרא לפונקציה החדשה לעדכון
-        } else {
-            document.getElementById('mini-summary').classList.add('hidden'); // הסתר את הסיכום
-        }
         }
 
         function goToStep(s) {
@@ -1132,41 +1039,38 @@ function setLayout(layout) {
                     if (!pDate || !rDate || !uName || !uPhone) return showToast('נא למלא את כל הפרטים');
                     
                     for (let c of cart) {
-                        const avail = getAvailableStock(c.שם_פריט, pDate, rDate);
-                        if (c.qty > avail) return showToast(`המלאי של ${c.שם_פריט} השתנה. זמינים רק ${avail}`);
+                        const avail = getAvailableStock(c.parentName || c.שם_פריט, pDate, rDate);
+                        if (c.qty > avail) return showToast(`המלאי של ${c.displayName} השתנה.`);
                     }
                     pendingFormData = { name: uName, phone: uPhone, pDate, rDate, notes: document.getElementById('u-notes').value };
                 }
-                if (currentStep === 3 && !document.getElementById('terms-checkbox')?.checked) return showToast('חובה לאשר את כללי הגמ"ח');
+                if (currentStep === 3 && !document.getElementById('terms-checkbox')?.checked) return showToast('חובה לאשר את תנאי ההזמנה');
             }
-currentStep = s;
-        // הסר קלאסים מכל הצעדים
-        document.querySelectorAll('.step-item').forEach(el => {
-            el.classList.remove('step-active');
-            el.classList.remove('step-completed');
-            const progressBar = el.querySelector('.step-progress-bar');
-            if (progressBar) progressBar.style.width = '0%'; // איפוס
-        });
+            currentStep = s;
+            document.querySelectorAll('.step-item').forEach(el => {
+                el.classList.remove('step-active');
+                el.classList.remove('step-completed');
+                const progressBar = el.querySelector('.step-progress-bar');
+                if (progressBar) progressBar.style.width = '0%';
+            });
 
-        // סמן צעדים שהושלמו
-        for (let i = 1; i < s; i++) {
-            const completedStep = document.getElementById(`step-${i}-header`);
-            if (completedStep) {
-                completedStep.classList.add('step-completed');
-                const progressBar = completedStep.querySelector('.step-progress-bar');
-                if (progressBar) progressBar.style.width = '100%';
+            for (let i = 1; i < s; i++) {
+                const completedStep = document.getElementById(`step-${i}-header`);
+                if (completedStep) {
+                    completedStep.classList.add('step-completed');
+                    const progressBar = completedStep.querySelector('.step-progress-bar');
+                    if (progressBar) progressBar.style.width = '100%';
+                }
             }
-        }
 
-        // סמן את הצעד הפעיל
-        const activeStep = document.getElementById(`step-${s}-header`);
-        if (activeStep) {
-            activeStep.classList.add('step-active');
-            const progressBar = activeStep.querySelector('.step-progress-bar');
-            if (progressBar) progressBar.style.width = '50%'; // חצי התקדמות
-        }
-        
-        document.getElementById('prevBtn').classList.toggle('hidden', s === 1);
+            const activeStep = document.getElementById(`step-${s}-header`);
+            if (activeStep) {
+                activeStep.classList.add('step-active');
+                const progressBar = activeStep.querySelector('.step-progress-bar');
+                if (progressBar) progressBar.style.width = '50%';
+            }
+            
+            document.getElementById('prevBtn').classList.toggle('hidden', s === 1);
             
             const cont = document.getElementById('cart-content');
             if (s === 1) renderCartStep1(cont);
@@ -1177,19 +1081,19 @@ currentStep = s;
 
         function renderCartStep1(cont) {
             cont.innerHTML = `<h4 class="font-bold serif text-xl mb-6 text-navy">הסל שלך</h4>` + cart.map(item => `
-              <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-2xl mb-3 relative border border-gray-100 shadow-sm">
-                <button onclick="updateQty('${item.שם_פריט}', -${item.qty})" class="absolute top-2 left-2 text-red-400 hover:text-red-600 transition-colors p-1" aria-label="הסר פריט">
+              <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-2xl mb-3 relative border border-gray-100 shadow-sm text-slate-800">
+                <button onclick="updateQty('${item.parentName || item.שם_פריט}', -${item.qty}, '${item.displayName}')" class="absolute top-2 left-2 text-red-400 hover:text-red-600 transition-colors p-1" aria-label="הסר פריט">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
-                <img src="${formatImageUrl(item.תמונה)}" alt="${item.שם_פריט}" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-gray-200">
-                <div class="flex-1">
-                    <div class="text-sm font-bold text-navy">${item.שם_פריט}</div>
+                <img src="${formatImageUrl(item.תמונה)}" alt="${item.displayName}" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-gray-200">
+                <div class="flex-1 text-right">
+                    <div class="text-sm font-bold text-navy">${item.displayName}</div>
                     <div class="text-[10px] text-gray-400">${item.קטגוריה}</div>
                 </div>
                 <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl p-1">
-                    <button onclick="updateQty('${item.שם_פריט}', -1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">-</button>
+                    <button onclick="updateQty('${item.parentName || item.שם_פריט}', -1, '${item.displayName}')" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">-</button>
                     <span class="w-4 text-center text-xs font-bold">${item.qty}</span>
-                    <button onclick="updateQty('${item.שם_פריט}', 1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">+</button>
+                    <button onclick="updateQty('${item.parentName || item.שם_פריט}', 1, '${item.displayName}')" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">+</button>
                 </div>
             </div>`).join('');
             lucide.createIcons();
@@ -1213,8 +1117,7 @@ currentStep = s;
 
             document.getElementById('p-date').value = formatDate(friday);
             document.getElementById('r-date').value = formatDate(sunday);
-            
-            showToast('עודכנו תאריכים לשבת הקרובה');
+            showToast('תאריכים עודכנו בהצלחה');
         }
 
         function renderCartStep2(cont) {
@@ -1223,52 +1126,47 @@ currentStep = s;
 
             cont.innerHTML = `
                 <div class="space-y-5">
-                    <h4 class="font-bold serif text-xl text-navy">פרטי התקשרות ותאריכים</h4>
+                    <h4 class="font-bold serif text-xl text-navy">פרטי הזמנה ותאריכים</h4>
                     
                     <button onclick="setNextShabbat()" class="w-full py-3 bg-navy/5 text-navy border border-navy/10 rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-navy hover:text-white transition-all group">
                         <i data-lucide="calendar-check" class="text-gold group-hover:text-white"></i>
-                        הגדר אוטומטית לסוף השבוע הקרוב
+                        בחירה אוטומטית לסוף השבוע הקרוב
                     </button>
 
-                    <input type="text" id="u-name" placeholder="שם מלא" value="${pendingFormData.name || ''}" aria-label="שם מלא" class="w-full p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all">
-                    <input type="tel" id="u-phone" placeholder="מספר טלפון" value="${pendingFormData.phone || ''}" aria-label="מספר טלפון" class="w-full p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all">
+                    <input type="text" id="u-name" placeholder="שם מלא" value="${pendingFormData.name || ''}" class="w-full p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800">
+                    <input type="tel" id="u-phone" placeholder="מספר טלפון" value="${pendingFormData.phone || ''}" class="w-full p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800">
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label class="text-[10px] text-gray-400 block mb-1 mr-1" for="p-date">תאריך לקיחה</label><input type="date" id="p-date" value="${defaultP}" class="w-full p-4 bg-gray-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all"></div>
-                        <div><label class="text-[10px] text-gray-400 block mb-1 mr-1" for="r-date">תאריך החזרה</label><input type="date" id="r-date" value="${defaultR}" class="w-full p-4 bg-gray-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all"></div>
+                        <div><label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך התחלה / לקיחה</label><input type="date" id="p-date" value="${defaultP}" class="w-full p-4 bg-gray-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800"></div>
+                        <div><label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך סיום / החזרה</label><input type="date" id="r-date" value="${defaultR}" class="w-full p-4 bg-gray-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800"></div>
                     </div>
-                    <div class="bg-blue-50 p-4 rounded-2xl text-xs text-blue-800 flex gap-2">
-                        <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
-                        <span> שימו לב: בהזמנת מפות אנו משאירים יום נוסף לניקוי בין הזמנה להזמנה, כדי שהמפות תגענה נקיות ויפות לשמחה הבאה. תודה על שיתוף הפעולה!</span>
-                    </div>
-                    <textarea id="u-notes" placeholder="הערות מיוחדות..." aria-label="הערות להזמנה" class="w-full p-4 bg-gray-50 rounded-2xl h-24 border-none focus:ring-2 focus:ring-gold transition-all">${pendingFormData.notes || ''}</textarea>
+                    <textarea id="u-notes" placeholder="הערות מיוחדות להזמנה..." class="w-full p-4 bg-gray-50 rounded-2xl h-24 border-none focus:ring-2 focus:ring-gold transition-all text-slate-800">${pendingFormData.notes || ''}</textarea>
                 </div>`;
         }
 
         function renderCartStep3(cont) {
             cont.innerHTML = `
                 <div class="space-y-6">
-                <div class="gold-gradient text-navy p-6 rounded-[2.5rem] shadow-xl border border-gold/50">
-                        <p class="text-xs uppercase tracking-widest mb-1 text-navy/70">סיכום עבור</p>
+                    <div class="gold-gradient text-navy p-6 rounded-[2.5rem] shadow-xl border border-gold/50">
+                        <p class="text-xs uppercase tracking-widest mb-1 text-navy/70">סיכום הזמנה עבור</p>
                         <p class="font-bold text-2xl italic text-navy">${pendingFormData.name}</p>
                         <p class="text-sm mt-1 text-navy/80">${pendingFormData.pDate} ⇠ ${pendingFormData.rDate}</p>
                     </div>
 
-                    <div class="bg-gray-50 p-6 rounded-[2rem] space-y-3 text-sm border border-gray-100">
-                        ${cart.map(c => `<div class="flex justify-between items-center"><span class="text-gray-600">${c.שם_פריט}</span><span class="font-bold text-navy">${c.qty} יח'</span></div>`).join('')}
+                    <div class="bg-gray-50 p-6 rounded-[2rem] space-y-3 text-sm border border-gray-100 text-slate-800">
+                        ${cart.map(c => `<div class="flex justify-between items-center"><span class="text-gray-600">${c.displayName}</span><span class="font-bold text-navy">${c.qty} יח'</span></div>`).join('')}
                     </div>
                     <div class="space-y-4">
                         <details class="bg-gray-100 rounded-2xl p-4 transition-all">
-                            <summary class="font-bold text-xs cursor-pointer flex justify-between items-center text-navy">כללי הגמ"ח (חובה לקרוא) <i data-lucide="chevron-down" class="w-4 h-4"></i></summary>
-                            <div class="text-[11px] mt-3 space-y-2 text-gray-600 leading-relaxed border-t border-gray-200 pt-3">
-                                <p>• הציוד מושאל בשמחה, ובאחריות השואל להחזירו נקי ותקין.</p>
-                                <p>• איחור בהחזרה עלול למנוע מאדם אחר לקיים את האירוע שלו.</p>
-                                <p>• במקרה של נזק, השואל מתחייב לשלם את עלות התיקון.</p>
-                                <p>• <b>מפות:</b> יש להחזיר מפות נקיות.</p>
+                            <summary class="font-bold text-xs cursor-pointer flex justify-between items-center text-navy">מדיניות ותנאי המקום <i data-lucide="chevron-down" class="w-4 h-4"></i></summary>
+                            <div class="text-[11px] mt-3 space-y-2 text-gray-600 leading-relaxed border-t border-gray-200 pt-3 text-right">
+                                <p>• באחריות המזמין להחזיר את הפריטים כשהם שלמים, נקיים ותקינים.</p>
+                                <p>• יש להחזיר את הציוד בזמן המוסכם על מנת למנוע פגיעה בהזמנות הבאות.</p>
+                                <p>• במקרה של אובדן או נזק בלתי הפיך לציוד, המזמין ישפה את המקום בגובה עלות התיקון/רכישה.</p>
                             </div>
                         </details>
                         <label class="flex items-center gap-3 p-3 bg-gold/5 rounded-2xl border border-gold/10 cursor-pointer">
                             <input type="checkbox" id="terms-checkbox" class="w-5 h-5 text-gold rounded focus:ring-gold"> 
-                            <span class="text-xs font-bold text-navy/80">קראתי ואישרתי את כללי הגמ"ח</span>
+                            <span class="text-xs font-bold text-navy/80 text-right">קראתי ואני מאשר את תנאי ומדיניות ההזמנה</span>
                         </label>
                     </div>
                 </div>`;
@@ -1276,7 +1174,7 @@ currentStep = s;
         }
 
         async function sendOrder() {
-            if (!document.getElementById('terms-checkbox').checked) return showToast('חובה לאשר את הכללים');
+            if (!document.getElementById('terms-checkbox').checked) return showToast('חובה לקרוא ולאשר את התנאים');
             const nextBtn = document.getElementById('nextBtn');
             const originalText = nextBtn.innerText;
             nextBtn.disabled = true;
@@ -1290,15 +1188,15 @@ currentStep = s;
                 טלפון: pendingFormData.phone,
                 תאריך_לקיחה: pendingFormData.pDate,
                 תאריך_החזרה: pendingFormData.rDate,
-                פריטים: cart.map(c => `${c.qty}x ${c.שם_פריט}`).join(', '),
+                פריטים: cart.map(c => `${c.qty}x ${c.displayName}`).join(', '),
                 raw_cart: JSON.stringify(cart),
                 הערות: pendingFormData.notes
             };
 
             try {
                 await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-document.getElementById('mini-summary').classList.add('hidden'); // הסתר את הסיכום גם בסיום הזמנה               
- populatePrintArea(code);
+                document.getElementById('mini-summary').classList.add('hidden');
+                populatePrintArea(code);
                 renderSuccessState(code);
                 activeOrderCode = code;
                 localStorage.removeItem('gemach_cart');
@@ -1308,7 +1206,11 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
                 pendingFormData = {};
                 updateCartUI();
                 await init();
-            } catch (e) { showToast('שגיאה בשליחה'); nextBtn.disabled = false; nextBtn.innerText = originalText; }
+            } catch (e) { 
+                showToast('שגיאה בשליחת ההזמנה'); 
+                nextBtn.disabled = false; 
+                nextBtn.innerText = originalText; 
+            }
         }
 
         function renderSuccessState(code) {
@@ -1322,22 +1224,20 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
                         <i data-lucide="check-circle-2" class="w-12 h-12"></i>
                     </div>
                     <div>
-                        <h3 class="text-3xl font-bold serif italic text-navy">ההזמנה נשלחה!</h3>
-                        <p class="text-gray-500 mt-2">קיבלנו את פרטי ההזמנה שלך.</p>
+                        <h3 class="text-3xl font-bold serif italic text-navy">ההזמנה התקבלה!</h3>
+                        <p class="text-gray-500 mt-2">קיבלנו את פרטי ההזמנה שלך במערכת.</p>
                     </div>
-                 <div class="gold-gradient text-navy p-8 rounded-[2.5rem] shadow-2xl border-b-4 border-gold">
-    <p class="text-sm opacity-80 uppercase tracking-widest mb-2 text-navy/70">קוד ההזמנה שלך:</p>
-    <p class="text-5xl font-black tracking-widest text-navy">${code}</p>
-    <p class="text-sm mt-4 opacity-80 leading-relaxed border-t border-navy/10 pt-4 text-navy/80">
-        נא לשמור את הקוד לביצוע שינויים, עדכונים או ביטול ההזמנה בעתיד.
-    </p>
-</div>
-                  <div class="space-y-3">
-                        <!-- כפתור הדפסה - קיים -->
+                    <div class="gold-gradient text-navy p-8 rounded-[2.5rem] shadow-2xl border-b-4 border-gold">
+                        <p class="text-sm opacity-80 uppercase tracking-widest mb-2 text-navy/70">קוד ההזמנה המאובטח:</p>
+                        <p class="text-5xl font-black tracking-widest text-navy">${code}</p>
+                        <p class="text-sm mt-4 opacity-80 leading-relaxed border-t border-navy/10 pt-4 text-navy/80">
+                            נא לשמור את הקוד לחיפוש, עדכון או ביטול ההזמנה בעתיד.
+                        </p>
+                    </div>
+                    <div class="space-y-3">
                         <button onclick="preparePrint()" class="w-full py-5 gold-gradient rounded-2xl font-bold text-navy shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
-                            <i data-lucide="printer" class="w-5 h-5"></i> הדפסת אישור השאלה
+                            <i data-lucide="printer" class="w-5 h-5"></i> הדפסת אישור הזמנה
                         </button>
-                        <!-- כפתור חדש להורדה כ-PDF -->
                         <button onclick="downloadPdf()" class="w-full py-5 bg-navy text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
                             <i data-lucide="file-text" class="w-5 h-5"></i> הורד כקובץ PDF
                         </button>
@@ -1356,24 +1256,22 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
             code = code.trim(); 
 
             if (!orders || orders.length === 0) {
-                return showToast('המערכת עדיין טוענת נתונים, אנא נסה שוב בעוד מספר שניות');
+                return showToast('המערכת טוענת נתונים, נסה שוב בעוד מספר רגעים');
             }
 
             const order = orders.find(o => {
-                const val = o.קוד_הזמנה || o['קוד_הזמנה'] || o['קוד הזמנה'] || o.orderCode || o['orderCode'] || o.code;
+                const val = o.קוד_הזמנה || o['קוד_הזמנה'] || o.orderCode || o.code;
                 return String(val).trim() === code;
             });
 
-            if (!order) return showToast('הזמנה לא נמצאה במערכת. אנא בדוק את הקוד.');
+            if (!order) return showToast('הזמנה לא נמצאה במערכת. אנא ודא שהקוד נכון.');
             
-            const customerName = order.שם_לקוח || order['שם_לקוח'] || 'לקוח';
-            if (confirm(`נמצאה הזמנה על שם ${customerName}. לעבור לעריכה?`)) {
+            const customerName = order.שם_לקוח || order['שם_לקוח'] || 'אורח';
+            if (confirm(`נמצאה הזמנה על שם ${customerName}. האם ברצונך לערוך אותה?`)) {
                 activeOrderCode = code;
-                
                 try {
                     cart = JSON.parse(order.raw_cart || '[]');
                 } catch(e) {
-                    console.error("Error parsing cart json", e);
                     cart = [];
                     showToast('שגיאה בטעינת פריטי ההזמנה');
                 }
@@ -1401,7 +1299,7 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
         }
 
         async function cancelCurrentOrder() {
-            if (!activeOrderCode || !confirm('האם אתה בטוח שברצונך לבטל ולמחוק את ההזמנה לצמיתות? פעולה זו לא ניתנת לביטול.')) return;
+            if (!activeOrderCode || !confirm('לבטל ולמחוק את ההזמנה לצמיתות? לא ניתן יהיה לשחזר אותה.')) return;
             try {
                 await fetch(SCRIPT_URL, { 
                     method: 'POST', 
@@ -1421,14 +1319,14 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
         function populatePrintArea(code) {
             document.getElementById('print-order-id').innerText = 'קוד הזמנה: ' + code;
             document.getElementById('print-user-info').innerHTML = `
-                <p><b>שם השואל:</b> ${pendingFormData.name}</p>
+                <p><b>שם הלקוח:</b> ${pendingFormData.name}</p>
                 <p><b>טלפון:</b> ${pendingFormData.phone}</p>
-                <p><b>תקופת השאלה:</b> מ-${pendingFormData.pDate} עד ${pendingFormData.rDate}</p>
+                <p><b>תקופה:</b> מ-${pendingFormData.pDate} עד ${pendingFormData.rDate}</p>
                 <p><b>הערות:</b> ${pendingFormData.notes || 'אין'}</p>
             `;
             document.getElementById('print-items-list').innerHTML = cart.map(c => `
                 <tr>
-                    <td class="p-3 border border-gray-300 font-bold text-right">${c.שם_פריט}</td>
+                    <td class="p-3 border border-gray-300 font-bold text-right">${c.displayName}</td>
                     <td class="p-3 border border-gray-300 text-center font-bold">${c.qty}</td>
                 </tr>
             `).join('');
@@ -1437,10 +1335,10 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
         function preparePrint() { window.print(); }
 
         async function showAdminLogin() {
-            const pass = prompt('סיסמה:');
+            const pass = prompt('נא להזין סיסמת מנהל:');
             if (!pass) return;
 
-            showToast('מאמת סיסמה...');
+            showToast('בודק הרשאות...');
 
             try {
                 const response = await fetch(SCRIPT_URL, {
@@ -1450,7 +1348,6 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
                         password: pass
                     })
                 });
-                
                 const result = await response.json();
 
                 if (result.status === "success") {
@@ -1462,7 +1359,7 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
                 }
             } catch (e) {
                 console.error(e);
-                showToast('שגיאה בתקשורת עם השרת');
+                showToast('שגיאה בהתחברות למערכת');
             }
         }
 
@@ -1472,12 +1369,13 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
             document.getElementById('admin-subtitle').innerText = "ניהול פריטים ומלאי";
             const content = document.getElementById('admin-content');
             content.innerHTML = `
-                <div id="admin-form" class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-12 p-6 bg-gray-50 rounded-3xl border border-dashed border-gray-300">
+                <div id="admin-form" class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-12 p-6 bg-gray-50 rounded-3xl border border-dashed border-gray-300">
                     <input type="hidden" id="edit-id">
-                    <input type="text" id="new-name" placeholder="שם פריט" class="p-3 border rounded-xl text-sm outline-none text-right">
-                    <input type="number" id="new-qty" placeholder="מלאי" class="p-3 border rounded-xl text-sm outline-none text-right">
-                    <input type="text" id="new-cat" placeholder="קטגוריה" class="p-3 border rounded-xl text-sm outline-none text-right">
-                    <input type="text" id="new-img" placeholder="קישור תמונה" class="p-3 border rounded-xl text-sm outline-none text-right">
+                    <input type="text" id="new-name" placeholder="שם פריט" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="number" id="new-qty" placeholder="מלאי" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="text" id="new-cat" placeholder="קטגוריה" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="text" id="new-vars" placeholder="וריאציות (מופרדות בפסיק)" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="text" id="new-img" placeholder="קישור תמונה" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
                     <button onclick="saveItem()" id="save-btn" class="gold-gradient rounded-xl font-bold py-4 text-navy shadow-md">שמור פריט</button>
                 </div>
                 <div id="admin-table-list" class="space-y-3"></div>`;
@@ -1486,15 +1384,15 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
             list.innerHTML = inventory.map((item, idx) => {
                 const isHidden = item.status === 'hidden';
                 return `
-                <div class="flex items-center gap-4 p-4 bg-white border rounded-2xl hover:border-gold transition-colors ${isHidden ? 'bg-gray-50 item-hidden' : ''}">
+                <div class="flex items-center gap-4 p-4 bg-white border rounded-2xl hover:border-gold transition-colors ${isHidden ? 'bg-gray-50' : ''}">
                     <img src="${formatImageUrl(item['תמונה'])}" onerror="this.src='${DEFAULT_IMG}'" class="w-16 h-16 rounded-lg object-cover border border-gray-200">
                     <div class="flex-1 text-right">
                         <div class="font-bold text-sm text-navy">${item['שם_פריט']} (מלאי: ${item.מלאי})</div>
+                        ${item['וריאציות'] ? `<div class="text-[10px] text-gray-500">וריאציות: ${item['וריאציות']}</div>` : ''}
                         ${isHidden ? '<span class="text-[9px] bg-gray-200 px-2 py-0.5 rounded text-gray-500">מוסתר מהקטלוג</span>' : ''}
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="toggleItemVisibility('${item['שם_פריט'].replace(/'/g, "\\'")}', '${item.status}')" 
-                                class="p-2 hover:bg-gray-100 rounded-lg text-navy" title="${isHidden ? 'הצג בקטלוג' : 'הסתר מהקטלוג'}">
+                        <button onclick="toggleItemVisibility('${item['שם_פריט'].replace(/'/g, "\\'")}', '${item.status}')" class="p-2 hover:bg-gray-100 rounded-lg text-navy" title="${isHidden ? 'הצג' : 'הסתר'}">
                             <i data-lucide="${isHidden ? 'eye-off' : 'eye'}" class="w-4 h-4 ${isHidden ? 'text-gray-400' : 'text-gold'}"></i>
                         </button>
                         <button onclick="editItem(${idx})" class="p-2 hover:bg-gray-100 rounded-lg text-navy"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
@@ -1509,12 +1407,12 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
             const newStatus = currentStatus === 'hidden' ? 'active' : 'hidden';
             const item = inventory.find(i => i['שם_פריט'] === name);
             if (item) item.status = newStatus;
+            
             renderAdminTable();
-            // אם אנחנו בתוך קטגוריה, נרצה לעדכן גם את הגריד
             if(!document.getElementById('inventory-grid').classList.contains('hidden')) {
                  renderGrid();
             } else {
-                 renderHomeCategories(); // עדכון רשימת הקטגוריות
+                 renderHomeCategories();
             }
             
             try {
@@ -1527,7 +1425,8 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
                         old_name: name,
                         מלאי: item.מלאי,
                         קטגוריה: item['קטגוריה'],
-                        תמונה: item['תמונה']
+                        תמונה: item['תמונה'],
+                        וריאציות: item['וריאציות'] || ""
                     }) 
                 });
             } catch (e) { showToast('שגיאה בעדכון הסטטוס בשרת'); }
@@ -1538,13 +1437,13 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
             const content = document.getElementById('admin-content');
             
             if (orders.length === 0) {
-                content.innerHTML = `<div class="py-20 text-center opacity-50 text-navy font-bold">אין הזמנות עדיין</div>`;
+                content.innerHTML = `<div class="py-20 text-center opacity-50 text-navy font-bold">אין הזמנות רשומות במערכת</div>`;
                 return;
             }
 
             let html = `
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-lg serif italic text-navy">רשימת השאלות</h3>
+                    <h3 class="font-bold text-lg serif italic text-navy">רשימת הזמנות</h3>
                     <div class="flex gap-3">
                         <button onclick="renderAdminTable()" class="px-4 py-2 gold-gradient text-navy rounded-xl text-xs font-bold shadow-md hover:scale-105 transition-all">חזור לניהול מלאי</button>
                         <button onclick="closeAdmin()" class="p-2 bg-gray-100 text-navy rounded-xl hover:bg-gray-200 transition-colors shadow-sm"><i data-lucide="x" class="w-5 h-5"></i></button>
@@ -1556,8 +1455,8 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
                             <tr>
                                 <th class="p-4 border-b border-white/10 text-right">לקוח</th>
                                 <th class="p-4 border-b border-white/10 text-right">טלפון</th>
-                                <th class="p-4 border-b border-white/10 text-center">איסוף</th>
-                                <th class="p-4 border-b border-white/10 text-center">החזרה</th>
+                                <th class="p-4 border-b border-white/10 text-center">התחלה</th>
+                                <th class="p-4 border-b border-white/10 text-center">סיום</th>
                                 <th class="p-4 border-b border-white/10 text-right">פריטים</th>
                                 <th class="p-4 border-b border-white/10 text-center">קוד הזמנה</th>                            
                             </tr>
@@ -1598,6 +1497,7 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
                 מלאי: qty,
                 קטגוריה: document.getElementById('new-cat').value,
                 תמונה: document.getElementById('new-img').value,
+                וריאציות: document.getElementById('new-vars').value,
                 old_name: document.getElementById('edit-id').value,
                 status: 'active'
             };
@@ -1621,17 +1521,18 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
 
         function editItem(idx) {
             const i = inventory[idx];
-            document.getElementById('new-name').value = i['שם_פריט'];
-            document.getElementById('new-qty').value = i.מלאי;
-            document.getElementById('new-cat').value = i['קטגוריה'];
-            document.getElementById('new-img').value = i['תמונה'];
-            document.getElementById('edit-id').value = i['שם_פריט'];
+            document.getElementById('new-name').value = i['שם_פריט'] || '';
+            document.getElementById('new-qty').value = i.מלאי || 0;
+            document.getElementById('new-cat').value = i['קטגוריה'] || '';
+            document.getElementById('new-vars').value = i['וריאציות'] || '';
+            document.getElementById('new-img').value = i['תמונה'] || '';
+            document.getElementById('edit-id').value = i['שם_פריט'] || '';
             document.getElementById('save-btn').innerText = 'עדכן שינויים';
             document.getElementById('admin-form').scrollIntoView({behavior:'smooth'});
         }
 
         async function deleteItem(name) {
-            if (confirm('למחוק לצמיתות?')) {
+            if (confirm('האם אתה בטוח שברצונך למחוק מוצר זה לצמיתות?')) {
                 await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({action: "deleteItem", שם_פריט: name}) });
                 await init(); 
                 renderAdminTable();
@@ -1648,13 +1549,11 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
         function handleSearch() {
             const term = document.getElementById('searchInput').value.toLowerCase();
             
-            // אם המשתמש מחפש, נעבור אוטומטית לתצוגת פריטים
             if (term.length > 0) {
                 document.getElementById('home-categories-container').classList.add('hidden');
                 document.getElementById('inventory-grid').classList.remove('hidden');
                 document.getElementById('sticky-catalog-header').classList.remove('hidden');
             } else {
-                // אם מחק את החיפוש, נחזור לקטגוריות
                  backToMain();
                  return;
             }
@@ -1666,62 +1565,60 @@ document.getElementById('mini-summary').classList.add('hidden'); // הסתר א�
             renderGrid(filtered);
         }
 
-function showToast(m) {
+        function showToast(m) {
             const t = document.getElementById('toast');
             document.getElementById('toast-msg').innerText = m;
             t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-function updateCartSummary() {
-    const summaryCount = document.getElementById('summary-count');
-    const summaryDates = document.getElementById('summary-dates');
-    const activeOrderLabel = document.getElementById('active-order-label');
+        function updateCartSummary() {
+            const summaryCount = document.getElementById('summary-count');
+            const summaryDates = document.getElementById('summary-dates');
+            const activeOrderLabel = document.getElementById('active-order-label');
 
-    const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
-    summaryCount.innerText = totalItems;
+            const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+            summaryCount.innerText = totalItems;
 
-    const pDate = pendingFormData.pDate;
-    const rDate = pendingFormData.rDate;
+            const pDate = pendingFormData.pDate;
+            const rDate = pendingFormData.rDate;
 
-    if (pDate && rDate) {
-        summaryDates.innerText = `מ-${pDate} עד ${rDate}`;
-    } else {
-        summaryDates.innerText = 'תאריכים לא נבחרו';
-    }
+            if (pDate && rDate) {
+                summaryDates.innerText = `מ-${pDate} עד ${rDate}`;
+            } else {
+                summaryDates.innerText = 'תאריכים לא נבחרו';
+            }
 
-    if (activeOrderCode) {
-        activeOrderLabel.classList.remove('hidden');
-    } else {
-        activeOrderLabel.classList.add('hidden');
-    }
-}
-       function downloadPdf() {
+            if (activeOrderCode) {
+                activeOrderLabel.classList.remove('hidden');
+            } else {
+                activeOrderLabel.classList.add('hidden');
+            }
+        }
+
+        function downloadPdf() {
             const element = document.getElementById('print-area');
             if (!element) {
-                showToast('שגיאה: אזור ההדפסה לא נמצא.');
+                showToast('שגיאה ביצירת קובץ ה-PDF');
                 return;
             }
 
-            // זמנית נראה את אזור ההדפסה כדי שה-html2pdf יוכל לעבד אותו
             element.classList.remove('hidden');
             element.style.display = 'block'; 
 
             const options = {
                 margin: 10,
-                filename: `Order_Confirmation_${activeOrderCode || 'GEMACH'}.pdf`,
+                filename: `Confirmation_${activeOrderCode || 'ORDER'}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, useCORS: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
             };
 
             html2pdf().from(element).set(options).save().then(() => {
-                // לאחר השמירה, נחזיר את אלמנט ההדפסה למצב נסתר
                 element.classList.add('hidden');
                 element.style.display = ''; 
             });
         }
 
-        // פונקציה לעדכון ברכת בוקר/ערב טוב
         function updateGreetingAndDateTime() {
             const greetingElement = document.getElementById('current-greeting');
             const now = new Date();
@@ -1739,52 +1636,45 @@ function updateCartSummary() {
             if (greetingElement) greetingElement.innerText = greeting;
         }
 
-     // הרצה ראשונית של המערכת - מתחילה מיד כשמבנה הדף מוכן, ללא המתנה לתמונות ועיצובים
         document.addEventListener('DOMContentLoaded', () => {
-            init(); // פנייה מיידית לגוגל שיט וטעינת המלאי והנתונים
-            setLayout(currentLayout); // הגדר את התצוגה שנשמרה
-            updateGreetingAndDateTime(); // עדכון הברכה הראשוני
-            setInterval(updateGreetingAndDateTime, 60000); // עדכון הברכה כל דקה
+            init();
+            setLayout(currentLayout);
+            updateGreetingAndDateTime();
+            setInterval(updateGreetingAndDateTime, 60000);
         });
 
-function toggleDarkMode() {
-    document.body.classList.toggle('dark');
-    const isDarkMode = document.body.classList.contains('dark');
-    localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-    
-    // החיפוש כעת הוא כללי ללא הגבלה לתגית i
-    document.querySelectorAll('[data-lucide="moon"], [data-lucide="sun"]').forEach(icon => {
-        icon.setAttribute('data-lucide', isDarkMode ? 'sun' : 'moon');
-    });
-    lucide.createIcons();
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const isDarkMode = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            
+            document.querySelectorAll('[data-lucide="moon"], [data-lucide="sun"]').forEach(icon => {
+                icon.setAttribute('data-lucide', isDarkMode ? 'sun' : 'moon');
+            });
+            lucide.createIcons();
 
-    // עדכון הטקסט באופן דינמי בלחיצה
-    const themeText = document.getElementById('theme-text');
-    if (themeText) {
-        themeText.innerText = isDarkMode ? 'מצב בהיר' : 'מצב כהה';
-    }
-}
+            const themeText = document.getElementById('theme-text');
+            if (themeText) {
+                themeText.innerText = isDarkMode ? 'מצב בהיר' : 'מצב כהה';
+            }
+        }
 
-// טען את מצב ה-Dark Mode מה-localStorage בעת טעינת הדף
-window.addEventListener('DOMContentLoaded', () => {
-    if (localStorage.getItem('theme') === 'dark' ||
-       (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.body.classList.add('dark');
-    }
-    // עדכן אייקון בפתיחה
-    const isDark = document.body.classList.contains('dark');
-    // החיפוש כעת הוא כללי ללא הגבלה לתגית i
-    document.querySelectorAll('[data-lucide="moon"], [data-lucide="sun"]').forEach(icon => {
-        icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
-    });
-    lucide.createIcons();
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'dark' ||
+               (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark');
+            }
+            const isDark = document.body.classList.contains('dark');
+            document.querySelectorAll('[data-lucide="moon"], [data-lucide="sun"]').forEach(icon => {
+                icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+            });
+            lucide.createIcons();
 
-    // עדכון הטקסט הראשוני לפי המצב שנטען
-    const themeText = document.getElementById('theme-text');
-    if (themeText) {
-        themeText.innerText = isDark ? 'מצב בהיר' : 'מצב כהה';
-    }
-});  
-  </script>
+            const themeText = document.getElementById('theme-text');
+            if (themeText) {
+                themeText.innerText = isDark ? 'מצב בהיר' : 'מצב כהה';
+            }
+        });  
+    </script>
 </body>
 </html>
