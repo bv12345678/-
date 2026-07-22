@@ -20,8 +20,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght=300;400;600;800&family=Playfair+Display:ital,wght=0,700;1,700&display=swap');
+        
         :root {
             --gold: #C5A059;
             --navy: #1A1C2C;
@@ -83,11 +85,14 @@
             position: relative;
             overflow: hidden;
         }
+        
         .step-item.step-active { color: var(--gold); }
+        
         .step-item.step-completed {
             color: var(--navy);
             font-weight: 800;
         }
+        
         .step-item .step-progress-bar {
             position: absolute;
             bottom: 0;
@@ -97,6 +102,7 @@
             width: 0%;
             transition: width 0.5s ease-out;
         }
+        
         .step-item.step-active .step-progress-bar { width: 50%; }
         .step-item.step-completed .step-progress-bar { width: 100%; }
         
@@ -109,10 +115,12 @@
             animation: spin 0.8s ease-in-out infinite;
             box-shadow: 0 0 5px rgba(197, 160, 89, 0.5);
         }
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
         .full-page-loader {
             position: fixed;
             inset: 0;
@@ -127,14 +135,62 @@
             font-size: 1.2rem;
             font-weight: bold;
         }
-        #toast { position: fixed; bottom: 20px; right: 20px; transform: translateY(150%); transition: transform 0.3s ease; z-index: 1000; background-color: var(--navy); color: white; padding: 1rem 1.5rem; border-radius: 1rem; border-right: 4px solid var(--gold); }
+        
+        #toast { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            transform: translateY(150%); 
+            transition: transform 0.3s ease; 
+            z-index: 1000; 
+            background-color: var(--navy); 
+            color: white; 
+            padding: 1rem 1.5rem; 
+            border-radius: 1rem; 
+            border-right: 4px solid var(--gold); 
+        }
+        
         #toast.show { transform: translateY(0); }
-        #whatsapp-float { position: fixed; bottom: 20px; left: 20px; z-index: 999; background: #25D366; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.2); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-        @media print { .no-print { display: none !important; } body { background: white; } #print-area { display: block !important; } }
+        
+        #whatsapp-float { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 20px; 
+            z-index: 999; 
+            background: #25D366; 
+            color: white; 
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2); 
+            animation: pulse 2s infinite; 
+        }
+        
+        @keyframes pulse { 
+            0% { transform: scale(1); } 
+            50% { transform: scale(1.1); } 
+            100% { transform: scale(1); } 
+        }
+        
+        @media print { 
+            .no-print { display: none !important; } 
+            body { background: white; } 
+            #print-area { display: block !important; } 
+        }
+        
         details summary::-webkit-details-marker { display:none; }
         
-        .map-container iframe { width: 100%; height: 100%; border: 0; filter: grayscale(20%) contrast(1.2) opacity(0.9); border-radius: 1.5rem; }
+        .map-container iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: 0; 
+            filter: grayscale(20%) contrast(1.2) opacity(0.9); 
+            border-radius: 1.5rem; 
+        }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -150,10 +206,12 @@
             cursor: pointer;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
+        
         .category-box:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
         }
+        
         .category-box::before {
             content: '';
             position: absolute;
@@ -162,7 +220,9 @@
             transition: background 0.2s;
             z-index: 1;
         }
+        
         .category-box:hover::before { background: rgba(26, 28, 44, 0.1); }
+        
         .category-box img {
             position: absolute;
             inset: 0;
@@ -172,6 +232,7 @@
             transition: transform 0.5s;
             z-index: 0;
         }
+        
         .category-box h3 {
             position: relative;
             z-index: 2;
@@ -187,6 +248,7 @@
             50% { transform: scale(1.4); }
             100% { transform: scale(1); }
         }
+        
         .pop-animation {
             animation: pop 0.25s ease-out;
             display: inline-block;
@@ -197,11 +259,13 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
         }
+        
         #inventory-grid.list-view {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
         }
+        
         #inventory-grid.list-view .item-card {
             flex-direction: row;
             align-items: center;
@@ -209,6 +273,7 @@
             border-radius: 1.5rem;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
+        
         #inventory-grid.list-view .item-card .item-image-wrapper {
             width: 150px;
             height: 150px;
@@ -216,11 +281,14 @@
             margin-left: 1.5rem;
             margin-right: 0;
         }
+        
         #inventory-grid.list-view .item-card .item-content {
             flex-grow: 1;
             text-align: right;
         }
+        
         #inventory-grid.list-view .item-card .item-details { flex-grow: 1; }
+        
         #inventory-grid.list-view .item-card .item-actions {
             flex-direction: column;
             gap: 0.5rem;
@@ -229,10 +297,11 @@
     </style>
 </head>
 <body class="text-slate-800">
-<div id="full-page-loader" class="full-page-loader hidden">
-    <div class="loader mb-4"></div>
-    טוען נתונים...
-</div>    
+
+    <div id="full-page-loader" class="full-page-loader hidden">
+        <div class="loader mb-4"></div>
+        טוען נתונים...
+    </div>    
 
     <div id="toast" class="shadow-2xl flex items-center gap-3">
         <i data-lucide="info" class="text-gold"></i>
@@ -494,17 +563,23 @@
         </div>
         <div id="print-user-info" class="mb-8 space-y-2 text-lg"></div>
         <table class="w-full border-collapse border border-gray-300">
-            <thead><tr class="bg-navy text-white"><th class="p-3 border border-gray-300">פריט</th><th class="p-3 border border-gray-300">כמות</th></tr></thead>
+            <thead>
+                <tr class="bg-navy text-white">
+                    <th class="p-3 border border-gray-300">פריט</th>
+                    <th class="p-3 border border-gray-300">כמות</th>
+                </tr>
+            </thead>
             <tbody id="print-items-list"></tbody>
         </table>
     </div>
 
     <script>
-        // החליפו את ה-URL בקישור שלכם לאחר פריסת ה-Apps Script (Deploy Web App)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4f1QrovCOzIo8v3nhIfvhnjKGdh8Wh0vK4RZgPUkaPewzG2HTF8Wudh4GqUu0P79q/exec';
         const DEFAULT_IMG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%23cccccc" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
       
         let inventory = [];
+        let groupedProducts = [];
+        let productState = {};
         let orders = [];
         let aboutConfig = {};
         let cart = JSON.parse(localStorage.getItem('gemach_cart')) || [];
@@ -549,6 +624,9 @@
                 orders = data.Orders || [];
                 aboutConfig = data.About || {};
                 
+                processInventory();
+                initProductStates();
+                
                 applyConfig();
                 renderHomeCategories();
                 updateCartUI();
@@ -563,6 +641,114 @@
             }
         }
 
+        function processInventory() {
+            const groups = {};
+            inventory.forEach(item => {
+                if (item.status === 'hidden') return;
+                const name = item.שם_פריט;
+                if (!groups[name]) {
+                    groups[name] = {
+                        שם_פריט: name,
+                        קטגוריה: item.קטגוריה || 'כללי',
+                        variations: [],
+                        images: [],
+                        attributes: {},
+                        status: item.status
+                    };
+                }
+                groups[name].variations.push(item);
+                
+                if (item.תמונה) {
+                    const imgUrl = formatImageUrl(item.תמונה);
+                    if (!groups[name].images.includes(imgUrl)) {
+                        groups[name].images.push(imgUrl);
+                    }
+                }
+
+                Object.keys(item).forEach(key => {
+                    if (key.startsWith('וריאציה_') && item[key]) {
+                        const attrName = key.replace('וריאציה_', '').trim();
+                        if (!groups[name].attributes[attrName]) {
+                            groups[name].attributes[attrName] = new Set();
+                        }
+                        groups[name].attributes[attrName].add(item[key].toString().trim());
+                    }
+                });
+            });
+
+            groupedProducts = Object.values(groups).map(g => {
+                const cleanAttrs = {};
+                Object.keys(g.attributes).forEach(k => {
+                    cleanAttrs[k] = Array.from(g.attributes[k]);
+                });
+                return {
+                    ...g,
+                    attributes: cleanAttrs,
+                    images: g.images.length > 0 ? g.images : [DEFAULT_IMG]
+                };
+            });
+        }
+
+        function initProductStates() {
+            groupedProducts.forEach(p => {
+                if (!productState[p.שם_פריט]) {
+                    const defaultSelections = {};
+                    Object.keys(p.attributes).forEach(attr => {
+                        defaultSelections[attr] = p.attributes[attr][0] || '';
+                    });
+                    productState[p.שם_פריט] = {
+                        selectedAttributes: defaultSelections,
+                        currentImageIndex: 0
+                    };
+                }
+            });
+        }
+
+        function getMatchingVariation(pName) {
+            const p = groupedProducts.find(x => x.שם_פריט === pName);
+            if (!p) return null;
+            const selections = productState[pName]?.selectedAttributes || {};
+            
+            let match = p.variations.find(v => {
+                return Object.entries(selections).every(([attrName, val]) => {
+                    const key = 'וריאציה_' + attrName;
+                    return String(v[key] || '').trim() === String(val).trim();
+                });
+            });
+
+            if (!match && p.variations.length > 0) {
+                match = p.variations[0];
+            }
+            return match;
+        }
+
+        function getCardImage(pName) {
+            const p = groupedProducts.find(x => x.שם_פריט === pName);
+            if (!p) return DEFAULT_IMG;
+            
+            const match = getMatchingVariation(pName);
+            if (match && match.תמונה) {
+                return formatImageUrl(match.תמונה);
+            }
+            
+            const idx = productState[pName]?.currentImageIndex || 0;
+            return p.images[idx] || DEFAULT_IMG;
+        }
+
+        function getDisplayNameForVariation(vRow) {
+            const pName = vRow.שם_פריט;
+            const attrs = {};
+            Object.keys(vRow).forEach(key => {
+                if (key.startsWith('וריאציה_') && vRow[key]) {
+                    attrs[key.replace('וריאציה_', '').trim()] = vRow[key];
+                }
+            });
+            const attrStr = Object.entries(attrs)
+                .map(([k, v]) => `${k}: ${v}`)
+                .join(', ');
+            return attrStr ? `${pName} (${attrStr})` : pName;
+        }
+
         function applyConfig() {
             if (!aboutConfig) return;
             
@@ -575,23 +761,19 @@
             const waze = aboutConfig['קישור וויז'] || '';
             const bgImg = aboutConfig['תמונת רקע'] || '';
 
-            // כותרות
             document.title = `${name} | הזמנה אונליין`;
             document.getElementById('nav-brand-title').innerText = name;
             document.getElementById('hero-title').innerText = name;
             document.getElementById('hero-desc').innerText = desc;
             document.getElementById('print-brand-title').innerText = `אישור הזמנה - ${name}`;
 
-            // תמונת רקע ל-Hero
             if (bgImg) {
                 document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(to bottom, rgba(26, 28, 44, 0.2), rgba(26, 28, 44, 0.5)), url('${formatImageUrl(bgImg)}')`;
             }
 
-            // שעות ומיקום עליון
             document.getElementById('opening-hours-display').innerText = hours;
             document.getElementById('location-text-display').innerText = location || 'פרטי איסוף והחזרה';
 
-            // כפתור וואטסאפ צף
             const waFloat = document.getElementById('whatsapp-float');
             if (whatsapp && waFloat) {
                 const cleanPhone = whatsapp.replace(/\D/g, '');
@@ -600,7 +782,6 @@
                 waFloat.classList.remove('hidden');
             }
 
-            // בלוק מפה ואיסוף תחתון
             if (location || waze) {
                 document.getElementById('location-block').classList.remove('hidden');
                 document.getElementById('location-title').innerText = `מיקום ואיסוף - ${name}`;
@@ -611,7 +792,6 @@
                     wazeBtn.href = waze;
                     wazeBtn.classList.remove('hidden');
                     
-                    // מפה דינמית מבוססת מיקום
                     const mapIframe = document.getElementById('map-iframe');
                     mapIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(location || name)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
                 } else {
@@ -631,14 +811,14 @@
             const homeContainer = document.getElementById('home-categories-container');
             homeContainer.classList.remove('hidden');
 
-            const categories = [...new Set(inventory.filter(i => i.status !== 'hidden').map(i => i.קטגוריה).filter(Boolean))];
+            const categories = [...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
             
             homeContainer.innerHTML = categories.map(cat => {
-                const repItem = inventory.find(i => i.קטגוריה === cat && i.status !== 'hidden' && i.תמונה);
-                const bgImage = repItem ? formatImageUrl(repItem.תמונה) : DEFAULT_IMG;
+                const repItem = groupedProducts.find(i => i.קטגוריה === cat && i.images[0] !== DEFAULT_IMG);
+                const bgImage = repItem ? repItem.images[0] : DEFAULT_IMG;
 
                 return `
-                    <div role="button" tabindex="0" onclick="enterCategory('${cat}')" onkeypress="if(event.key === 'Enter') enterCategory('${cat}')" class="category-box" aria-label="קטגוריית ${cat}">
+                    <div role="button" tabindex="0" onclick="enterCategory('${cat.replace(/'/g, "\\'")}')" onkeypress="if(event.key === 'Enter') enterCategory('${cat.replace(/'/g, "\\'")}')" class="category-box" aria-label="קטגוריית ${cat}">
                         <img src="${bgImage}" alt="${cat}">
                         <h3>${cat}</h3>
                     </div>
@@ -662,13 +842,13 @@
         }
 
         function renderCategories() {
-            const categories = ['הכל', ...new Set(inventory.map(i => i.קטגוריה).filter(Boolean))];
+            const categories = ['הכל', ...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
             const container = document.getElementById('category-filters');
             
             container.innerHTML = categories.map(cat => {
                 const isActive = currentCategory === cat;
                 return `
-                    <button onclick="filterByCategory('${cat}')" 
+                    <button onclick="filterByCategory('${cat.replace(/'/g, "\\'")}')" 
                         class="px-5 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap ${isActive 
                             ? 'bg-navy text-gold border-navy shadow-md scale-105' 
                             : 'bg-white text-gray-500 border-gray-200 hover:border-gold hover:text-navy'}">
@@ -684,9 +864,9 @@
             renderCategories();
             
             if (cat === 'הכל') {
-                renderGrid(inventory.filter(item => item.status !== 'hidden'));
+                renderGrid(groupedProducts);
             } else {
-                const filtered = inventory.filter(i => i.status !== 'hidden' && i.קטגוריה === cat);
+                const filtered = groupedProducts.filter(i => i.קטגוריה === cat);
                 renderGrid(filtered);
             }
         }
@@ -706,8 +886,8 @@
             }
             
             const filteredItems = currentCategory === 'הכל' 
-                ? inventory.filter(item => item.status !== 'hidden')
-                : inventory.filter(item => item.status !== 'hidden' && item.קטגוריה === currentCategory);
+                ? groupedProducts
+                : groupedProducts.filter(item => item.קטגוריה === currentCategory);
             renderGrid(filteredItems);
         }
 
@@ -741,10 +921,13 @@
             handleDateFilter();
         }
 
-        function getAvailableStock(itemName, pDate, rDate) {
-            const item = inventory.find(i => i.שם_פריט === itemName);
-            if (!item) return 0;
-            if (!pDate || !rDate) return item.מלאי;
+        function getAvailableStock(itemName, pDate, rDate, specificVariationRow = null) {
+            let matchRow = specificVariationRow;
+            if (!matchRow) {
+                matchRow = inventory.find(i => i.שם_פריט === itemName);
+            }
+            if (!matchRow) return 0;
+            if (!pDate || !rDate) return matchRow.מלאי;
 
             const normalizeDate = (dateInput) => {
                 if (!dateInput) return null;
@@ -777,14 +960,53 @@
                 if (reqStart <= oEnd && reqEnd >= oStart) {
                     try {
                         const rawCart = JSON.parse(order.raw_cart || '[]');
-                        const orderItem = rawCart.find(oi => oi.שם_פריט === itemName || oi.parentName === itemName);
-                        if (orderItem) {
-                            totalInUse += parseInt(orderItem.qty);
+                        let orderItems = [];
+                        if (specificVariationRow) {
+                            const targetDisplayName = getDisplayNameForVariation(specificVariationRow);
+                            orderItems = rawCart.filter(oi => oi.displayName === targetDisplayName || oi.שם_פריט === targetDisplayName);
+                        } else {
+                            orderItems = rawCart.filter(oi => oi.שם_פריט === itemName || oi.parentName === itemName);
                         }
+                        orderItems.forEach(oi => {
+                            totalInUse += parseInt(oi.qty || 0);
+                        });
                     } catch(e) {}
                 }
             });
-            return Math.max(0, item.מלאי - totalInUse);
+            return Math.max(0, matchRow.מלאי - totalInUse);
+        }
+
+        function slideImage(pName, direction, event) {
+            if (event) event.stopPropagation();
+            const p = groupedProducts.find(x => x.שם_פריט === pName);
+            if (!p) return;
+            const state = productState[pName];
+            if (!state) return;
+            
+            let newIdx = state.currentImageIndex + direction;
+            if (newIdx < 0) newIdx = p.images.length - 1;
+            if (newIdx >= p.images.length) newIdx = 0;
+            
+            state.currentImageIndex = newIdx;
+            renderGrid(displayedItems);
+        }
+
+        function selectAttribute(pName, attrName, value) {
+            const state = productState[pName];
+            if (!state) return;
+            
+            state.selectedAttributes[attrName] = value;
+            
+            const match = getMatchingVariation(pName);
+            if (match && match.תמונה) {
+                const p = groupedProducts.find(x => x.שם_פריט === pName);
+                const imgUrl = formatImageUrl(match.תמונה);
+                const idx = p.images.indexOf(imgUrl);
+                if (idx !== -1) {
+                    state.currentImageIndex = idx;
+                }
+            }
+            renderGrid(displayedItems);
         }
 
         function setLayout(layout) {
@@ -825,7 +1047,7 @@
                     grid.innerHTML = ''; 
                 }
             } else if (!isAppend) {
-                displayedItems = inventory.filter(item => item.status !== 'hidden');
+                displayedItems = groupedProducts;
                 itemsToShow = ITEMS_BATCH;
                 grid.innerHTML = '';
             }
@@ -840,61 +1062,84 @@
                 return;
             }
 
-            const html = itemsToRender.map(item => {
-                let displayStock = item.מלאי;
-                if (hasDates) {
-                    displayStock = getAvailableStock(item.שם_פריט, pendingFormData.pDate, pendingFormData.rDate);
+            const html = itemsToRender.map(p => {
+                const pName = p.שם_פריט;
+                const state = productState[pName];
+                const match = getMatchingVariation(pName);
+                
+                let displayStock = match ? match.מלאי : 0;
+                if (match && hasDates) {
+                    displayStock = getAvailableStock(pName, pendingFormData.pDate, pendingFormData.rDate, match);
                 }
 
                 const isOutOfStock = displayStock <= 0;
-                const itemNameSafe = item.שם_פריט.replace(/"/g, '&quot;');
-                const categorySafe = (item.קטגוריה || 'כללי').replace(/"/g, '&quot;');
-                const qtySpanId = `qty-${item.שם_פריט.replace(/\s+/g, '-')}`;
-
-                // בניית וריאציות (Dropdown)
-                const variationsStr = item.וריאציות || item['וריאציות'] || '';
-                const variations = variationsStr ? variationsStr.split(',').map(v => v.trim()).filter(Boolean) : [];
+                const cardImg = getCardImage(pName);
+                const pNameSafe = pName.replace(/"/g, '&quot;');
                 
-                let variationDropdown = '';
-                if (variations.length > 0) {
-                    variationDropdown = `
-                        <div class="mb-3">
-                            <label class="block text-[10px] text-gray-400 mb-1">אפשרות / סוג:</label>
-                            <select id="select-var-${item.שם_פריט.replace(/\s+/g, '-')}" onchange="updateCardQtyDisplay('${item.שם_פריט.replace(/'/g, "\\'")}')" class="w-full p-2 text-xs bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-1 focus:ring-gold text-slate-800">
-                                ${variations.map(v => `<option value="${v}">${v}</option>`).join('')}
-                            </select>
-                        </div>
-                    `;
-                }
+                const showSlider = p.images.length > 1;
+                const sliderHTML = showSlider ? `
+                    <button onclick="slideImage('${pName.replace(/'/g, "\\'")}', -1, event)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-navy p-1.5 rounded-full shadow z-10 hover:scale-105 transition-all" aria-label="תמונה קודמת">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="slideImage('${pName.replace(/'/g, "\\'")}', 1, event)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-navy p-1.5 rounded-full shadow z-10 hover:scale-105 transition-all" aria-label="תמונה הבאה">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                ` : '';
 
-                // בדיקת מוצר נוכחי בעגלה
-                const defaultSelectedVar = variations.length > 0 ? variations[0] : null;
-                const defaultDisplayName = defaultSelectedVar ? `${item.שם_פריט} (${defaultSelectedVar})` : item.שם_פריט;
-                const cartItem = cart.find(c => c.displayName === defaultDisplayName);
+                let selectorsHTML = '';
+                Object.keys(p.attributes).forEach(attrName => {
+                    const options = p.attributes[attrName];
+                    if (options.length > 0) {
+                        const currentSelected = state.selectedAttributes[attrName];
+                        selectorsHTML += `
+                            <div class="mb-3">
+                                <label class="block text-[11px] text-gray-400 font-bold mb-1">${attrName}:</label>
+                                <div class="flex flex-wrap gap-1">
+                                    ${options.map(opt => {
+                                        const isSelected = opt === currentSelected;
+                                        return `
+                                            <button onclick="selectAttribute('${pName.replace(/'/g, "\\'")}', '${attrName.replace(/'/g, "\\'")}', '${opt.replace(/'/g, "\\'")}')" 
+                                                class="px-2.5 py-1 rounded-xl text-xs font-semibold border transition-all ${isSelected 
+                                                    ? 'bg-gold text-navy border-gold shadow-sm font-bold scale-105' 
+                                                    : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-300'}">
+                                                ${opt}
+                                            </button>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                const activeVarDisplayName = getDisplayNameForVariation(match || p.variations[0]);
+                const cartItem = cart.find(c => c.displayName === activeVarDisplayName);
                 const inCart = cartItem ? cartItem.qty : 0;
+                const qtySpanId = `qty-${pName.replace(/\s+/g, '-')}`;
 
                 return `
-                    <div class="item-card bg-white rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75 grayscale' : ''}">
-                        <div class="item-image-wrapper h-64 ${currentLayout === 'list' ? 'w-40 h-auto' : 'w-full'} overflow-hidden relative bg-gray-100 cursor-zoom-in" onclick="openImage('${formatImageUrl(item.תמונה)}')">
-                            <img src="${formatImageUrl(item.תמונה)}" loading="lazy" decoding="async" alt="${itemNameSafe}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="item-card bg-white rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75' : ''}">
+                        <div class="item-image-wrapper h-64 ${currentLayout === 'list' ? 'w-48 h-auto' : 'w-full'} overflow-hidden relative bg-gray-100">
+                            ${sliderHTML}
+                            <img src="${cardImg}" loading="lazy" decoding="async" alt="${pNameSafe}" class="w-full h-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-105" onclick="openImage('${cardImg}')">
                             <div class="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-navy shadow-sm">
-                                ${item.קטגוריה || 'כללי'}
+                                ${p.קטגוריה}
                             </div>
                             ${isOutOfStock ? `<div class="absolute inset-0 bg-navy/30 flex items-center justify-center"><span class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold text-xs shadow-lg transform -rotate-6">אזל מהמלאי</span></div>` : ''}
                         </div>
-                        <div class="item-content p-6 flex flex-col flex-1 ${currentLayout === 'list' ? 'justify-center' : ''}">
+                        <div class="item-content p-6 flex flex-col flex-1">
                             <div class="item-details flex-1">
-                                <h3 class="font-bold text-lg text-navy">${item.שם_פריט}</h3>
+                                <h3 class="font-bold text-lg text-navy mb-1">${pName}</h3>
                                 <p class="text-xs ${hasDates ? 'text-gold font-bold' : 'text-gray-500'} mb-3">
-                                    ${hasDates ? `פנוי לתאריך הנבחר: ${displayStock}` : `במלאי כולל: ${item.מלאי}`}
+                                    ${hasDates ? `פנוי לתאריך הנבחר: ${displayStock}` : `במלאי כולל: ${displayStock}`}
                                 </p>
-                                ${variationDropdown}
+                                ${selectorsHTML}
                             </div>
-                            <div class="item-actions mt-auto flex ${currentLayout === 'list' ? 'flex-col' : 'flex-row'} items-center justify-between">
+                            <div class="item-actions mt-4 flex items-center justify-between">
                                 <div class="flex items-center gap-3 bg-gray-50 p-1 rounded-xl">
-                                    <button onclick="updateQty('${item.שם_פריט.replace(/'/g, "\\'")}', -1)" class="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors active:scale-95 text-slate-800" aria-label="הפחת כמות">-</button>
+                                    <button onclick="removeProductFromCart('${pName.replace(/'/g, "\\'")}')" class="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors active:scale-95 text-slate-800" aria-label="הפחת כמות">-</button>
                                     <span class="w-6 text-center font-bold text-slate-800" id="${qtySpanId}">${inCart}</span>
-                                    <button onclick="updateQty('${item.שם_פריט.replace(/'/g, "\\'")}', 1)" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors active:scale-95 text-slate-800 ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
+                                    <button onclick="addProductToCart('${pName.replace(/'/g, "\\'")}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors active:scale-95 text-slate-800 ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
                                 </div>
                                 <button onclick="toggleCart(true)" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה"><i data-lucide="shopping-bag"></i></button>
                             </div>
@@ -906,17 +1151,72 @@
             lucide.createIcons();
         }
 
-        function updateCardQtyDisplay(name) {
-            const selectEl = document.getElementById(`select-var-${name.replace(/\s+/g, '-')}`);
-            const selectedVar = selectEl ? selectEl.value : null;
-            const displayName = selectedVar ? `${name} (${selectedVar})` : name;
-            
-            const cartItem = cart.find(c => c.displayName === displayName);
-            const qtySpanId = `qty-${name.replace(/\s+/g, '-')}`;
-            const qtySpan = document.getElementById(qtySpanId);
-            if (qtySpan) {
-                qtySpan.innerText = cartItem ? cartItem.qty : 0;
+        function addProductToCart(pName) {
+            const match = getMatchingVariation(pName);
+            if (!match) return;
+
+            const selections = productState[pName].selectedAttributes;
+            const attrStr = Object.entries(selections)
+                .map(([k, v]) => `${k}: ${v}`)
+                .join(', ');
+            const displayName = attrStr ? `${pName} (${attrStr})` : pName;
+
+            updateQtyWithVariation(match, displayName, 1);
+        }
+
+        function removeProductFromCart(pName) {
+            const match = getMatchingVariation(pName);
+            if (!match) return;
+
+            const selections = productState[pName].selectedAttributes;
+            const attrStr = Object.entries(selections)
+                .map(([k, v]) => `${k}: ${v}`)
+                .join(', ');
+            const displayName = attrStr ? `${pName} (${attrStr})` : pName;
+
+            updateQtyWithVariation(match, displayName, -1);
+        }
+
+        function updateQtyWithVariation(variationRow, displayName, delta) {
+            const pName = variationRow.שם_פריט;
+            const pDate = document.getElementById('p-date')?.value || pendingFormData.pDate;
+            const rDate = document.getElementById('r-date')?.value || pendingFormData.rDate;
+
+            let limit = variationRow.מלאי;
+            if (pDate && rDate) {
+                limit = getAvailableStock(pName, pDate, rDate, variationRow);
             }
+
+            let cartItem = cart.find(c => c.displayName === displayName);
+            const currentQtyInCart = cartItem ? cartItem.qty : 0;
+
+            if (!cartItem && delta > 0) {
+                if (currentQtyInCart + 1 > limit) {
+                    return showToast(`אין מלאי פנוי. נותרו רק ${limit} יחידות זמינות.`);
+                }
+                cart.push({
+                    ...variationRow,
+                    displayName: displayName,
+                    parentName: pName,
+                    qty: 1
+                });
+            } else if (cartItem) {
+                const newQty = cartItem.qty + delta;
+                if (delta > 0 && currentQtyInCart + 1 > limit) {
+                    return showToast(`אין מלאי פנוי. נותרו רק ${limit} יחידות זמינות.`);
+                }
+                if (newQty <= 0) {
+                    cart = cart.filter(c => c.displayName !== displayName);
+                } else {
+                    cartItem.qty = newQty;
+                }
+            }
+
+            saveCart();
+            renderGrid(displayedItems); 
+            
+            if (currentStep === 1) renderCartStep1(document.getElementById('cart-content'));
+            updateCartUI();
         }
 
         window.addEventListener('scroll', () => {
@@ -935,78 +1235,6 @@
             img.src = url;
             box.classList.remove('hidden');
             requestAnimationFrame(() => img.classList.replace('scale-95', 'scale-100'));
-        }
-
-        function updateQty(name, delta, displayNameFromCart = null) {
-            const itemToAdd = inventory.find(i => i.שם_פריט === name);
-            if (!itemToAdd) return;
-
-            let displayName = displayNameFromCart;
-            let selectedVar = null;
-            if (!displayName) {
-                const selectEl = document.getElementById(`select-var-${name.replace(/\s+/g, '-')}`);
-                selectedVar = selectEl ? selectEl.value : null;
-                displayName = selectedVar ? `${name} (${selectedVar})` : name;
-            } else {
-                const cartItem = cart.find(c => c.displayName === displayName);
-                if (cartItem) selectedVar = cartItem.selectedVar;
-            }
-
-            const pDate = document.getElementById('p-date')?.value || pendingFormData.pDate;
-            const rDate = document.getElementById('r-date')?.value || pendingFormData.rDate;
-            
-            let limit = itemToAdd.מלאי;
-            if (pDate && rDate) {
-                limit = getAvailableStock(name, pDate, rDate);
-            }
-
-            const currentTotalInCart = cart
-                .filter(c => c.שם_פריט === name || c.parentName === name)
-                .reduce((sum, c) => sum + c.qty, 0);
-
-            let cartItem = cart.find(c => c.displayName === displayName);
-            
-            if (!cartItem && delta > 0) {
-                if (currentTotalInCart + 1 > limit) {
-                    return showToast(`אין מלאי פנוי. נותרו רק ${limit} יחידות זמינות.`);
-                }
-                cart.push({
-                    ...itemToAdd,
-                    displayName: displayName,
-                    selectedVar: selectedVar,
-                    parentName: name,
-                    qty: 1
-                });
-            } else if (cartItem) {
-                const newQty = cartItem.qty + delta;
-                if (delta > 0 && currentTotalInCart + 1 > limit) {
-                    return showToast(`זמינים רק ${limit} לתאריכים אלו`);
-                }
-                if (newQty <= 0) {
-                    cart = cart.filter(c => c.displayName !== displayName);
-                } else {
-                    cartItem.qty = newQty;
-                }
-            }
-            saveCart();
-            
-            const qtySpanId = `qty-${name.replace(/\s+/g, '-')}`;
-            const qtySpan = document.getElementById(qtySpanId);
-            if (qtySpan) {
-                const selectEl = document.getElementById(`select-var-${name.replace(/\s+/g, '-')}`);
-                const currentGridVar = selectEl ? selectEl.value : null;
-                const currentGridDisplayName = currentGridVar ? `${name} (${currentGridVar})` : name;
-                const currentVarItem = cart.find(c => c.displayName === currentGridDisplayName);
-                
-                qtySpan.innerText = currentVarItem ? currentVarItem.qty : 0;
-                
-                qtySpan.classList.remove('pop-animation');
-                void qtySpan.offsetWidth;
-                qtySpan.classList.add('pop-animation');
-            }
-
-            if (currentStep === 1) renderCartStep1(document.getElementById('cart-content'));
-            updateCartUI();
         }
 
         function toggleCart(show) {
@@ -1039,7 +1267,7 @@
                     if (!pDate || !rDate || !uName || !uPhone) return showToast('נא למלא את כל הפרטים');
                     
                     for (let c of cart) {
-                        const avail = getAvailableStock(c.parentName || c.שם_פריט, pDate, rDate);
+                        const avail = getAvailableStock(c.parentName || c.שם_פריט, pDate, rDate, c);
                         if (c.qty > avail) return showToast(`המלאי של ${c.displayName} השתנה.`);
                     }
                     pendingFormData = { name: uName, phone: uPhone, pDate, rDate, notes: document.getElementById('u-notes').value };
@@ -1082,18 +1310,18 @@
         function renderCartStep1(cont) {
             cont.innerHTML = `<h4 class="font-bold serif text-xl mb-6 text-navy">הסל שלך</h4>` + cart.map(item => `
               <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-2xl mb-3 relative border border-gray-100 shadow-sm text-slate-800">
-                <button onclick="updateQty('${item.parentName || item.שם_פריט}', -${item.qty}, '${item.displayName}')" class="absolute top-2 left-2 text-red-400 hover:text-red-600 transition-colors p-1" aria-label="הסר פריט">
+                <button onclick="updateQtyWithVariation({שם_פריט: '${item.parentName || item.שם_פריט}'}, '${item.displayName}', -${item.qty})" class="absolute top-2 left-2 text-red-400 hover:text-red-600 transition-colors p-1" aria-label="הסר פריט">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
                 <img src="${formatImageUrl(item.תמונה)}" alt="${item.displayName}" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-gray-200">
                 <div class="flex-1 text-right">
-                    <div class="text-sm font-bold text-navy">${item.displayName}</div>
-                    <div class="text-[10px] text-gray-400">${item.קטגוריה}</div>
+                    <div class="text-xs font-bold text-navy leading-tight">${item.displayName}</div>
+                    <div class="text-[10px] text-gray-400 mt-1">${item.קטגוריה}</div>
                 </div>
                 <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl p-1">
-                    <button onclick="updateQty('${item.parentName || item.שם_פריט}', -1, '${item.displayName}')" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">-</button>
+                    <button onclick="updateQtyWithVariation({שם_פריט: '${item.parentName || item.שם_פריט}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}'}, '${item.displayName}', -1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">-</button>
                     <span class="w-4 text-center text-xs font-bold">${item.qty}</span>
-                    <button onclick="updateQty('${item.parentName || item.שם_פריט}', 1, '${item.displayName}')" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">+</button>
+                    <button onclick="updateQtyWithVariation({שם_פריט: '${item.parentName || item.שם_פריט}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}'}, '${item.displayName}', 1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">+</button>
                 </div>
             </div>`).join('');
             lucide.createIcons();
@@ -1147,7 +1375,7 @@
             cont.innerHTML = `
                 <div class="space-y-6">
                     <div class="gold-gradient text-navy p-6 rounded-[2.5rem] shadow-xl border border-gold/50">
-                        <p class="text-xs uppercase tracking-widest mb-1 text-navy/70">סיכום הזמנה עבור</p>
+                        <p class="text-xs opacity-80 uppercase tracking-widest mb-1 text-navy/70">סיכום הזמנה עבור</p>
                         <p class="font-bold text-2xl italic text-navy">${pendingFormData.name}</p>
                         <p class="text-sm mt-1 text-navy/80">${pendingFormData.pDate} ⇠ ${pendingFormData.rDate}</p>
                     </div>
@@ -1365,31 +1593,56 @@
 
         function closeAdmin() { document.getElementById('admin-modal').classList.add('hidden'); }
 
+        function getVariationColumns() {
+            if (inventory.length === 0) return [];
+            const cols = new Set();
+            inventory.forEach(item => {
+                Object.keys(item).forEach(k => {
+                    if (k.startsWith('וריאציה_')) {
+                        cols.add(k);
+                    }
+                });
+            });
+            return Array.from(cols);
+        }
+
         function renderAdminTable() {
             document.getElementById('admin-subtitle').innerText = "ניהול פריטים ומלאי";
             const content = document.getElementById('admin-content');
+            const varCols = getVariationColumns();
+            
+            const varInputsHTML = varCols.map(col => {
+                const cleanName = col.replace('וריאציה_', '');
+                return `<input type="text" id="new-${col}" placeholder="${cleanName}" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">`;
+            }).join('');
+
             content.innerHTML = `
-                <div id="admin-form" class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-12 p-6 bg-gray-50 rounded-3xl border border-dashed border-gray-300">
+                <div id="admin-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 p-6 bg-gray-50 rounded-3xl border border-dashed border-gray-300">
                     <input type="hidden" id="edit-id">
                     <input type="text" id="new-name" placeholder="שם פריט" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
                     <input type="number" id="new-qty" placeholder="מלאי" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
                     <input type="text" id="new-cat" placeholder="קטגוריה" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
-                    <input type="text" id="new-vars" placeholder="וריאציות (מופרדות בפסיק)" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
                     <input type="text" id="new-img" placeholder="קישור תמונה" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
-                    <button onclick="saveItem()" id="save-btn" class="gold-gradient rounded-xl font-bold py-4 text-navy shadow-md">שמור פריט</button>
+                    ${varInputsHTML}
+                    <button onclick="saveItem()" id="save-btn" class="gold-gradient rounded-xl font-bold py-4 text-navy shadow-md md:col-span-4">שמור פריט</button>
                 </div>
                 <div id="admin-table-list" class="space-y-3"></div>`;
             
             const list = document.getElementById('admin-table-list');
             list.innerHTML = inventory.map((item, idx) => {
                 const isHidden = item.status === 'hidden';
+                const itemVarKeys = Object.keys(item).filter(k => k.startsWith('וריאציה_') && item[k]);
+                const varBadges = itemVarKeys.map(k => {
+                    return `<span class="text-[10px] bg-gold/10 text-gold px-2 py-0.5 rounded-lg border border-gold/20 font-bold ml-1">${k.replace('וריאציה_', '')}: ${item[k]}</span>`;
+                }).join('');
+
                 return `
                 <div class="flex items-center gap-4 p-4 bg-white border rounded-2xl hover:border-gold transition-colors ${isHidden ? 'bg-gray-50' : ''}">
                     <img src="${formatImageUrl(item['תמונה'])}" onerror="this.src='${DEFAULT_IMG}'" class="w-16 h-16 rounded-lg object-cover border border-gray-200">
                     <div class="flex-1 text-right">
                         <div class="font-bold text-sm text-navy">${item['שם_פריט']} (מלאי: ${item.מלאי})</div>
-                        ${item['וריאציות'] ? `<div class="text-[10px] text-gray-500">וריאציות: ${item['וריאציות']}</div>` : ''}
-                        ${isHidden ? '<span class="text-[9px] bg-gray-200 px-2 py-0.5 rounded text-gray-500">מוסתר מהקטלוג</span>' : ''}
+                        <div class="flex flex-wrap gap-1 mt-1">${varBadges}</div>
+                        ${isHidden ? '<div class="mt-1"><span class="text-[9px] bg-gray-200 px-2 py-0.5 rounded text-gray-500">מוסתר מהקטלוג</span></div>' : ''}
                     </div>
                     <div class="flex gap-2">
                         <button onclick="toggleItemVisibility('${item['שם_פריט'].replace(/'/g, "\\'")}', '${item.status}')" class="p-2 hover:bg-gray-100 rounded-lg text-navy" title="${isHidden ? 'הצג' : 'הסתר'}">
@@ -1408,6 +1661,7 @@
             const item = inventory.find(i => i['שם_פריט'] === name);
             if (item) item.status = newStatus;
             
+            processInventory();
             renderAdminTable();
             if(!document.getElementById('inventory-grid').classList.contains('hidden')) {
                  renderGrid();
@@ -1491,16 +1745,23 @@
             const qty = document.getElementById('new-qty').value;
             if(!name || !qty) return showToast('נא למלא שם ומלאי');
 
+            const varCols = getVariationColumns();
             const payload = {
                 action: document.getElementById('edit-id').value ? "editItem" : "addItem",
                 שם_פריט: name,
                 מלאי: qty,
                 קטגוריה: document.getElementById('new-cat').value,
                 תמונה: document.getElementById('new-img').value,
-                וריאציות: document.getElementById('new-vars').value,
                 old_name: document.getElementById('edit-id').value,
                 status: 'active'
             };
+
+            varCols.forEach(col => {
+                const inputEl = document.getElementById(`new-${col}`);
+                if (inputEl) {
+                    payload[col] = inputEl.value || "";
+                }
+            });
             
             const btn = document.getElementById('save-btn');
             btn.disabled = true;
@@ -1524,9 +1785,17 @@
             document.getElementById('new-name').value = i['שם_פריט'] || '';
             document.getElementById('new-qty').value = i.מלאי || 0;
             document.getElementById('new-cat').value = i['קטגוריה'] || '';
-            document.getElementById('new-vars').value = i['וריאציות'] || '';
             document.getElementById('new-img').value = i['תמונה'] || '';
             document.getElementById('edit-id').value = i['שם_פריט'] || '';
+            
+            const varCols = getVariationColumns();
+            varCols.forEach(col => {
+                const inputEl = document.getElementById(`new-${col}`);
+                if (inputEl) {
+                    inputEl.value = i[col] || '';
+                }
+            });
+
             document.getElementById('save-btn').innerText = 'עדכן שינויים';
             document.getElementById('admin-form').scrollIntoView({behavior:'smooth'});
         }
@@ -1540,6 +1809,7 @@
         }
 
         function saveCart() { localStorage.setItem('gemach_cart', JSON.stringify(cart)); updateCartUI(); }
+        
         function updateCartUI() {
             const count = document.getElementById('cart-count');
             const total = cart.reduce((a, c) => a + c.qty, 0);
@@ -1558,9 +1828,9 @@
                  return;
             }
 
-            const filtered = inventory.filter(i => 
-                i.status !== 'hidden' && 
-                (i.שם_פריט.toLowerCase().includes(term) || (i.קטגוריה && i.קטגוריה.toLowerCase().includes(term)))
+            const filtered = groupedProducts.filter(p => 
+                p.שם_פריט.toLowerCase().includes(term) || 
+                p.קטגוריה.toLowerCase().includes(term)
             );
             renderGrid(filtered);
         }
