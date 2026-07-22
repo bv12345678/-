@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -78,7 +79,7 @@
         .card-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); }
         
         .hero-section {
-            background: linear-gradient(to bottom, rgba(26, 28, 44, 0.2), rgba(26, 28, 44, 0.5)), url('preview.jpg');
+            background: linear-gradient(to bottom, rgba(26, 28, 44, 0.3), rgba(26, 28, 44, 0.7)), url('preview.jpg');
             background-size: cover; 
             background-position: center; 
             background-repeat: no-repeat;
@@ -212,7 +213,7 @@
             position: relative;
             overflow: hidden;
             border-radius: 1.5rem;
-            height: 200px;
+            height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -230,12 +231,12 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(26, 28, 44, 0.3);
+            background: rgba(26, 28, 44, 0.4);
             transition: background 0.2s;
             z-index: 1;
         }
         
-        .category-box:hover::before { background: rgba(26, 28, 44, 0.1); }
+        .category-box:hover::before { background: rgba(26, 28, 44, 0.2); }
         
         .category-box img {
             position: absolute;
@@ -268,9 +269,10 @@
             display: inline-block;
         }
 
+        /* תיקון: שימוש ב-auto-fill במקום auto-fit מונע ממוצר יחיד להימתח על פני כל הדף */
         #inventory-grid.grid-view {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
         }
         
@@ -346,160 +348,123 @@
         <i data-lucide="message-circle" class="w-8 h-8"></i>
     </a>
 
-    <header class="hero-section min-h-[75vh] md:min-h-[85vh] flex flex-col relative text-white no-print">
-        <nav class="p-4 md:p-6 flex justify-between items-center max-w-7xl mx-auto w-full z-20">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 md:w-12 md:h-12 gold-gradient rounded-full flex items-center justify-center shadow-lg">
-                    <i data-lucide="sparkles" class="text-navy w-5 h-5 md:w-6 md:h-6"></i>
+    <!-- תפריט עליון קבוע ומקצועי (Sticky Navigation Bar) -->
+    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-b border-gray-100 dark:border-white/10 px-4 md:px-6 py-4 no-print shadow-sm transition-all">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            <!-- לוגו וכותרת מותג -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="backToMain()">
+                <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center shadow-md">
+                    <i data-lucide="sparkles" class="text-navy w-5 h-5"></i>
                 </div>
                 <div>
-                    <div id="nav-brand-title" class="text-xl md:text-2xl font-bold serif italic leading-none">מערכת הזמנות</div>
-                    <p class="text-[9px] md:text-[10px] tracking-[0.2em] uppercase opacity-70">Inventory Platform</p>
+                    <div id="nav-brand-title" class="text-lg md:text-xl font-bold serif leading-none text-navy dark:text-white">מערכת הזמנות</div>
+                    <p class="text-[9px] tracking-[0.15em] uppercase opacity-70 dark:text-white/60">Inventory Platform</p>
                 </div>
             </div>
-            
-            <div class="flex items-center gap-4 md:gap-6">
-                <button onclick="lookupOrder()" class="opacity-60 hover:opacity-100 transition-opacity text-xs font-bold tracking-widest border-l border-white/20 pl-6 hidden md:block">חיפוש/עריכת הזמנה</button>
-                <button onclick="showAdminLogin()" class="opacity-60 hover:opacity-100 transition-opacity text-xs font-bold tracking-widest transform md:translate-x-5 hidden md:block">ניהול מלאי</button>
-                <button onclick="toggleDarkMode()" class="opacity-60 hover:opacity-100 transition-opacity text-xs font-bold tracking-widest hidden md:block" aria-label="החלף למצב כהה/בהיר">
-                    <i data-lucide="moon" class="w-5 h-5 text-white"></i>
+
+            <!-- שורת חיפוש מובנית בתפריט (למחשב) -->
+            <div class="flex-1 max-w-md mx-6 relative hidden md:block">
+                <label for="searchInput" class="sr-only">חפש בקטלוג...</label>
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="חפש מוצרים וקטגוריות בקטלוג..."
+                    class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-sm outline-none focus:ring-2 focus:ring-gold focus:border-transparent transition-all text-slate-800">
+                <i data-lucide="search" class="absolute left-3 top-3 text-gray-400 w-4.5 h-4.5"></i>
+            </div>
+
+            <!-- כפתורי שליטה וניווט מהיר -->
+            <div class="flex items-center gap-2 md:gap-4">
+                <button onclick="lookupOrder()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors hidden lg:block">חיפוש/עריכת הזמנה</button>
+                <button onclick="showAdminLogin()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors hidden lg:block">ניהול מלאי</button>
+                
+                <!-- החלפת תצוגה גריד/רשימה -->
+                <div class="items-center gap-1 bg-gray-100 dark:bg-zinc-800 p-1 rounded-xl hidden sm:flex">
+                    <button onclick="setLayout('grid')" id="grid-view-btn" class="p-1.5 rounded-lg transition-colors bg-navy text-gold dark:bg-gold dark:text-navy" aria-label="תצוגת גריד">
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="setLayout('list')" id="list-view-btn" class="p-1.5 rounded-lg transition-colors text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700" aria-label="תצוגת רשימה">
+                        <i data-lucide="list" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- החלפת ערכת נושא (Dark mode) -->
+                <button onclick="toggleDarkMode()" class="p-2 bg-gray-100 dark:bg-zinc-800 rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-all" aria-label="החלף למצב כהה/בהיר">
+                    <i data-lucide="moon" class="w-4.5 h-4.5 text-navy dark:text-white"></i>
                 </button>        
 
-                <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors" aria-label="תפריט">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
+                <!-- כפתור עגלה מובנה בתפריט -->
+                <button id="cart-btn-icon" onclick="toggleCart(true)" class="relative bg-white dark:bg-zinc-800 p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all" aria-label="עגלת קניות">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 text-navy dark:text-white"></i>
+                    <span id="cart-count" class="absolute -top-1.5 -right-1.5 gold-gradient text-navy text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-zinc-800 hidden">0</span>
                 </button>
 
-                <button id="cart-btn-icon" onclick="toggleCart(true)" class="relative bg-white/10 p-3 md:p-4 rounded-2xl backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all" aria-label="עגלת קניות">
-                    <i data-lucide="shopping-cart" class="w-5 h-5 md:w-6 h-6"></i>
-                    <span id="cart-count" class="absolute -top-2 -right-2 gold-gradient text-navy text-[11px] font-extrabold w-6 h-6 rounded-full flex items-center justify-center border-2 border-navy hidden">0</span>
+                <!-- המבורגר למובייל -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 bg-gray-100 dark:bg-zinc-800 rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors" aria-label="תפריט">
+                    <i data-lucide="menu" class="w-5 h-5 text-navy dark:text-white"></i>
                 </button>
             </div>
-        </nav>
-
-        <div id="mobile-menu" class="hidden absolute top-[70px] left-0 right-0 bg-navy/95 backdrop-blur-xl border-t border-white/10 p-4 z-50 flex flex-col gap-4 md:hidden shadow-2xl">
-            <button onclick="lookupOrder(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
-                <i data-lucide="search" class="text-gold w-5 h-5"></i>
-                <span class="font-bold">חיפוש/עריכת הזמנה</span>
-            </button>
-            <button onclick="showAdminLogin(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
-                <i data-lucide="lock" class="text-gold w-5 h-5"></i>
-                <span class="font-bold">ניהול מלאי</span>
-            </button>
-            <button onclick="toggleDarkMode(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
-                <i data-lucide="moon" class="text-gold w-5 h-5"></i>
-                <span id="theme-text" class="font-bold">מצב כהה</span>
-            </button>
         </div>
+    </nav>
 
-        <div class="flex-1 flex flex-col items-center justify-center text-center px-4 z-10 max-w-4xl mx-auto w-full pb-12 mt-8 md:mt-16">
-            <div class="space-y-3 mb-8 md:mb-10">
-                <h2 id="current-greeting" class="text-2xl md:text-4xl font-light tracking-wide text-white/90"></h2> 
-                <h1 id="hero-title" class="text-4xl md:text-7xl font-bold mb-2 md:mb-4 serif text-white">טוען...</h1>
-                <p id="hero-desc" class="text-base md:text-xl text-white/80 max-w-xl mx-auto font-light leading-relaxed"></p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
-                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 md:p-6 flex items-center justify-between text-right shadow-lg">
-                    <div class="flex items-center gap-4">
-                        <i data-lucide="clock" class="w-6 h-6 text-white/80 shrink-0"></i>
-                        <div>
-                            <p class="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-wider">שעות פתיחה</p>
-                            <p id="opening-hours-display" class="text-base md:text-lg font-bold text-white mt-0.5">---</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 md:p-6 flex items-center gap-4 text-right shadow-lg">
-                    <i data-lucide="alert-circle" class="w-6 h-6 text-white/80 shrink-0"></i>
-                    <div>
-                        <p class="text-xs md:text-sm text-white/60 font-semibold uppercase tracking-wider">מידע ואיסוף</p>
-                        <p id="location-text-display" class="text-sm md:text-base text-white/90 font-medium leading-relaxed mt-0.5">---</p>
-                    </div>
-                </div>
+    <!-- באנר כותרת דף הבית (Hero Section) ללא תאריכים ושעות -->
+    <header class="hero-section min-h-[45vh] md:min-h-[55vh] flex flex-col relative text-white no-print justify-center items-center">
+        <div class="text-center px-4 z-10 max-w-4xl mx-auto w-full py-12">
+            <div class="space-y-4">
+                <h2 id="current-greeting" class="text-2xl md:text-3xl font-light tracking-wide text-white/95"></h2> 
+                <h1 id="hero-title" class="text-4xl md:text-7xl font-bold mb-2 serif text-white">טוען...</h1>
+                <p id="hero-desc" class="text-base md:text-xl text-white/95 max-w-2xl mx-auto font-light leading-relaxed"></p>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-6 md:py-12 no-print">
-        
-        <!-- Smart Availability Check Section -->
-        <div class="bg-white rounded-[2rem] p-6 mb-8 shadow-lg border border-gold/20 relative z-30 -mt-16 md:-mt-20">
-            <div class="flex flex-col lg:flex-row items-end gap-4 lg:gap-6">
-                <div class="flex-1 w-full grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-navy mb-2 mr-1 uppercase tracking-wider flex items-center gap-1" for="filter-p-date">
-                            <i data-lucide="calendar" class="w-3 h-3 text-gold"></i> תאריך איסוף / התחלה
-                        </label>
-                        <input type="date" id="filter-p-date" onchange="handleDateFilter()" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gold focus:border-transparent outline-none text-sm transition-all">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-navy mb-2 mr-1 uppercase tracking-wider flex items-center gap-1" for="filter-r-date">
-                            <i data-lucide="calendar-check" class="w-3 h-3 text-gold"></i> תאריך החזרה / סיום
-                        </label>
-                        <input type="date" id="filter-r-date" onchange="handleDateFilter()" class="w-full p-3 bg-gray-50 rounded-xl border border-gray-200 focus:ring-2 focus:ring-gold focus:border-transparent outline-none text-sm transition-all">
-                    </div>
-                </div>
-                <div class="flex gap-2 w-full lg:w-auto">
-                    <button onclick="setNextShabbatFilter()" class="flex-1 lg:flex-none px-6 py-3 bg-navy/5 text-navy rounded-xl border border-navy/10 hover:bg-navy hover:text-white transition-all text-xs font-bold whitespace-nowrap">
-                        לסוף השבוע הקרוב
-                    </button>
-                    <button onclick="clearDateFilter()" class="px-4 py-3 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all" title="נקה תאריכים" aria-label="נקה תאריכים">
-                        <i data-lucide="x-circle" class="w-5 h-5"></i>
-                    </button>
-                </div>
-            </div>
-            <div id="availability-message" class="hidden mt-3 text-xs text-center font-bold text-gold bg-navy/5 p-2 rounded-lg">
-                הקטלוג מציג זמינות לתאריכים שנבחרו
-            </div>
-        </div>
+    <main class="max-w-7xl mx-auto px-4 py-8 md:py-12 no-print">
 
-        <!-- Sticky Header Container -->
-        <div id="sticky-catalog-header" class="sticky top-0 z-40 bg-[#fcfcfc]/95 backdrop-blur-md py-4 -mx-4 px-4 border-b border-gray-100 transition-shadow mb-6 shadow-sm hidden">
-            <div class="flex flex-col md:flex-row justify-between items-end gap-4 md:gap-6">
-                <div class="space-y-2 md:space-y-4 w-full md:w-auto overflow-hidden">
-                    <div class="flex items-center gap-3">
-                         <button onclick="backToMain()" class="bg-gray-100 hover:bg-gray-200 p-2 rounded-full transition-colors flex items-center justify-center gap-1 text-xs font-bold px-3">
-                            <i data-lucide="arrow-right" class="w-4 h-4"></i> חזור
-                         </button>
-                        <h2 class="text-sm font-bold uppercase tracking-widest text-gold" id="current-category-title">הקטלוג שלנו</h2>
-                    </div>
-                    <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar scroll-smooth" id="category-filters" style="max-width: 100vw;"></div>
-                    <div class="flex items-center gap-2 mt-4 md:mt-0">
-                        <button onclick="setLayout('grid')" id="grid-view-btn" class="p-2 rounded-xl bg-navy text-gold shadow-md" aria-label="תצוגת גריד">
-                            <i data-lucide="layout-grid" class="w-5 h-5"></i>
-                        </button>
-                        <button onclick="setLayout('list')" id="list-view-btn" class="p-2 rounded-xl bg-gray-100 text-gray-400 hover:bg-gray-200" aria-label="תצוגת רשימה">
-                            <i data-lucide="list" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Search Container -->
-         <div class="relative w-full mb-8">
-            <label for="searchInput" class="sr-only">חפש בקטלוג...</label>
-            <input type="text" id="searchInput" oninput="handleSearch()" placeholder="חפש מוצרים וקטגוריות בקטלוג..."
-                class="w-full pl-12 pr-6 py-3 md:py-3.5 rounded-2xl bg-white border border-gray-100 shadow-sm focus:ring-2 focus:ring-gold transition-all outline-none">
-            <i data-lucide="search" class="absolute left-4 top-3 md:top-3.5 text-gray-400 w-5 h-5"></i>
+        <!-- שורת חיפוש למובייל (מוצגת רק במסכים קטנים) -->
+        <div class="relative w-full mb-8 md:hidden">
+            <label for="searchInputMobile" class="sr-only">חפש בקטלוג...</label>
+            <input type="text" id="searchInputMobile" oninput="handleSearchMobile()" placeholder="חפש מוצרים וקטגוריות בקטלוג..."
+                class="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-white border border-gray-200 shadow-sm focus:ring-2 focus:ring-gold transition-all outline-none dark:bg-zinc-800 dark:border-zinc-700 dark:text-white">
+            <i data-lucide="search" class="absolute left-4 top-4 text-gray-400 w-5 h-5"></i>
         </div>
         
-        <!-- Main Home Categories (Vertical Grid) -->
-        <div id="home-categories-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <div class="col-span-full text-center py-20"><div class="loader mx-auto mb-4"></div>טוען קטגוריות...</div>
-        </div>
+        <!-- דף הבית: תצוגת קטגוריות בלבד -->
+        <section id="home-view" class="space-y-8">
+            <div class="text-center md:text-right">
+                <h2 class="text-2xl md:text-3xl font-bold serif text-navy dark:text-white">קטגוריות הציוד שלנו</h2>
+                <p class="text-sm text-gray-500 mt-1">בחר קטגוריה כדי לצפות במוצרים הזמינים להזמנה</p>
+            </div>
+            <div id="home-categories-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="col-span-full text-center py-20"><div class="loader mx-auto mb-4"></div>טוען קטגוריות...</div>
+            </div>
+        </section>
 
-        <!-- Items Grid -->
-        <div id="inventory-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12 md:mb-20 hidden">
-            <div class="col-span-full text-center py-20"><div class="loader mx-auto mb-4"></div>טוען פריטים...</div>
-        </div>
+        <!-- דף הקטלוג והמוצרים: מופרד לחלוטין מדף הבית ומוסתר בהתחלה -->
+        <section id="catalog-view" class="space-y-8 hidden">
+            <!-- כותרת הקטגוריה וניווט חזרה -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 dark:border-white/5 pb-4">
+                <div class="flex items-center gap-4">
+                    <button onclick="backToMain()" class="bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 p-3 rounded-full transition-all flex items-center justify-center gap-2 text-xs font-bold px-4 text-navy dark:text-white shadow-sm">
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i> חזור לקטגוריות
+                    </button>
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-bold serif text-navy dark:text-white" id="current-category-title">הקטלוג שלנו</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">קטגוריה פעילה</p>
+                    </div>
+                </div>
+                <!-- פילטרים פנימיים מהירים של קטגוריות אחרות -->
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar scroll-smooth max-w-full" id="category-filters"></div>
+            </div>
 
-        <!-- Location Section -->
-        <div id="location-block" class="bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-xl border border-gray-100 flex flex-col md:flex-row gap-8 items-center justify-between hidden">
+            <!-- גריד מוצרי הקטלוג (מעוצב למנוע מתיחה של מוצר יחיד) -->
+            <div id="inventory-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12 md:mb-20">
+                <div class="col-span-full text-center py-20"><div class="loader mx-auto mb-4"></div>טוען פריטים...</div>
+            </div>
+        </section>
+
+        <!-- בלוק המיקום והוויז -->
+        <div id="location-block" class="bg-white dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-xl border border-gray-100 dark:border-zinc-800 flex flex-col md:flex-row gap-8 items-center justify-between mt-12 hidden">
             <div class="w-full md:w-1/2 space-y-6">
                 <div>
-                    <h2 id="location-title" class="text-2xl font-bold serif text-navy mb-2">מיקום ואיסוף</h2>
-                    <p id="location-desc" class="text-gray-500 text-sm md:text-base">האיסוף וההחזרה מתבצעים בתיאום מראש בלבד בשעות הפעילות.</p>
+                    <h2 id="location-title" class="text-2xl font-bold serif text-navy dark:text-white mb-2">מיקום ואיסוף</h2>
+                    <p id="location-desc" class="text-gray-500 dark:text-gray-400 text-sm md:text-base">האיסוף וההחזרה מתבצעים בתיאום מראש בלבד בשעות הפעילות.</p>
                 </div>
                 <div class="flex gap-3 md:gap-4">
                     <a id="waze-btn" href="#" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 bg-[#33CCFF] hover:bg-[#2cb5e3] text-white py-3 px-4 md:px-6 rounded-xl font-bold transition-transform hover:scale-105 shadow-lg shadow-blue-200 text-sm md:text-base hidden">
@@ -508,26 +473,26 @@
                     </a>
                 </div>
             </div>
-            <div class="w-full md:w-1/2 h-56 md:h-80 bg-gray-200 rounded-[1.5rem] map-container shadow-inner overflow-hidden relative">
+            <div class="w-full md:w-1/2 h-56 md:h-80 bg-gray-200 dark:bg-zinc-800 rounded-[1.5rem] map-container shadow-inner overflow-hidden relative">
                 <iframe id="map-iframe"
                     title="מפת הגעה"
                     src="" 
                     frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
                 </iframe>
-                <div class="absolute inset-0 pointer-events-none border-[6px] border-white/50 rounded-[1.5rem]"></div>
+                <div class="absolute inset-0 pointer-events-none border-[6px] border-white/50 dark:border-zinc-900/50 rounded-[1.5rem]"></div>
             </div>
         </div>
     </main>
 
     <!-- Cart Sidebar -->
     <div id="cart-sidebar" class="fixed inset-0 bg-navy/60 backdrop-blur-sm z-[100] transition-opacity duration-300 opacity-0 pointer-events-none no-print" onclick="toggleCart(false)">
-        <div class="fixed inset-y-0 left-0 w-full md:w-[500px] bg-white shadow-2xl transform -translate-x-full transition-transform duration-500 flex flex-col" onclick="event.stopPropagation()">
+        <div class="fixed inset-y-0 left-0 w-full md:w-[500px] bg-white dark:bg-zinc-900 shadow-2xl transform -translate-x-full transition-transform duration-500 flex flex-col" onclick="event.stopPropagation()">
             
-            <button onclick="toggleCart(false)" class="absolute top-4 left-4 z-50 p-2 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200 shadow-sm md:hidden" aria-label="סגור חלון">
+            <button onclick="toggleCart(false)" class="absolute top-4 left-4 z-50 p-2 bg-gray-100 dark:bg-zinc-800 rounded-full text-gray-600 dark:text-white hover:bg-gray-200 dark:hover:bg-zinc-700 shadow-sm" aria-label="סגור חלון">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
-            <div id="cart-stepper" class="flex border-b text-center text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 mt-2 md:mt-0">
+            <div id="cart-stepper" class="flex border-b dark:border-zinc-800 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 mt-12 md:mt-0">
                 <div id="step-1-header" class="flex-1 py-6 step-item step-active transition-all relative">
                     <span class="z-10 relative">01. סל פריטים</span>
                     <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
@@ -542,43 +507,42 @@
                 </div>
             </div>
             <div id="cart-content" class="flex-1 overflow-y-auto p-8"></div>
-            <div id="mini-summary" class="hidden sticky bottom-0 z-50 px-8 py-3 bg-white border-t border-b text-xs flex justify-between items-center shadow-lg">
+            <div id="mini-summary" class="hidden sticky bottom-0 z-50 px-8 py-3 bg-white dark:bg-zinc-900 border-t border-b dark:border-zinc-800 text-xs flex justify-between items-center shadow-lg">
                 <div class="flex flex-col text-right">
-                    <span class="font-bold text-navy">סיכום הזמנה: <span id="summary-count">0</span> פריטים</span>
-                    <span class="text-[10px] text-gray-500" id="summary-dates"></span>
+                    <span class="font-bold text-navy dark:text-white">סיכום הזמנה: <span id="summary-count">0</span> פריטים</span>
+                    <span class="text-[10px] text-gray-500 dark:text-gray-400" id="summary-dates"></span>
                     <span id="active-order-label" class="text-gold font-bold hidden text-[10px] mt-1">עריכת הזמנה פעילה</span>
                 </div>
                 <button onclick="goToStep(1)" class="text-gold underline text-xs font-bold">עריכה</button>
             </div>
-            <div id="cart-footer" class="p-8 bg-white border-t space-y-4">
+            <div id="cart-footer" class="p-8 bg-white dark:bg-zinc-900 border-t dark:border-zinc-800 space-y-4">
                 <div id="cancel-order-area" class="hidden pb-4">
-                    <button onclick="cancelCurrentOrder()" class="w-full py-3 text-red-500 text-xs font-bold border border-red-100 rounded-xl hover:bg-red-50 transition-colors">ביטול ומחיקת ההזמנה לחלוטין</button>
+                    <button onclick="cancelCurrentOrder()" class="w-full py-3 text-red-500 text-xs font-bold border border-red-100 dark:border-red-900/35 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors">ביטול ומחיקת ההזמנה לחלוטין</button>
                 </div>
                 <div class="flex gap-3">
-                    <button id="prevBtn" onclick="prevStep()" class="hidden flex-1 py-4 rounded-2xl border border-gray-200 font-bold hover:bg-gray-50 transition-colors">חזור</button>
+                    <button id="prevBtn" onclick="prevStep()" class="hidden flex-1 py-4 rounded-2xl border border-gray-200 dark:border-zinc-700 font-bold hover:bg-gray-50 dark:hover:bg-zinc-800 text-slate-800 dark:text-white transition-colors">חזור</button>
                     <button id="nextBtn" onclick="nextStep()" class="flex-[2] gold-gradient py-4 rounded-2xl font-bold text-navy shadow-xl hover:scale-[1.02] active:scale-95 transition-all">המשך</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Admin Modal -->
+    <!-- Admin Modal - מוגדל לרוחב מקסימלי עם כפתורי מעבר ברורים -->
     <div id="admin-modal" class="fixed inset-0 bg-navy/80 backdrop-blur-md z-[200] hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-[2rem] w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl">
-            <div class="p-8 bg-[#0b1f3a] text-[#f5d37a] flex justify-between items-center">
+        <div class="bg-white dark:bg-zinc-900 rounded-[2rem] w-full max-w-7xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
+            <div class="p-6 md:p-8 bg-[#0b1f3a] text-[#f5d37a] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h2 class="text-2xl font-bold serif italic leading-none text-[#f5d37a]">ניהול מלאי והזמנות</h2>
                     <p id="admin-subtitle" class="text-[10px] uppercase tracking-widest mt-2 text-[#e6c46f] opacity-70">Inventory & Order Management</p>
                 </div>
-                <div class="flex items-center gap-4">
-                    <button id="admin-view-toggle" onclick="showOrdersHistory()" class="px-4 py-2 bg-[#132f55] text-[#f5d37a] rounded-xl hover:bg-white/10 text-xs font-bold transition-colors hidden md:block">היסטוריית הזמנות</button>
-                    <button onclick="closeAdmin()" class="p-2 -mt-1 text-[#f5d37a] bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="סגור"><i data-lucide="x"></i></button>
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <!-- אפשרות לחזור לעמוד המוצרים גם כשנמצאים באזור ההזמנות -->
+                    <button id="admin-back-inv" onclick="renderAdminTable()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-[#f5d37a] rounded-xl text-xs font-bold transition-colors hidden">חזור לניהול פריטים</button>
+                    <button id="admin-view-toggle" onclick="showOrdersHistory()" class="px-4 py-2 bg-[#132f55] text-[#f5d37a] rounded-xl hover:bg-white/25 text-xs font-bold transition-colors">היסטוריית הזמנות</button>
+                    <button onclick="closeAdmin()" class="p-2 text-[#f5d37a] bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="סגור"><i data-lucide="x"></i></button>
                 </div>
             </div>
-            <div class="md:hidden p-4 bg-[#132f55] border-t border-white/10">
-                 <button onclick="showOrdersHistory()" class="w-full py-2 bg-white/10 text-[#f5d37a] rounded-xl text-xs font-bold">היסטוריית הזמנות</button>
-            </div>
-            <div id="admin-content" class="flex-1 overflow-y-auto p-8"></div>
+            <div id="admin-content" class="flex-1 overflow-y-auto p-6 md:p-8 dark:bg-zinc-900"></div>
         </div>
     </div>
 
@@ -598,6 +562,7 @@
             </thead>
             <tbody id="print-items-list"></tbody>
         </table>
+        <p id="print-consent-timestamp" class="text-xs text-gray-400 mt-8 font-mono"></p>
     </div>
 
     <!-- Footer - תחתית עמוד סטטוטורית ומשפטית -->
@@ -670,9 +635,7 @@
         }
 
         function restrictPastDates() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('filter-p-date').min = today;
-            document.getElementById('filter-r-date').min = today;
+            // התאריכים יוגדלו ויוגבלו רק בתוך טופס מודל העגלה (Step 2)
         }
 
         async function fetchInventory(pDate = '', rDate = '') {
@@ -692,7 +655,6 @@
                     ...i,
                     status: (i['תיאור_אפשרי'] && i['תיאור_אפשרי'].trim().toLowerCase() === 'hidden') ? 'hidden' : 'active',
                     מלאי: parseInt(i.מלאי || i['מלאי'] || 0),
-                    // קבלת מלאי זמין המחושב בצורה מאובטחת מהשרת
                     available_stock: i.available_stock !== undefined ? parseInt(i.available_stock) : parseInt(i.מלאי || i['מלאי'] || 0)
                 }));
                 aboutConfig = data.About || {};
@@ -701,11 +663,8 @@
                 initProductStates();
                 applyConfig();
                 
-                if (currentCategory === 'הכל') {
-                    renderHomeCategories();
-                } else {
-                    filterByCategory(currentCategory);
-                }
+                // אתחול דף הבית המופרד: בהתחלה מציגים רק קטגוריות
+                renderHomeCategories();
                 
                 updateCartUI();
                 updateCartSummary();
@@ -800,17 +759,17 @@
             return match;
         }
 
+        // תיקון: גלריית התמונות קוראת את המפתח שנבחר בגלריית החיצים
         function getCardImage(pName) {
             const p = groupedProducts.find(x => x.שם_פריט === pName);
             if (!p) return DEFAULT_IMG;
             
-            const match = getMatchingVariation(pName);
-            if (match && match.תמונה) {
-                return formatImageUrl(match.תמונה);
+            const state = productState[pName];
+            const idx = state ? state.currentImageIndex : 0;
+            if (p.images && p.images[idx]) {
+                return p.images[idx];
             }
-            
-            const idx = productState[pName]?.currentImageIndex || 0;
-            return p.images[idx] || DEFAULT_IMG;
+            return DEFAULT_IMG;
         }
 
         function getDisplayNameForVariation(vRow) {
@@ -834,7 +793,6 @@
             const desc = aboutConfig['תיאור'] || 'הזמנת פריטים אונליין בקלות';
             const phone = aboutConfig['טלפון'] || '';
             const whatsapp = aboutConfig['וואטסאפ'] || '';
-            const hours = aboutConfig['שעות פתיחה'] || 'בתיאום מראש';
             const location = aboutConfig['מיקום'] || '';
             const waze = aboutConfig['קישור וויז'] || '';
             const bgImg = aboutConfig['תמונת רקע'] || '';
@@ -847,11 +805,8 @@
             document.getElementById('print-brand-title').innerText = `אישור הזמנה - ${name}`;
 
             if (bgImg) {
-                document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(to bottom, rgba(26, 28, 44, 0.2), rgba(26, 28, 44, 0.5)), url('${formatImageUrl(bgImg)}')`;
+                document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(to bottom, rgba(26, 28, 44, 0.3), rgba(26, 28, 44, 0.7)), url('${formatImageUrl(bgImg)}')`;
             }
-
-            document.getElementById('opening-hours-display').innerText = hours;
-            document.getElementById('location-text-display').innerText = location || 'פרטי איסוף והחזרה';
 
             const waFloat = document.getElementById('whatsapp-float');
             if (whatsapp && waFloat) {
@@ -899,19 +854,19 @@
         }
 
         function renderHomeCategories() {
-            document.getElementById('inventory-grid').classList.add('hidden');
-            document.getElementById('sticky-catalog-header').classList.add('hidden');
+            document.getElementById('catalog-view').classList.add('hidden');
+            document.getElementById('home-view').classList.remove('hidden');
             const homeContainer = document.getElementById('home-categories-container');
-            homeContainer.classList.remove('hidden');
 
             const categories = [...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
             
             homeContainer.innerHTML = categories.map(cat => {
                 const repItem = groupedProducts.find(i => i.קטגוריה === cat && i.images[0] !== DEFAULT_IMG);
                 const bgImage = repItem ? repItem.images[0] : DEFAULT_IMG;
+                const catEscaped = cat.replace(/'/g, "\\'");
 
                 return `
-                    <div role="button" tabindex="0" onclick="enterCategory('${cat.replace(/'/g, "\\'")}')" onkeypress="if(event.key === 'Enter') enterCategory('${cat.replace(/'/g, "\\'")}')" class="category-box" aria-label="קטגוריית ${cat}">
+                    <div role="button" tabindex="0" onclick="enterCategory('${catEscaped}')" onkeypress="if(event.key === 'Enter') enterCategory('${catEscaped}')" class="category-box" aria-label="קטגוריית ${cat}">
                         <img src="${bgImage}" alt="${cat}">
                         <h3>${cat}</h3>
                     </div>
@@ -920,18 +875,17 @@
         }
 
         function enterCategory(cat) {
-            document.getElementById('home-categories-container').classList.add('hidden');
-            document.getElementById('inventory-grid').classList.remove('hidden');
-            document.getElementById('sticky-catalog-header').classList.remove('hidden');
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('catalog-view').classList.remove('hidden');
             filterByCategory(cat);
-            document.getElementById('sticky-catalog-header').scrollIntoView({behavior: 'smooth'});
+            document.getElementById('catalog-view').scrollIntoView({behavior: 'smooth'});
         }
 
         function backToMain() {
-            document.getElementById('inventory-grid').classList.add('hidden');
-            document.getElementById('sticky-catalog-header').classList.add('hidden');
-            document.getElementById('home-categories-container').classList.remove('hidden');
+            document.getElementById('catalog-view').classList.add('hidden');
+            document.getElementById('home-view').classList.remove('hidden');
             document.getElementById('searchInput').value = '';
+            document.getElementById('searchInputMobile').value = '';
         }
 
         function renderCategories() {
@@ -944,7 +898,7 @@
                     <button onclick="filterByCategory('${cat.replace(/'/g, "\\'")}')" 
                         class="px-5 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap ${isActive 
                             ? 'bg-navy text-gold border-navy shadow-md scale-105' 
-                            : 'bg-white text-gray-500 border-gray-200 hover:border-gold hover:text-navy'}">
+                            : 'bg-white dark:bg-zinc-800 text-gray-500 border-gray-200 dark:border-zinc-700 hover:border-gold hover:text-navy dark:hover:text-white'}">
                         ${cat}
                     </button>
                 `;
@@ -965,56 +919,10 @@
         }
 
         async function handleDateFilter() {
-            const pDate = document.getElementById('filter-p-date').value;
-            const rDate = document.getElementById('filter-r-date').value;
-            
-            if (pDate) pendingFormData.pDate = pDate;
-            if (rDate) pendingFormData.rDate = rDate;
-
-            if (pDate && rDate) {
-                if (new Date(rDate) < new Date(pDate)) {
-                    showToast("תאריך החזרה לא יכול להיות מוקדם מתאריך לקיחה");
-                    document.getElementById('filter-r-date').value = "";
-                    return;
-                }
-                document.getElementById('availability-message').classList.remove('hidden');
-                showToast("טוען זמינות מלאי מעודכנת...");
-                await fetchInventory(pDate, rDate);
-            } else {
-                document.getElementById('availability-message').classList.add('hidden');
-            }
+            // הוסר מדף הבית
         }
 
-        async function clearDateFilter() {
-            document.getElementById('filter-p-date').value = '';
-            document.getElementById('filter-r-date').value = '';
-            pendingFormData.pDate = '';
-            pendingFormData.rDate = '';
-            document.getElementById('availability-message').classList.add('hidden');
-            await fetchInventory(); 
-        }
-
-        function setNextShabbatFilter() {
-            const today = new Date();
-            const friday = new Date(today);
-            friday.setDate(today.getDate() + (5 - today.getDay() + 7) % 7);
-            if(today.getDay() >= 5) friday.setDate(friday.getDate() + 7);
-
-            const sunday = new Date(friday);
-            sunday.setDate(friday.getDate() + 2);
-
-            const formatDate = (date) => {
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                return `${year}-${month}-${day}`;
-            };
-
-            document.getElementById('filter-p-date').value = formatDate(friday);
-            document.getElementById('filter-r-date').value = formatDate(sunday);
-            handleDateFilter();
-        }
-
+        // תיקון: גלריית תמונות הפוכה - תוקן וסונכרן עם ה-DOM
         function slideImage(pName, direction, event) {
             if (event) event.stopPropagation();
             const p = groupedProducts.find(x => x.שם_פריט === pName);
@@ -1059,20 +967,22 @@
             if (layout === 'grid') {
                 gridContainer.classList.remove('list-view');
                 gridContainer.classList.add('grid-view');
-                gridBtn.classList.add('bg-navy', 'text-gold', 'shadow-md');
-                gridBtn.classList.remove('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
-                listBtn.classList.add('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
-                listBtn.classList.remove('bg-navy', 'text-gold', 'shadow-md');
+                gridBtn.className = "p-1.5 rounded-lg transition-colors bg-navy text-gold dark:bg-gold dark:text-navy";
+                listBtn.className = "p-1.5 rounded-lg transition-colors text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700";
             } else {
                 gridContainer.classList.remove('grid-view');
                 gridContainer.classList.add('list-view');
-                listBtn.classList.add('bg-navy', 'text-gold', 'shadow-md');
-                listBtn.classList.remove('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
-                gridBtn.classList.add('bg-gray-100', 'text-gray-400', 'hover:bg-gray-200');
-                gridBtn.classList.remove('bg-navy', 'text-gold', 'shadow-md');
+                listBtn.className = "p-1.5 rounded-lg transition-colors bg-navy text-gold dark:bg-gold dark:text-navy";
+                gridBtn.className = "p-1.5 rounded-lg transition-colors text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700";
             }
             renderGrid(displayedItems);
             lucide.createIcons();
+        }
+
+        // פונקציית עזר למניעת שבירת פקודות JS Inline בשל תווים מיוחדים וגרשיים
+        function escapeHtmlParam(str) {
+            if (!str) return '';
+            return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         }
 
         function renderGrid(items = null, isAppend = false) {
@@ -1106,20 +1016,22 @@
                 const state = productState[pName];
                 const match = getMatchingVariation(pName);
                 
-                // המלאי הזמין מתקבל כעת ישירות מהשדה המחושב בשרת
+                // המלאי הזמין מתקבל בצורה מאובטחת מהשרת
                 let displayStock = match ? (match.available_stock !== undefined ? match.available_stock : match.מלאי) : 0;
 
                 const isOutOfStock = displayStock <= 0;
                 const cardImg = getCardImage(pName);
                 const pNameSafe = pName.replace(/"/g, '&quot;');
+                const pNameEscaped = escapeHtmlParam(pName);
                 
                 const showSlider = p.images.length > 1;
+                // תיקון חיצים הפוכים בגלריה
                 const sliderHTML = showSlider ? `
-                    <button onclick="slideImage('${pName.replace(/'/g, "\\'")}', -1, event)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-navy p-1.5 rounded-full shadow z-10 hover:scale-105 transition-all" aria-label="תמונה קודמת">
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
-                    <button onclick="slideImage('${pName.replace(/'/g, "\\'")}', 1, event)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white text-navy p-1.5 rounded-full shadow z-10 hover:scale-105 transition-all" aria-label="תמונה הבאה">
+                    <button onclick="slideImage('${pNameEscaped}', -1, event)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-zinc-800/80 hover:bg-white text-navy dark:text-white p-1.5 rounded-full shadow z-10 transition-all" aria-label="תמונה קודמת">
                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="slideImage('${pNameEscaped}', 1, event)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-zinc-800/80 hover:bg-white text-navy dark:text-white p-1.5 rounded-full shadow z-10 transition-all" aria-label="תמונה הבאה">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
                     </button>
                 ` : '';
 
@@ -1129,16 +1041,18 @@
                     if (options.length > 0) {
                         const currentSelected = state.selectedAttributes[attrName];
                         selectorsHTML += `
-                            <div class="mb-3">
+                            <div class="mb-3 text-right">
                                 <label class="block text-[11px] text-gray-400 font-bold mb-1">${attrName}:</label>
                                 <div class="flex flex-wrap gap-1">
                                     ${options.map(opt => {
                                         const isSelected = opt === currentSelected;
+                                        const attrNameEscaped = escapeHtmlParam(attrName);
+                                        const optEscaped = escapeHtmlParam(opt);
                                         return `
-                                            <button onclick="selectAttribute('${pName.replace(/'/g, "\\'")}', '${attrName.replace(/'/g, "\\'")}', '${opt.replace(/'/g, "\\'")}')" 
+                                            <button onclick="selectAttribute('${pNameEscaped}', '${attrNameEscaped}', '${optEscaped}')" 
                                                 class="px-2.5 py-1 rounded-xl text-xs font-semibold border transition-all ${isSelected 
                                                     ? 'bg-gold text-navy border-gold shadow-sm font-bold scale-105' 
-                                                    : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-gray-300'}">
+                                                    : 'bg-gray-50 dark:bg-zinc-800 text-gray-500 border-gray-200 dark:border-zinc-700 hover:border-gray-300'}">
                                                 ${opt}
                                             </button>
                                         `;
@@ -1155,28 +1069,29 @@
                 const qtySpanId = `qty-${pName.replace(/\s+/g, '-')}`;
 
                 return `
-                    <div class="item-card bg-white rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75' : ''}">
-                        <div class="item-image-wrapper h-64 ${currentLayout === 'list' ? 'w-48 h-auto' : 'w-full'} overflow-hidden relative bg-gray-100">
+                    <div class="item-card bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75' : ''}">
+                        <div class="item-image-wrapper h-64 ${currentLayout === 'list' ? 'w-48 h-auto' : 'w-full'} overflow-hidden relative bg-gray-100 dark:bg-zinc-800">
                             ${sliderHTML}
                             <img src="${cardImg}" loading="lazy" decoding="async" alt="${pNameSafe}" class="w-full h-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-105" onclick="openImage('${cardImg}')">
-                            <div class="absolute bottom-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-navy shadow-sm">
+                            <div class="absolute bottom-2 right-2 bg-white/90 dark:bg-zinc-800/95 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-navy dark:text-white shadow-sm">
                                 ${p.קטגוריה}
                             </div>
                             ${isOutOfStock ? `<div class="absolute inset-0 bg-navy/30 flex items-center justify-center"><span class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold text-xs shadow-lg transform -rotate-6">אזל מהמלאי</span></div>` : ''}
                         </div>
                         <div class="item-content p-6 flex flex-col flex-1">
                             <div class="item-details flex-1">
-                                <h3 class="font-bold text-lg text-navy mb-1">${pName}</h3>
-                                <p class="text-xs ${hasDates ? 'text-gold font-bold' : 'text-gray-500'} mb-3">
+                                <h3 class="font-bold text-lg text-navy dark:text-white mb-1 text-right">${pName}</h3>
+                                <p class="text-xs text-right ${hasDates ? 'text-gold font-bold' : 'text-gray-500'} mb-3">
                                     ${hasDates ? `פנוי לתאריך הנבחר: ${displayStock}` : `במלאי כולל: ${displayStock}`}
                                 </p>
                                 ${selectorsHTML}
                             </div>
+                            <!-- תיקון: לחצני פלוס ומינוס מוגנים ורספונסיביים לחלוטין -->
                             <div class="item-actions mt-4 flex items-center justify-between">
-                                <div class="flex items-center gap-3 bg-gray-50 p-1 rounded-xl">
-                                    <button onclick="removeProductFromCart('${pName.replace(/'/g, "\\'")}')" class="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors active:scale-95 text-slate-800" aria-label="הפחת כמות">-</button>
-                                    <span class="w-6 text-center font-bold text-slate-800" id="${qtySpanId}">${inCart}</span>
-                                    <button onclick="addProductToCart('${pName.replace(/'/g, "\\'")}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white rounded-lg transition-colors active:scale-95 text-slate-800 ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
+                                <div class="flex items-center gap-3 bg-gray-50 dark:bg-zinc-800 p-1 rounded-xl">
+                                    <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white" aria-label="הפחת כמות">-</button>
+                                    <span class="w-6 text-center font-bold text-slate-800 dark:text-white" id="${qtySpanId}">${inCart}</span>
+                                    <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
                                 </div>
                                 <button onclick="toggleCart(true)" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה"><i data-lucide="shopping-bag"></i></button>
                             </div>
@@ -1184,7 +1099,7 @@
                     </div>`;
             }).join('');
             
-            grid.insertAdjacentHTML('beforeend', html);
+            grid.innerHTML = html;
             lucide.createIcons();
         }
 
@@ -1255,7 +1170,7 @@
         }
 
         window.addEventListener('scroll', () => {
-            if(document.getElementById('inventory-grid').classList.contains('hidden')) return;
+            if(document.getElementById('catalog-view').classList.contains('hidden')) return;
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
                 if (itemsToShow < displayedItems.length) {
                     itemsToShow += ITEMS_BATCH;
@@ -1348,22 +1263,26 @@
         }
 
         function renderCartStep1(cont) {
-            cont.innerHTML = `<h4 class="font-bold serif text-xl mb-6 text-navy">הסל שלך</h4>` + cart.map(item => `
-              <div class="flex items-center gap-4 bg-gray-50 p-4 rounded-2xl mb-3 relative border border-gray-100 shadow-sm text-slate-800">
-                <button onclick="updateQtyWithVariation({שם_פריט: '${item.parentName || item.שם_פריט}'}, '${item.displayName}', -${item.qty})" class="absolute top-2 left-2 text-red-400 hover:text-red-600 transition-colors p-1" aria-label="הסר פריט">
+            cont.innerHTML = `<h4 class="font-bold serif text-xl mb-6 text-navy dark:text-white text-right">הסל שלך</h4>` + cart.map(item => {
+                const pNameEscaped = escapeHtmlParam(item.parentName || item.שם_פריט);
+                const dispNameEscaped = escapeHtmlParam(item.displayName);
+                return `
+              <div class="flex items-center gap-4 bg-gray-50 dark:bg-zinc-800 p-4 rounded-2xl mb-3 relative border border-gray-100 dark:border-zinc-700 shadow-sm text-slate-800 dark:text-white">
+                <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}'}, '${dispNameEscaped}', -${item.qty})" class="absolute top-2 left-2 text-red-400 hover:text-red-600 transition-colors p-1" aria-label="הסר פריט">
                     <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
-                <img src="${formatImageUrl(item.תמונה)}" alt="${item.displayName}" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-gray-200">
+                <img src="${formatImageUrl(item.תמונה)}" alt="${item.displayName}" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-gray-200 dark:border-zinc-700">
                 <div class="flex-1 text-right">
-                    <div class="text-xs font-bold text-navy leading-tight">${item.displayName}</div>
+                    <div class="text-xs font-bold text-navy dark:text-white leading-tight">${item.displayName}</div>
                     <div class="text-[10px] text-gray-400 mt-1">${item.קטגוריה}</div>
                 </div>
-                <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl p-1">
-                    <button onclick="updateQtyWithVariation({שם_פריט: '${item.parentName || item.שם_פריט}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${item.displayName}', -1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">-</button>
+                <div class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl p-1">
+                    <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${dispNameEscaped}', -1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white">-</button>
                     <span class="w-4 text-center text-xs font-bold">${item.qty}</span>
-                    <button onclick="updateQtyWithVariation({שם_פריט: '${item.parentName || item.שם_פריט}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${item.displayName}', 1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">+</button>
+                    <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${dispNameEscaped}', 1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white">+</button>
                 </div>
-            </div>`).join('');
+              </div>`;
+            }).join('');
             lucide.createIcons();
         }
 
@@ -1394,46 +1313,47 @@
             const today = new Date().toISOString().split('T')[0];
 
             cont.innerHTML = `
-                <div class="space-y-5">
-                    <h4 class="font-bold serif text-xl text-navy">פרטי הזמנה ותאריכים</h4>
+                <div class="space-y-5 text-right">
+                    <h4 class="font-bold serif text-xl text-navy dark:text-white">פרטי הזמנה ותאריכים</h4>
                     
-                    <button onclick="setNextShabbat()" class="w-full py-3 bg-navy/5 text-navy border border-navy/10 rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-navy hover:text-white transition-all group">
-                        <i data-lucide="calendar-check" class="text-gold group-hover:text-white"></i>
+                    <button onclick="setNextShabbat()" class="w-full py-3 bg-navy/5 text-navy dark:bg-white/5 dark:text-gold border border-navy/10 dark:border-white/10 rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-navy hover:text-white dark:hover:bg-zinc-800 transition-all group">
+                        <i data-lucide="calendar-check" class="text-gold"></i>
                         בחירה אוטומטית לסוף השבוע הקרוב
                     </button>
 
-                    <input type="text" id="u-name" placeholder="שם מלא" value="${pendingFormData.name || ''}" class="w-full p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800">
-                    <input type="tel" id="u-phone" placeholder="מספר טלפון" value="${pendingFormData.phone || ''}" class="w-full p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800">
+                    <input type="text" id="u-name" placeholder="שם מלא" value="${pendingFormData.name || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                    <input type="tel" id="u-phone" placeholder="מספר טלפון" value="${pendingFormData.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך התחלה / לקיחה</label>
-                            <input type="date" id="p-date" min="${today}" value="${defaultP}" class="w-full p-4 bg-gray-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800">
+                            <input type="date" id="p-date" min="${today}" value="${defaultP}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך סיום / החזרה</label>
-                            <input type="date" id="r-date" min="${today}" value="${defaultR}" class="w-full p-4 bg-gray-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800">
+                            <input type="date" id="r-date" min="${today}" value="${defaultR}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
                         </div>
                     </div>
-                    <textarea id="u-notes" placeholder="הערות מיוחדות להזמנה..." class="w-full p-4 bg-gray-50 rounded-2xl h-24 border-none focus:ring-2 focus:ring-gold transition-all text-slate-800">${pendingFormData.notes || ''}</textarea>
+                    <textarea id="u-notes" placeholder="הערות מיוחדות להזמנה..." class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl h-24 border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">${pendingFormData.notes || ''}</textarea>
                 </div>`;
+            lucide.createIcons();
         }
 
         function renderCartStep3(cont) {
             cont.innerHTML = `
-                <div class="space-y-6">
+                <div class="space-y-6 text-right">
                     <div class="gold-gradient text-navy p-6 rounded-[2.5rem] shadow-xl border border-gold/50">
                         <p class="text-xs opacity-80 uppercase tracking-widest mb-1 text-navy/70">סיכום הזמנה עבור</p>
                         <p class="font-bold text-2xl italic text-navy">${pendingFormData.name}</p>
                         <p class="text-sm mt-1 text-navy/80">${pendingFormData.pDate} ⇠ ${pendingFormData.rDate}</p>
                     </div>
 
-                    <div class="bg-gray-50 p-6 rounded-[2rem] space-y-3 text-sm border border-gray-100 text-slate-800">
-                        ${cart.map(c => `<div class="flex justify-between items-center"><span class="text-gray-600">${c.displayName}</span><span class="font-bold text-navy">${c.qty} יח'</span></div>`).join('')}
+                    <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-[2rem] space-y-3 text-sm border border-gray-100 dark:border-zinc-700 text-slate-800 dark:text-white">
+                        ${cart.map(c => `<div class="flex justify-between items-center"><span class="text-gray-600 dark:text-gray-300">${c.displayName}</span><span class="font-bold text-navy dark:text-gold">${c.qty} יח'</span></div>`).join('')}
                     </div>
                     <div class="space-y-4">
-                        <details class="bg-gray-100 rounded-2xl p-4 transition-all">
-                            <summary class="font-bold text-xs cursor-pointer flex justify-between items-center text-navy">מדיניות ותנאי המקום <i data-lucide="chevron-down" class="w-4 h-4"></i></summary>
-                            <div class="text-[11px] mt-3 space-y-2 text-gray-600 leading-relaxed border-t border-gray-200 pt-3 text-right">
+                        <details class="bg-gray-100 dark:bg-zinc-800 rounded-2xl p-4 transition-all">
+                            <summary class="font-bold text-xs cursor-pointer flex justify-between items-center text-navy dark:text-white">מדיניות ותנאי המקום <i data-lucide="chevron-down" class="w-4 h-4"></i></summary>
+                            <div class="text-[11px] mt-3 space-y-2 text-gray-600 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-zinc-700 pt-3 text-right">
                                 <p>• באחריות המזמין להחזיר את הפריטים כשהם שלמים, נקיים ותקינים.</p>
                                 <p>• יש להחזיר את הציוד בזמן המוסכם על מנת למנוע פגיעה בהזמנות הבאות.</p>
                                 <p>• במקרה של אובדן או נזק בלתי הפיך לציוד, המזמין ישפה את המקום בגובה עלות התיקון/רכישה.</p>
@@ -1441,21 +1361,11 @@
                         </details>
                         <label class="flex items-center gap-3 p-3 bg-gold/5 rounded-2xl border border-gold/10 cursor-pointer">
                             <input type="checkbox" id="terms-checkbox" class="w-5 h-5 text-gold rounded focus:ring-gold"> 
-                            <span class="text-xs font-bold text-navy/80 text-right">קראתי ואני מאשר את תנאי ומדיניות ההזמנה</span>
+                            <span class="text-xs font-bold text-navy/80 dark:text-white/80 text-right font-semibold">קראתי ואני מאשר את תנאי ומדיניות ההזמנה</span>
                         </label>
                     </div>
                 </div>`;
             lucide.createIcons();
-        }
-
-        // יצירת קוד הזמנה אקראי ומאובטח בן 6 תווים (אותיות גדולות ומספרים)
-        function generateSecureOrderCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let code = '';
-            for (let i = 0; i < 6; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return code;
         }
 
         async function sendOrder() {
@@ -1486,16 +1396,12 @@
                 activeOrderCode = code;
                 localStorage.removeItem('gemach_cart');
                 cart = [];
-                document.getElementById('filter-p-date').value = '';
-                document.getElementById('filter-r-date').value = '';
                 
-                // שימוש בפרטים השמורים לפני איפוסם ליצירת כפתור הוואטסאפ
                 const savedFormData = { ...pendingFormData };
                 pendingFormData = {};
                 updateCartUI();
                 await fetchInventory();
                 
-                // עדכון כפתור הוואטסאפ עם ההודעה המעוצבת החדשה
                 setupWhatsAppButton(code, savedFormData, payload.פריטים);
             } catch (e) { 
                 showToast('שגיאה בשליחת ההזמנה'); 
@@ -1532,13 +1438,13 @@ ${itemsText.replace(/, /g, '\n')}
             document.getElementById('mini-summary').classList.add('hidden');
             
             document.getElementById('cart-content').innerHTML = `
-                <div class="text-center space-y-8 py-10 text-slate-800">
-                    <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm">
+                <div class="text-center space-y-8 py-10 text-slate-800 dark:text-white">
+                    <div class="w-20 h-20 bg-green-100 dark:bg-green-950/40 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm">
                         <i data-lucide="check-circle-2" class="w-12 h-12"></i>
                     </div>
                     <div>
-                        <h3 class="text-3xl font-bold serif italic text-navy">ההזמנה התקבלה!</h3>
-                        <p class="text-gray-500 mt-2">קיבלנו את פרטי ההזמנה שלך במערכת.</p>
+                        <h3 class="text-3xl font-bold serif italic text-navy dark:text-gold">ההזמנה התקבלה!</h3>
+                        <p class="text-gray-500 dark:text-gray-400 mt-2">קיבלנו את פרטי ההזמנה שלך במערכת.</p>
                     </div>
                     <div class="gold-gradient text-navy p-8 rounded-[2.5rem] shadow-2xl border-b-4 border-gold">
                         <p class="text-sm opacity-80 uppercase tracking-widest mb-2 text-navy/70">קוד ההזמנה המאובטח:</p>
@@ -1557,7 +1463,7 @@ ${itemsText.replace(/, /g, '\n')}
                         <button onclick="downloadPdf()" class="w-full py-5 bg-navy text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
                             <i data-lucide="file-text" class="w-5 h-5"></i> הורד כקובץ PDF
                         </button>
-                        <button onclick="location.reload()" class="w-full py-4 text-gray-400 font-bold text-sm hover:text-navy transition-colors">חזרה לדף הבית</button>
+                        <button onclick="location.reload()" class="w-full py-4 text-gray-400 font-bold text-sm hover:text-navy dark:hover:text-white transition-colors">חזרה לדף הבית</button>
                     </div>
                 </div>`;
             lucide.createIcons();
@@ -1575,7 +1481,6 @@ ${itemsText.replace(/, /g, '\n')}
             fullPageLoader.classList.remove('hidden');
 
             try {
-                // משיכת הזמנה ספציפית ומאובטחת מהשרת ללא חשיפת מאגר ההזמנות המלא
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({
@@ -1664,7 +1569,6 @@ ${itemsText.replace(/, /g, '\n')}
                 </tr>
             `).join('');
 
-            // הוספת חותמת הסכמה דיגיטלית של הלקוח לקובץ ה-PDF
             document.getElementById('print-consent-timestamp').innerText = `אושר דיגיטלית: הלקוח אישר את תקנון האתר ומדיניות הפרטיות | תאריך אישור: ${formattedDate} | מזהה הזמנה: ${code}`;
         }
 
@@ -1687,7 +1591,7 @@ ${itemsText.replace(/, /g, '\n')}
                 const result = await response.json();
 
                 if (result.status === "success") {
-                    adminPassword = pass; // שמירת הסיסמה בצורה בטוחה בפרונטאנד לצורך פעולות ניהול עתידיות
+                    adminPassword = pass; 
                     document.getElementById('admin-modal').classList.remove('hidden');
                     renderAdminTable();
                     showToast('התחברת בהצלחה');
@@ -1716,22 +1620,24 @@ ${itemsText.replace(/, /g, '\n')}
         }
 
         function renderAdminTable() {
+            // כפתור חזרה חבוי כשנמצאים כבר בעריכת המוצרים
+            document.getElementById('admin-back-inv').classList.add('hidden');
             document.getElementById('admin-subtitle').innerText = "ניהול פריטים ומלאי";
             const content = document.getElementById('admin-content');
             const varCols = getVariationColumns();
             
             const varInputsHTML = varCols.map(col => {
                 const cleanName = col.replace('וריאציה_', '');
-                return `<input type="text" id="new-${col}" placeholder="${cleanName}" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">`;
+                return `<input type="text" id="new-${col}" placeholder="${cleanName}" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">`;
             }).join('');
 
             content.innerHTML = `
-                <div id="admin-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 p-6 bg-gray-50 rounded-3xl border border-dashed border-gray-300">
+                <div id="admin-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 p-6 bg-gray-50 dark:bg-zinc-800/50 rounded-3xl border border-dashed border-gray-300 dark:border-zinc-700">
                     <input type="hidden" id="edit-id">
-                    <input type="text" id="new-name" placeholder="שם פריט" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
-                    <input type="number" id="new-qty" placeholder="מלאי" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
-                    <input type="text" id="new-cat" placeholder="קטגוריה" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
-                    <input type="text" id="new-img" placeholder="קישור תמונה" class="p-3 border rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="text" id="new-name" placeholder="שם פריט" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="number" id="new-qty" placeholder="מלאי" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="text" id="new-cat" placeholder="קטגוריה" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="text" id="new-img" placeholder="קישור תמונה" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
                     ${varInputsHTML}
                     <button onclick="saveItem()" id="save-btn" class="gold-gradient rounded-xl font-bold py-4 text-navy shadow-md md:col-span-4">שמור פריט</button>
                 </div>
@@ -1745,20 +1651,21 @@ ${itemsText.replace(/, /g, '\n')}
                     return `<span class="text-[10px] bg-gold/10 text-gold px-2 py-0.5 rounded-lg border border-gold/20 font-bold ml-1">${k.replace('וריאציה_', '')}: ${item[k]}</span>`;
                 }).join('');
 
+                const itemPNameEscaped = escapeHtmlParam(item['שם_פריט']);
                 return `
-                <div class="flex items-center gap-4 p-4 bg-white border rounded-2xl hover:border-gold transition-colors ${isHidden ? 'bg-gray-50' : ''}">
-                    <img src="${formatImageUrl(item['תמונה'])}" onerror="this.src='${DEFAULT_IMG}'" class="w-16 h-16 rounded-lg object-cover border border-gray-200">
+                <div class="flex items-center gap-4 p-4 bg-white dark:bg-zinc-900 border dark:border-zinc-800 rounded-2xl hover:border-gold transition-colors ${isHidden ? 'bg-gray-50' : ''}">
+                    <img src="${formatImageUrl(item['תמונה'])}" onerror="this.src='${DEFAULT_IMG}'" class="w-16 h-16 rounded-lg object-cover border border-gray-200 dark:border-zinc-700">
                     <div class="flex-1 text-right">
-                        <div class="font-bold text-sm text-navy">${item['שם_פריט']} (מלאי: ${item.מלאי})</div>
+                        <div class="font-bold text-sm text-navy dark:text-white">${item['שם_פריט']} (מלאי: ${item.מלאי})</div>
                         <div class="flex flex-wrap gap-1 mt-1">${varBadges}</div>
-                        ${isHidden ? '<div class="mt-1"><span class="text-[9px] bg-gray-200 px-2 py-0.5 rounded text-gray-500">מוסתר מהקטלוג</span></div>' : ''}
+                        ${isHidden ? '<div class="mt-1"><span class="text-[9px] bg-gray-200 dark:bg-zinc-800 px-2 py-0.5 rounded text-gray-500">מוסתר מהקטלוג</span></div>' : ''}
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="toggleItemVisibility('${item['שם_פריט'].replace(/'/g, "\\'")}', '${item.status}')" class="p-2 hover:bg-gray-100 rounded-lg text-navy" title="${isHidden ? 'הצג' : 'הסתר'}">
+                        <button onclick="toggleItemVisibility('${itemPNameEscaped}', '${item.status}')" class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg text-navy dark:text-white" title="${isHidden ? 'הצג' : 'הסתר'}">
                             <i data-lucide="${isHidden ? 'eye-off' : 'eye'}" class="w-4 h-4 ${isHidden ? 'text-gray-400' : 'text-gold'}"></i>
                         </button>
-                        <button onclick="editItem(${idx})" class="p-2 hover:bg-gray-100 rounded-lg text-navy"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-                        <button onclick="deleteItem('${item['שם_פריט'].replace(/'/g, "\\'")}')" class="p-2 text-red-500 hover:bg-red-50 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <button onclick="editItem(${idx})" class="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg text-navy dark:text-white"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                        <button onclick="deleteItem('${itemPNameEscaped}')" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </div>
                 </div>`;
             }).join('');
@@ -1778,7 +1685,7 @@ ${itemsText.replace(/, /g, '\n')}
                     method: 'POST', 
                     body: JSON.stringify({
                         action: "editItem", 
-                        password: adminPassword, // אימות מאובטח בשרת
+                        password: adminPassword, 
                         שם_פריט: name, 
                         status: newStatus,
                         old_name: name,
@@ -1791,6 +1698,8 @@ ${itemsText.replace(/, /g, '\n')}
         }
 
         async function showOrdersHistory() {
+            // הוספת לחצן "חזור לעמוד הפריטים" באזור ההזמנות
+            document.getElementById('admin-back-inv').classList.remove('hidden');
             document.getElementById('admin-subtitle').innerText = "היסטוריית הזמנות מפורטת";
             const content = document.getElementById('admin-content');
             
@@ -1802,7 +1711,7 @@ ${itemsText.replace(/, /g, '\n')}
                     method: 'POST',
                     body: JSON.stringify({
                         action: "getOrders",
-                        password: adminPassword // אימות מנהל קפדני
+                        password: adminPassword 
                     })
                 });
                 
@@ -1819,15 +1728,15 @@ ${itemsText.replace(/, /g, '\n')}
                 }
 
                 let html = `
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="font-bold text-lg serif italic text-navy">רשימת הזמנות</h3>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                        <h3 class="font-bold text-lg serif italic text-navy dark:text-white">רשימת הזמנות פעילה</h3>
                         <div class="flex gap-3">
-                            <button onclick="renderAdminTable()" class="px-4 py-2 gold-gradient text-navy rounded-xl text-xs font-bold shadow-md hover:scale-105 transition-all">חזור לניהול מלאי</button>
-                            <button onclick="closeAdmin()" class="p-2 bg-gray-100 text-navy rounded-xl hover:bg-gray-200 transition-colors shadow-sm"><i data-lucide="x" class="w-5 h-5"></i></button>
+                            <button onclick="renderAdminTable()" class="px-5 py-2.5 gold-gradient text-navy rounded-xl text-xs font-bold shadow-md hover:scale-105 transition-all">חזור לניהול פריטים</button>
+                            <button onclick="closeAdmin()" class="p-2 bg-gray-100 dark:bg-zinc-800 text-navy dark:text-white rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors shadow-sm"><i data-lucide="x" class="w-5 h-5"></i></button>
                         </div>
                     </div>
-                    <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
-                        <table class="w-full text-sm border-collapse bg-white text-slate-800">
+                    <div class="overflow-x-auto rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm">
+                        <table class="w-full text-sm border-collapse bg-white dark:bg-zinc-900 text-slate-800 dark:text-white">
                             <thead class="bg-navy text-blue-400 text-right">
                                 <tr>
                                     <th class="p-4 border-b border-white/10 text-right">לקוח</th>
@@ -1848,13 +1757,13 @@ ${itemsText.replace(/, /g, '\n')}
                     const code = o.קוד_הזמנה || o['קוד_הזמנה'] || o.orderCode || '---';
 
                     html += `
-                        <tr class="border-b hover:bg-gray-50 transition-colors text-navy text-right">
+                        <tr class="border-b dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800/40 transition-colors text-navy dark:text-white text-right">
                             <td class="p-4 font-bold">${o.שם_לקוח || o['שם_לקוח']}</td>
                             <td class="p-4 font-mono text-xs">${o.טלפון || o['טלפון']}</td>
-                            <td class="p-4 text-center text-xs bg-gray-50/50 font-bold">${cleanPickup}</td>
-                            <td class="p-4 text-center text-xs bg-gray-50/50 font-bold">${cleanReturn}</td>
+                            <td class="p-4 text-center text-xs bg-gray-50/50 dark:bg-zinc-800/15 font-bold">${cleanPickup}</td>
+                            <td class="p-4 text-center text-xs bg-gray-50/50 dark:bg-zinc-800/15 font-bold">${cleanReturn}</td>
                             <td class="p-4 text-[11px] leading-relaxed max-w-xs text-right">${(o.פריטים || o['פריטים'] || "").replace(/, /g, '<br>')}</td>
-                            <td class="p-4 text-center font-bold text-gold bg-gray-50/30">${code}</td>
+                            <td class="p-4 text-center font-bold text-gold bg-gray-50/30 dark:bg-zinc-800/30">${code}</td>
                         </tr>`;
                 });
                 
@@ -1876,7 +1785,7 @@ ${itemsText.replace(/, /g, '\n')}
             const varCols = getVariationColumns();
             const payload = {
                 action: document.getElementById('edit-id').value ? "editItem" : "addItem",
-                password: adminPassword, // אימות מאובטח בשרת
+                password: adminPassword, 
                 שם_פריט: name,
                 מלאי: qty,
                 קטגוריה: document.getElementById('new-cat').value,
@@ -1935,7 +1844,7 @@ ${itemsText.replace(/, /g, '\n')}
                     method: 'POST', 
                     body: JSON.stringify({
                         action: "deleteItem", 
-                        password: adminPassword, // אימות מאובטח
+                        password: adminPassword, 
                         שם_פריט: name
                     }) 
                 });
@@ -1952,23 +1861,66 @@ ${itemsText.replace(/, /g, '\n')}
             count.innerText = total; count.classList.toggle('hidden', total === 0);
         }
 
+        // תיקון: מנגנון חיפוש חכם ודינמי בתוך שורת החיפוש
         function handleSearch() {
-            const term = document.getElementById('searchInput').value.toLowerCase();
+            const searchInput = document.getElementById('searchInput');
+            const term = searchInput.value.trim().toLowerCase();
             
-            if (term.length > 0) {
-                document.getElementById('home-categories-container').classList.add('hidden');
-                document.getElementById('inventory-grid').classList.remove('hidden');
-                document.getElementById('sticky-catalog-header').classList.remove('hidden');
-            } else {
-                 backToMain();
-                 return;
+            searchInput.classList.remove('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
+            searchInput.placeholder = "חפש מוצרים וקטגוריות בקטלוג...";
+
+            if (term.length === 0) {
+                backToMain();
+                return;
             }
+
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('catalog-view').classList.remove('hidden');
 
             const filtered = groupedProducts.filter(p => 
                 p.שם_פריט.toLowerCase().includes(term) || 
                 p.קטגוריה.toLowerCase().includes(term)
             );
-            renderGrid(filtered);
+
+            if (filtered.length === 0) {
+                searchInput.classList.add('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
+                searchInput.placeholder = "לא נמצאו תוצאות חיפוש!";
+                // ריקון הצעות מוצרים כדי למנוע בלבול
+                const grid = document.getElementById('inventory-grid');
+                grid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-400 font-bold">לא נמצאו פריטים התואמים לחיפוש שלך בתיבת החיפוש</div>';
+            } else {
+                renderGrid(filtered);
+            }
+        }
+
+        function handleSearchMobile() {
+            const mobileInput = document.getElementById('searchInputMobile');
+            const term = mobileInput.value.trim().toLowerCase();
+            
+            mobileInput.classList.remove('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
+            mobileInput.placeholder = "חפש מוצרים וקטגוריות בקטלוג...";
+
+            if (term.length === 0) {
+                backToMain();
+                return;
+            }
+
+            document.getElementById('home-view').classList.add('hidden');
+            document.getElementById('catalog-view').classList.remove('hidden');
+
+            const filtered = groupedProducts.filter(p => 
+                p.שם_פריט.toLowerCase().includes(term) || 
+                p.קטגוריה.toLowerCase().includes(term)
+            );
+
+            if (filtered.length === 0) {
+                mobileInput.classList.add('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
+                mobileInput.placeholder = "לא נמצאו תוצאות חיפוש!";
+                const grid = document.getElementById('inventory-grid');
+                grid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-400 font-bold">לא נמצאו פריטים תואמים לחיפוש שלך</div>';
+            } else {
+                renderGrid(filtered);
+            }
         }
 
         function showToast(m) {
@@ -2042,7 +1994,7 @@ ${itemsText.replace(/, /g, '\n')}
             if (greetingElement) greetingElement.innerText = greeting;
         }
 
-        // ניהול המודל המשפטי והצגת התוכן הדינמי מהגוגל שיטס
+        // ניהול מנגנון התקנון המשפטי המובנה (עם פולבק מקצועי למקרה שלא הוזן בגוגל שיטס)
         function openLegalModal(type) {
             const titleEl = document.getElementById('legal-modal-title');
             const contentEl = document.getElementById('legal-modal-content');
@@ -2050,11 +2002,39 @@ ${itemsText.replace(/, /g, '\n')}
             let content = aboutConfig[type] || '';
             if (!content.trim()) {
                 if (type === 'תקנון') {
-                    content = "טרם הוזן תקנון ותנאי שימוש למערכת זו בגיליון הנתונים.\nאנא פנה למנהל המערכת לפרטים.";
+                    content = `תקנון ותנאי שימוש באתר
+
+1. כללי
+ברוכים הבאים למערכת ההזמנות המקוונת של [שם המקום]. עצם הגלישה באתר או ביצוע הזמנה מהווים הסכמה מלאה ובלתי מסויגת לתנאים המפורטים להלן.
+
+2. אופן ההזמנה ואישור השירות
+- כל הזמנה המבוצעת באתר מהווה בקשת שריון זמנית בלבד. 
+- השריון הופך לסופי ומחייב רק לאחר קבלת אישור מפורש בדוא"ל או בוואטסאפ מנציג הנהלת המקום.
+
+3. שמירה על הציוד ואחריות המשתמש
+- המזמין אחראי באופן מלא על שלמות הציוד מרגע קבלתו ועד להחזרתו המלאה.
+- יש להחזיר את הציוד כשהוא שלם, נקי ותקין בדיוק במועד ובשעות שסוכמו.
+- במקרה של אובדן, קלקול או נזק משמעותי, המזמין ישפה את בעלי האתר בגובה עלות התיקון או רכישתו של מוצר חדש זהה.
+
+4. סמכות שיפוט והוראות כלליות
+על הסכם זה יחולו חוקי מדינת ישראל בלבד.`;
                 } else if (type === 'מדיניות פרטיות') {
-                    content = "טרם הוזנה מדיניות פרטיות למערכת זו בגיליון הנתונים.\nהמערכת שומרת על פרטיותך ואינה משתפת את פרטיך עם צדדים שלישיים.";
+                    content = `מדיניות שמירה על פרטיות
+
+1. איסוף המידע
+אנו אוספים מידע הנמסר על ידך באופן וולונטרי בלבד בעת מילוי טופס ההזמנה (שם מלא, טלפון, תאריכים והערות).
+
+2. שימוש במידע
+המידע שנאסף משמש לצורך תיאום, משלוח ואספקת הציוד שהוזמן.
+
+3. אי-העברה לצדדים שלישיים
+בשום מקרה לא נמכור, נשכיר או נעביר את פרטיך האישיים לגורמים מסחריים מחוץ לצרכי תפעול הזמנתך.`;
                 } else if (type === 'הצהרת נגישות') {
-                    content = "אתר זה פטור מהנגשה טכנית בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות בשל מחזור פעילות שנתי הנמוך מ-100,000 ש\"ח.\n\nבמידה ונתקלת בקושי, ניתן לפנות אלינו באמצעי הקשר המופיעים בתחתית האתר לסיוע מלא.";
+                    content = `הצהרת נגישות ומתן שירות חלופי
+
+אתר זה פטור מחובת נגישות טכנולוגית מלאה בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות. 
+
+עם זאת, אנו מחויבים להעניק שירות שוויוני ומכבד לכולם. במידה ונתקלת בקושי טכני בגלישה, בצפייה במוצרים או בביצוע הזמנה דיגיטלית - אנו מעניקים סיוע ומענה אנושי מלא לביצוע הזמנות טלפוניות או בוואטסאפ בפרטי הקשר המופיעים בתחתית האתר.`;
                 }
             }
             
