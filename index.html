@@ -366,12 +366,12 @@
                     </div>
                 </div>
                 
-                <!-- קישורי ניווט צמודים לימין של השורה ליד הלוגו -->
-                <div class="hidden lg:flex items-center gap-4 border-r border-gray-100 dark:border-zinc-700 pr-6 mr-2">
-                    <button onclick="showView('home')" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">דף הבית</button>
-                    <button onclick="showView('categories')" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">קטגוריות</button>
-                    <button onclick="lookupOrder()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">חיפוש/עריכת הזמנה</button>
-                    <button onclick="showAdminLogin()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">ניהול מלאי</button>
+                <!-- שיפור 3: הגדלת טקסט תפריט הניווט ב-50% (מ-text-xs ל-text-base/lg) -->
+                <div class="hidden lg:flex items-center gap-6 border-r border-gray-100 dark:border-zinc-700 pr-6 mr-2">
+                    <button onclick="showView('home')" class="text-base md:text-[17px] font-extrabold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">דף הבית</button>
+                    <button onclick="showView('categories')" class="text-base md:text-[17px] font-extrabold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">קטגוריות</button>
+                    <button onclick="lookupOrder()" class="text-base md:text-[17px] font-extrabold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">חיפוש/עריכת הזמנה</button>
+                    <button onclick="showAdminLogin()" class="text-base md:text-[17px] font-extrabold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">ניהול מלאי</button>
                 </div>
             </div>
 
@@ -556,7 +556,8 @@
                 <p class="text-sm text-gray-500 mt-1">אנא עברו על הפריטים, קבעו תאריכים ואשרו את ההזמנה בצורה נוחה</p>
             </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+            <!-- גריד קופה ראשי המסתתר אוטומטית ברגע שההזמנה מושלמת בהצלחה -->
+            <div id="cart-main-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                 <!-- צד ימין: תוכן התהליך לפי השלבים (מרווח ומפורט) -->
                 <div class="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow p-6 md:p-10 border border-gray-100 dark:border-zinc-800 space-y-8">
                     <!-- בר שריון/שלבים בעיצוב מרווח -->
@@ -609,6 +610,11 @@
                     </div>
                 </div>
             </div>
+
+            <!-- שיפור 2: קונטיינר הצלחה חדש ברוחב מלא למניעת הצגת הסיכום התקוע בטעינה -->
+            <div id="cart-success-container" class="hidden bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow p-6 md:p-10 border border-gray-100 dark:border-zinc-800 max-w-4xl mx-auto">
+                <!-- ירונדר דינמית לאחר סיום הזמנה מוצלח -->
+            </div>
         </section>
 
         <!-- בלוק המיקום והניווט המשודרג -->
@@ -658,23 +664,23 @@
         </div>
     </div>
 
-    <!-- Print Layout (מיועד להורדת PDF והדפסה) -->
-    <div id="print-area" class="hidden text-right p-16 bg-white text-slate-900">
-        <div class="border-b-4 border-navy pb-4 mb-8">
-            <h1 id="print-brand-title" class="text-4xl font-bold serif italic">אישור הזמנה</h1>
-            <p id="print-order-id" class="text-xl font-bold mt-2 text-gold"></p>
+    <!-- שיפור 1: עימוד אישור הזמנה בעיצוב A4 קומפקטי ומאוזן להדפסה והורדה מושלמת ל-PDF ללא חיתוך -->
+    <div id="print-area" class="hidden text-right p-6 bg-white text-slate-900 max-w-2xl mx-auto border border-gray-200 rounded-xl">
+        <div class="border-b-4 border-navy pb-3 mb-6">
+            <h1 id="print-brand-title" class="text-3xl font-extrabold serif text-navy">אישור הזמנה</h1>
+            <p id="print-order-id" class="text-lg font-bold mt-1 text-gold"></p>
         </div>
-        <div id="print-user-info" class="mb-8 space-y-2 text-lg"></div>
-        <table class="w-full border-collapse border border-gray-300">
+        <div id="print-user-info" class="mb-6 space-y-2 text-base border-b pb-4 border-gray-100"></div>
+        <table class="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden mb-6">
             <thead>
-                <tr class="bg-[#1A1C2C] text-white">
-                    <th class="p-3 border border-gray-300 text-right">פריט</th>
-                    <th class="p-3 border border-gray-300 text-center">כמות</th>
+                <tr class="bg-[#1A1C2C] text-white text-sm">
+                    <th class="p-3 border border-gray-200 text-right font-bold">פריט</th>
+                    <th class="p-3 border border-gray-200 text-center font-bold w-24">כמות</th>
                 </tr>
             </thead>
-            <tbody id="print-items-list"></tbody>
+            <tbody id="print-items-list" class="text-sm"></tbody>
         </table>
-        <p id="print-consent-timestamp" class="text-xs text-gray-400 mt-8 font-mono"></p>
+        <p id="print-consent-timestamp" class="text-[10px] text-gray-400 mt-6 font-mono border-t pt-4 border-gray-100"></p>
     </div>
 
     <!-- Footer - תחתית עמוד סטטוטורית ומשפטית -->
@@ -809,6 +815,11 @@
                 headerSearch.classList.add('invisible');
                 layoutToggle.classList.add('invisible');
                 if (heroSection) heroSection.classList.add('hidden');
+                
+                // איפוס נראות תצוגת הקופה
+                document.getElementById('cart-main-grid').classList.remove('hidden');
+                document.getElementById('cart-success-container').classList.add('hidden');
+                
                 goToStep(1); // תמיד להתחיל משלב 1 של הקופה
                 updateCartSummary();
             }
@@ -1143,15 +1154,17 @@
             }).join('');
         }
 
+        // שיפור 4: הגדרת מנגנון סינון קטגוריות עמיד ואיתן ללא קריסות (תמיכה מלאה בכפתור הכל/כל המוצרים)
         function filterByCategory(cat) {
-            currentCategory = cat;
-            document.getElementById('current-category-title').innerText = cat;
+            const sanitizedCat = String(cat).trim();
+            currentCategory = sanitizedCat;
+            document.getElementById('current-category-title').innerText = sanitizedCat;
             renderCategories();
             
-            if (cat === 'הכל') {
+            if (sanitizedCat === 'הכל' || sanitizedCat === 'הכול' || sanitizedCat === '') {
                 renderGrid(groupedProducts);
             } else {
-                const filtered = groupedProducts.filter(i => i.קטגוריה === cat);
+                const filtered = groupedProducts.filter(i => String(i.קטגוריה).trim() === sanitizedCat);
                 renderGrid(filtered);
             }
         }
@@ -1225,7 +1238,7 @@
             return DEFAULT_IMG;
         }
 
-        // שיפור 2 ו-3: הוספת כפתור "טען עוד" תקין ושינוי הוספה לעגלה בלחיצה על כפתור בלבד
+        // שיפור 2 ו-5: הוספת כפתור "טען עוד" תקין והצגת בורר כמויות עם 0 כברירת מחדל לכל מוצר בקטלוג
         function renderGrid(items = null, isAppend = false) {
             const grid = document.getElementById('inventory-grid');
             const hasDates = pendingFormData.pDate && pendingFormData.rDate;
@@ -1304,30 +1317,19 @@
                 const inCart = cartItem ? cartItem.qty : 0;
                 const qtySpanId = `qty-${pName.replace(/\s+/g, '-')}`;
 
-                // שיפור 3: פתרון של הוספה ידנית באמצעות כפתור ייעודי ולא אוטומטי
-                let actionAreaHTML = '';
-                if (inCart > 0) {
-                    actionAreaHTML = `
-                        <div class="flex items-center justify-between w-full">
-                            <div class="flex items-center gap-2 bg-gray-50 dark:bg-zinc-800 p-1 rounded-xl border border-gray-200/50 dark:border-zinc-700">
-                                <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold" aria-label="הפחת כמות">-</button>
-                                <span class="w-6 text-center font-bold text-slate-800 dark:text-white text-sm" id="${qtySpanId}">${inCart}</span>
-                                <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
-                            </div>
-                            <button onclick="showView('cart')" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה">
-                                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-                            </button>
+                // שיפור 5: רינדור בורר הכמויות עם 0 כברירת מחדל לכל המוצרים, יחד עם כפתור העגלה
+                const actionAreaHTML = `
+                    <div class="flex items-center justify-between w-full">
+                        <div class="flex items-center gap-2 bg-gray-50 dark:bg-zinc-800 p-1 rounded-xl border border-gray-200/50 dark:border-zinc-700 shadow-sm">
+                            <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold" aria-label="הפחת כמות">-</button>
+                            <span class="w-6 text-center font-bold text-slate-800 dark:text-white text-sm" id="${qtySpanId}">${inCart}</span>
+                            <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
                         </div>
-                    `;
-                } else {
-                    actionAreaHTML = `
-                        <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} 
-                            class="w-full flex items-center justify-center gap-2 py-3 bg-navy text-gold dark:bg-zinc-800 dark:text-gold hover:bg-gold hover:text-navy dark:hover:bg-gold dark:hover:text-navy rounded-xl transition-all shadow-md font-bold text-xs ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : ''}">
-                            <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-                            הוסף לעגלה
+                        <button onclick="showView('cart')" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה">
+                            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                         </button>
-                    `;
-                }
+                    </div>
+                `;
 
                 return `
                     <div class="item-card bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75' : ''}">
@@ -1734,11 +1736,16 @@ ${itemsText.replace(/, /g, '\n')}
             }
         }
 
-        // שיפור: תצוגת סיום הזמנה מורחבת עם תמיכה מלאה ב-PDF
+        // שיפור 2: הסתרת הסיכום הזמני התקוע בטעינה והצגת ההצלחה ברוחב מלא במרכז
         function renderSuccessState(code) {
-            document.getElementById('full-cart-stepper').classList.add('hidden');
+            // הסתרת גריד הקופה הראשי
+            document.getElementById('cart-main-grid').classList.add('hidden');
             
-            document.getElementById('full-cart-content').innerHTML = `
+            // הצגת קונטיינר ההצלחה הממורכז והגדול
+            const successContainer = document.getElementById('cart-success-container');
+            successContainer.classList.remove('hidden');
+            
+            successContainer.innerHTML = `
                 <div class="text-center space-y-8 py-10 text-slate-800 dark:text-white">
                     <div class="w-20 h-20 bg-green-100 dark:bg-green-950/40 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm animate-bounce">
                         <i data-lucide="check-circle-2" class="w-12 h-12"></i>
@@ -1770,14 +1777,14 @@ ${itemsText.replace(/, /g, '\n')}
             lucide.createIcons();
         }
 
-        // שיפור: פונקציית הורדת ה-PDF התקינה עבור אישור ההזמנה
+        // שיפור 1: פונקציית הורדת ה-PDF התקינה והיציבה - מונעת כפילויות עימוד וגלישת טבלה
         function downloadPdf() {
             const element = document.getElementById('print-area');
             const opt = {
-                margin:       0.5,
+                margin:       [0.4, 0.4, 0.4, 0.4], // שוליים אחידים מכל הצדדים
                 filename:     `order-confirmation-${activeOrderCode || 'code'}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
+                html2canvas:  { scale: 2, useCORS: true, logging: false },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
             
@@ -1886,8 +1893,8 @@ ${itemsText.replace(/, /g, '\n')}
             `;
             document.getElementById('print-items-list').innerHTML = cart.map(c => `
                 <tr>
-                    <td class="p-3 border border-gray-300 font-bold text-right">${c.displayName}</td>
-                    <td class="p-3 border border-gray-300 text-center font-bold">${c.qty}</td>
+                    <td class="p-3 border border-gray-200 font-bold text-right">${c.displayName}</td>
+                    <td class="p-3 border border-gray-200 text-center font-bold">${c.qty}</td>
                 </tr>
             `).join('');
 
@@ -2315,7 +2322,7 @@ ${itemsText.replace(/, /g, '\n')}
                 } else if (type === 'הצהרת נגישות') {
                     content = `הצהרת נגישות ומתן שירות חלופי
 
-אתר זה פטור מחובת נגישות טכנות מלאה בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות. 
+אתר זה פטור מחובת נגישות טכנולוגית מלאה בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות. 
 
 עם זאת, אנו מחויבים להעניק שירות שוויוני ומכבד לכולם. במידה ונתקלת בקושי טכני בגלישה, בצפייה במוצרים או בביצוע הזמנה דיגיטלית - אנו מעניקים סיוע ומענה אנושי מלא לביצוע הזמנות טלפוניות או בוואטסאפ בפרטי הקשר המופיעים בתחתית האתר.`;
                 }
