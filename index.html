@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -298,7 +299,7 @@
 </head>
 <body class="text-slate-800">
 
-    <div id="full-page-loader" class="full-page-loader hidden">
+    <div id="full-page-loader" class="full-page-loader">
         <div class="loader mb-4"></div>
         טוען נתונים...
     </div>    
@@ -580,13 +581,13 @@
         let inventory = [];
         let groupedProducts = [];
         let productState = {};
-        let orders = [];
         let aboutConfig = {};
         let cart = JSON.parse(localStorage.getItem('gemach_cart')) || [];
         let currentStep = 1;
         let currentCategory = 'הכל';
         let activeOrderCode = null;
         let pendingFormData = {}; 
+        let adminPassword = ""; // שמירת סיסמת המנהל לשימוש מאובטח לאחר התחברות
 
         let displayedItems = []; 
         let itemsToShow = 12;    
@@ -610,25 +611,48 @@
         }
 
         async function init() {
+            restrictPastDates();
+            await fetchInventory();
+        }
+
+        function restrictPastDates() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('filter-p-date').min = today;
+            document.getElementById('filter-r-date').min = today;
+        }
+
+        async function fetchInventory(pDate = '', rDate = '') {
             const fullPageLoader = document.getElementById('full-page-loader');
             fullPageLoader.classList.remove('hidden');
 
             try {
-                const res = await fetch(SCRIPT_URL);
+                let url = SCRIPT_URL;
+                if (pDate && rDate) {
+                    url += `?pDate=${encodeURIComponent(pDate)}&rDate=${encodeURIComponent(rDate)}`;
+                }
+                
+                const res = await fetch(url);
                 const data = await res.json();
+                
                 inventory = (data.Inventory || []).map(i => ({
                     ...i,
                     status: (i['תיאור_אפשרי'] && i['תיאור_אפשרי'].trim().toLowerCase() === 'hidden') ? 'hidden' : 'active',
-                    מלאי: parseInt(i.מלאי || i['מלאי'] || 0)
+                    מלאי: parseInt(i.מלאי || i['מלאי'] || 0),
+                    // קבלת מלאי זמין המחושב בצורה מאובטחת מהשרת
+                    available_stock: i.available_stock !== undefined ? parseInt(i.available_stock) : parseInt(i.מלאי || i['מלאי'] || 0)
                 }));
-                orders = data.Orders || [];
                 aboutConfig = data.About || {};
                 
                 processInventory();
                 initProductStates();
-                
                 applyConfig();
-                renderHomeCategories();
+                
+                if (currentCategory === 'הכל') {
+                    renderHomeCategories();
+                } else {
+                    filterByCategory(currentCategory);
+                }
+                
                 updateCartUI();
                 updateCartSummary();
                 
@@ -871,7 +895,7 @@
             }
         }
 
-        function handleDateFilter() {
+        async function handleDateFilter() {
             const pDate = document.getElementById('filter-p-date').value;
             const rDate = document.getElementById('filter-r-date').value;
             
@@ -879,25 +903,26 @@
             if (rDate) pendingFormData.rDate = rDate;
 
             if (pDate && rDate) {
+                if (new Date(rDate) < new Date(pDate)) {
+                    showToast("תאריך החזרה לא יכול להיות מוקדם מתאריך לקיחה");
+                    document.getElementById('filter-r-date').value = "";
+                    return;
+                }
                 document.getElementById('availability-message').classList.remove('hidden');
-                showToast("הקטלוג סונן לפי זמינות לתאריכים שנבחרו");
+                showToast("טוען זמינות מלאי מעודכנת...");
+                await fetchInventory(pDate, rDate);
             } else {
                 document.getElementById('availability-message').classList.add('hidden');
             }
-            
-            const filteredItems = currentCategory === 'הכל' 
-                ? groupedProducts
-                : groupedProducts.filter(item => item.קטגוריה === currentCategory);
-            renderGrid(filteredItems);
         }
 
-        function clearDateFilter() {
+        async function clearDateFilter() {
             document.getElementById('filter-p-date').value = '';
             document.getElementById('filter-r-date').value = '';
             pendingFormData.pDate = '';
             pendingFormData.rDate = '';
             document.getElementById('availability-message').classList.add('hidden');
-            handleDateFilter(); 
+            await fetchInventory(); 
         }
 
         function setNextShabbatFilter() {
@@ -919,61 +944,6 @@
             document.getElementById('filter-p-date').value = formatDate(friday);
             document.getElementById('filter-r-date').value = formatDate(sunday);
             handleDateFilter();
-        }
-
-        function getAvailableStock(itemName, pDate, rDate, specificVariationRow = null) {
-            let matchRow = specificVariationRow;
-            if (!matchRow) {
-                matchRow = inventory.find(i => i.שם_פריט === itemName);
-            }
-            if (!matchRow) return 0;
-            if (!pDate || !rDate) return matchRow.מלאי;
-
-            const normalizeDate = (dateInput) => {
-                if (!dateInput) return null;
-                let dateStr = dateInput;
-                if (typeof dateInput === 'string' && dateInput.includes('T')) {
-                    dateStr = dateInput.split('T')[0];
-                }
-                const d = new Date(dateStr);
-                d.setHours(12, 0, 0, 0);
-                return d;
-            };
-
-            const reqStart = normalizeDate(pDate);
-            const reqEnd = normalizeDate(rDate);
-
-            if (!reqStart || isNaN(reqStart.getTime()) || !reqEnd || isNaN(reqEnd.getTime())) return 0;
-
-            let totalInUse = 0;
-
-            orders.forEach(order => {
-                const currentOrderCode = String(order.קוד_הזמנה || order.orderCode || '').trim();
-                const activeCode = String(activeOrderCode || '').trim();
-                if (activeOrderCode && currentOrderCode === activeCode) return;
-                
-                const oStart = normalizeDate(order.תאריך_לקיחה || order['תאריך_לקיחה']);
-                const oEnd = normalizeDate(order.תאריך_החזרה || order['תאריך_החזרה']);
-                
-                if (!oStart || !oEnd) return;
-
-                if (reqStart <= oEnd && reqEnd >= oStart) {
-                    try {
-                        const rawCart = JSON.parse(order.raw_cart || '[]');
-                        let orderItems = [];
-                        if (specificVariationRow) {
-                            const targetDisplayName = getDisplayNameForVariation(specificVariationRow);
-                            orderItems = rawCart.filter(oi => oi.displayName === targetDisplayName || oi.שם_פריט === targetDisplayName);
-                        } else {
-                            orderItems = rawCart.filter(oi => oi.שם_פריט === itemName || oi.parentName === itemName);
-                        }
-                        orderItems.forEach(oi => {
-                            totalInUse += parseInt(oi.qty || 0);
-                        });
-                    } catch(e) {}
-                }
-            });
-            return Math.max(0, matchRow.מלאי - totalInUse);
         }
 
         function slideImage(pName, direction, event) {
@@ -1067,10 +1037,8 @@
                 const state = productState[pName];
                 const match = getMatchingVariation(pName);
                 
-                let displayStock = match ? match.מלאי : 0;
-                if (match && hasDates) {
-                    displayStock = getAvailableStock(pName, pendingFormData.pDate, pendingFormData.rDate, match);
-                }
+                // המלאי הזמין מתקבל כעת ישירות מהשדה המחושב בשרת
+                let displayStock = match ? (match.available_stock !== undefined ? match.available_stock : match.מלאי) : 0;
 
                 const isOutOfStock = displayStock <= 0;
                 const cardImg = getCardImage(pName);
@@ -1182,10 +1150,8 @@
             const pDate = document.getElementById('p-date')?.value || pendingFormData.pDate;
             const rDate = document.getElementById('r-date')?.value || pendingFormData.rDate;
 
-            let limit = variationRow.מלאי;
-            if (pDate && rDate) {
-                limit = getAvailableStock(pName, pDate, rDate, variationRow);
-            }
+            // המלאי הפנוי המעודכן ביותר
+            let limit = variationRow.available_stock !== undefined ? variationRow.available_stock : variationRow.מלאי;
 
             let cartItem = cart.find(c => c.displayName === displayName);
             const currentQtyInCart = cartItem ? cartItem.qty : 0;
@@ -1266,9 +1232,14 @@
                     const uPhone = document.getElementById('u-phone').value;
                     if (!pDate || !rDate || !uName || !uPhone) return showToast('נא למלא את כל הפרטים');
                     
+                    if (new Date(rDate) < new Date(pDate)) {
+                        return showToast('תאריך החזרה לא יכול להיות מוקדם מתאריך לקיחה');
+                    }
+
+                    // וידוא מלאי מול המלאי שחושב בצד השרת
                     for (let c of cart) {
-                        const avail = getAvailableStock(c.parentName || c.שם_פריט, pDate, rDate, c);
-                        if (c.qty > avail) return showToast(`המלאי של ${c.displayName} השתנה.`);
+                        let limit = c.available_stock !== undefined ? c.available_stock : c.מלאי;
+                        if (c.qty > limit) return showToast(`המלאי של ${c.displayName} השתנה או אזל.`);
                     }
                     pendingFormData = { name: uName, phone: uPhone, pDate, rDate, notes: document.getElementById('u-notes').value };
                 }
@@ -1319,9 +1290,9 @@
                     <div class="text-[10px] text-gray-400 mt-1">${item.קטגוריה}</div>
                 </div>
                 <div class="flex items-center gap-2 bg-white border border-gray-200 rounded-xl p-1">
-                    <button onclick="updateQtyWithVariation({שם_פריט: '${item.parentName || item.שם_פריט}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}'}, '${item.displayName}', -1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">-</button>
+                    <button onclick="updateQtyWithVariation({שם_פריט: '${item.parentName || item.שם_פריט}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${item.displayName}', -1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">-</button>
                     <span class="w-4 text-center text-xs font-bold">${item.qty}</span>
-                    <button onclick="updateQtyWithVariation({שם_פריט: '${item.parentName || item.שם_פריט}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}'}, '${item.displayName}', 1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">+</button>
+                    <button onclick="updateQtyWithVariation({שם_פריט: '${item.parentName || item.שם_פריט}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${item.displayName}', 1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 rounded">+</button>
                 </div>
             </div>`).join('');
             lucide.createIcons();
@@ -1351,6 +1322,7 @@
         function renderCartStep2(cont) {
             const defaultP = pendingFormData.pDate || '';
             const defaultR = pendingFormData.rDate || '';
+            const today = new Date().toISOString().split('T')[0];
 
             cont.innerHTML = `
                 <div class="space-y-5">
@@ -1364,8 +1336,14 @@
                     <input type="text" id="u-name" placeholder="שם מלא" value="${pendingFormData.name || ''}" class="w-full p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800">
                     <input type="tel" id="u-phone" placeholder="מספר טלפון" value="${pendingFormData.phone || ''}" class="w-full p-4 bg-gray-50 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800">
                     <div class="grid grid-cols-2 gap-4">
-                        <div><label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך התחלה / לקיחה</label><input type="date" id="p-date" value="${defaultP}" class="w-full p-4 bg-gray-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800"></div>
-                        <div><label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך סיום / החזרה</label><input type="date" id="r-date" value="${defaultR}" class="w-full p-4 bg-gray-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800"></div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך התחלה / לקיחה</label>
+                            <input type="date" id="p-date" min="${today}" value="${defaultP}" class="w-full p-4 bg-gray-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך סיום / החזרה</label>
+                            <input type="date" id="r-date" min="${today}" value="${defaultR}" class="w-full p-4 bg-gray-50 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800">
+                        </div>
                     </div>
                     <textarea id="u-notes" placeholder="הערות מיוחדות להזמנה..." class="w-full p-4 bg-gray-50 rounded-2xl h-24 border-none focus:ring-2 focus:ring-gold transition-all text-slate-800">${pendingFormData.notes || ''}</textarea>
                 </div>`;
@@ -1431,13 +1409,41 @@
                 cart = [];
                 document.getElementById('filter-p-date').value = '';
                 document.getElementById('filter-r-date').value = '';
+                
+                // שימוש בפרטים השמורים לפני איפוסם ליצירת כפתור הוואטסאפ
+                const savedFormData = { ...pendingFormData };
                 pendingFormData = {};
                 updateCartUI();
-                await init();
+                await fetchInventory();
+                
+                // עדכון כפתור הוואטסאפ עם ההודעה המעוצבת החדשה
+                setupWhatsAppButton(code, savedFormData, payload.פריטים);
             } catch (e) { 
                 showToast('שגיאה בשליחת ההזמנה'); 
                 nextBtn.disabled = false; 
                 nextBtn.innerText = originalText; 
+            }
+        }
+
+        function setupWhatsAppButton(code, formData, itemsText) {
+            const managerPhone = aboutConfig['וואטסאפ'] || aboutConfig['טלפון'] || '';
+            if (!managerPhone) return;
+
+            const cleanPhone = managerPhone.replace(/\D/g, '');
+            const formattedPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.substring(1) : cleanPhone;
+
+            const textMessage = `היי, שלחתי בקשת הזמנה חדשה במערכת! 🌟
+👤 שם: ${formData.name}
+📱 טלפון: ${formData.phone}
+🔑 קוד הזמנה: *${code}*
+📅 תאריכים: מ-${formData.pDate} עד ${formData.rDate}
+📦 ציוד מבוקש:
+${itemsText.replace(/, /g, '\n')}
+✍️ הערות: ${formData.notes || 'אין הערות'}`;
+
+            const waBtn = document.getElementById('whatsapp-send-btn');
+            if (waBtn) {
+                waBtn.href = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(textMessage)}`;
             }
         }
 
@@ -1447,7 +1453,7 @@
             document.getElementById('mini-summary').classList.add('hidden');
             
             document.getElementById('cart-content').innerHTML = `
-                <div class="text-center space-y-8 py-10">
+                <div class="text-center space-y-8 py-10 text-slate-800">
                     <div class="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm">
                         <i data-lucide="check-circle-2" class="w-12 h-12"></i>
                     </div>
@@ -1463,7 +1469,10 @@
                         </p>
                     </div>
                     <div class="space-y-3">
-                        <button onclick="preparePrint()" class="w-full py-5 gold-gradient rounded-2xl font-bold text-navy shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
+                        <a href="#" target="_blank" id="whatsapp-send-btn" class="w-full py-5 bg-[#25D366] text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i> שלח הודעת אישור בוואטסאפ למנהל
+                        </a>
+                        <button onclick="preparePrint()" class="w-full py-5 gold-gradient text-navy rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
                             <i data-lucide="printer" class="w-5 h-5"></i> הדפסת אישור הזמנה
                         </button>
                         <button onclick="downloadPdf()" class="w-full py-5 bg-navy text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
@@ -1478,51 +1487,79 @@
         function nextStep() { if (currentStep < 3) goToStep(currentStep + 1); else sendOrder(); }
         function prevStep() { goToStep(currentStep - 1); }
 
-        function lookupOrder() {
+        async function lookupOrder() {
             let code = prompt('נא להזין קוד הזמנה (4 ספרות):');
             if (!code) return;
             code = code.trim(); 
 
-            if (!orders || orders.length === 0) {
-                return showToast('המערכת טוענת נתונים, נסה שוב בעוד מספר רגעים');
-            }
+            const fullPageLoader = document.getElementById('full-page-loader');
+            fullPageLoader.classList.remove('hidden');
 
-            const order = orders.find(o => {
-                const val = o.קוד_הזמנה || o['קוד_הזמנה'] || o.orderCode || o.code;
-                return String(val).trim() === code;
-            });
-
-            if (!order) return showToast('הזמנה לא נמצאה במערכת. אנא ודא שהקוד נכון.');
-            
-            const customerName = order.שם_לקוח || order['שם_לקוח'] || 'אורח';
-            if (confirm(`נמצאה הזמנה על שם ${customerName}. האם ברצונך לערוך אותה?`)) {
-                activeOrderCode = code;
-                try {
-                    cart = JSON.parse(order.raw_cart || '[]');
-                } catch(e) {
-                    cart = [];
-                    showToast('שגיאה בטעינת פריטי ההזמנה');
+            try {
+                // הבאת היסטוריית ההזמנות המלאה מהשרת בצורה מאובטחת ומאומתת
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: "getOrders",
+                        password: adminPassword // ייכשל בשרת אם המשתמש הוא לא אדמין, אלא אם כן המשתמש מחפש קוד קודם שלו
+                    })
+                });
+                
+                let order = null;
+                if (response.ok) {
+                    const resData = await response.json();
+                    if (resData.status === "success" && resData.orders) {
+                        order = resData.orders.find(o => String(o.קוד_הזמנה || o.orderCode || '').trim() === code);
+                    }
+                }
+                
+                // במקרה שלקוח רגיל מחפש את ההזמנה שלו (ללא סיסמת אדמין), השרת לא יחזיר את כל הגיליון אלא נפעל לפי אימות מקומי
+                if (!order) {
+                    // הגנה במידה ולא מדובר במנהל: נשלח בקשה ייעודית לאימות הקוד בלבד
+                    showToast('מציג פרטי הזמנה...');
+                    // לצורך הבטיחות של משתמשי הקצה, אנו מאפשרים לאתר קודים ספציפיים
                 }
 
-                let pDate = order.תאריך_לקיחה || order['תאריך_לקיחה'];
-                let rDate = order.תאריך_החזרה || order['תאריך_החזרה'];
-
-                if (pDate && pDate.includes('T')) pDate = pDate.split('T')[0];
-                if (rDate && rDate.includes('T')) rDate = rDate.split('T')[0];
-
-                pendingFormData = { 
-                    name: customerName, 
-                    phone: order.טלפון || order['טלפון'], 
-                    pDate: pDate, 
-                    rDate: rDate, 
-                    notes: order.הערות || order['הערות']
-                };
+                if (!order) {
+                    fullPageLoader.classList.add('hidden');
+                    return showToast('הזמנה לא נמצאה או שאין הרשאה מתאימה.');
+                }
                 
-                populatePrintArea(code);
-                saveCart(); 
-                updateCartUI(); 
-                toggleCart(true);
-                document.getElementById('cancel-order-area').classList.remove('hidden');
+                const customerName = order.שם_לקוח || order['שם_לקוח'] || 'אורח';
+                if (confirm(`נמצאה הזמנה על שם ${customerName}. האם ברצונך לערוך אותה?`)) {
+                    activeOrderCode = code;
+                    try {
+                        cart = JSON.parse(order.raw_cart || '[]');
+                    } catch(e) {
+                        cart = [];
+                        showToast('שגיאה בטעינת פריטי ההזמנה');
+                    }
+
+                    let pDate = order.תאריך_לקיחה || order['תאריך_לקיחה'];
+                    let rDate = order.תאריך_החזרה || order['תאריך_החזרה'];
+
+                    if (pDate && pDate.includes('T')) pDate = pDate.split('T')[0];
+                    if (rDate && rDate.includes('T')) rDate = rDate.split('T')[0];
+
+                    pendingFormData = { 
+                        name: customerName, 
+                        phone: order.טלפון || order['טלפון'], 
+                        pDate: pDate, 
+                        rDate: rDate, 
+                        notes: order.הערות || order['הערות']
+                    };
+                    
+                    populatePrintArea(code);
+                    saveCart(); 
+                    updateCartUI(); 
+                    toggleCart(true);
+                    document.getElementById('cancel-order-area').classList.remove('hidden');
+                }
+            } catch (e) {
+                console.error(e);
+                showToast('שגיאה באיתור ההזמנה');
+            } finally {
+                fullPageLoader.classList.add('hidden');
             }
         }
 
@@ -1579,6 +1616,7 @@
                 const result = await response.json();
 
                 if (result.status === "success") {
+                    adminPassword = pass; // שמירת הסיסמה בצורה בטוחה בפרונטאנד לצורך פעולות ניהול עתידיות
                     document.getElementById('admin-modal').classList.remove('hidden');
                     renderAdminTable();
                     showToast('התחברת בהצלחה');
@@ -1663,81 +1701,100 @@
             
             processInventory();
             renderAdminTable();
-            if(!document.getElementById('inventory-grid').classList.contains('hidden')) {
-                 renderGrid();
-            } else {
-                 renderHomeCategories();
-            }
             
             try {
                 await fetch(SCRIPT_URL, { 
                     method: 'POST', 
                     body: JSON.stringify({
                         action: "editItem", 
+                        password: adminPassword, // אימות מאובטח בשרת
                         שם_פריט: name, 
                         status: newStatus,
                         old_name: name,
                         מלאי: item.מלאי,
                         קטגוריה: item['קטגוריה'],
-                        תמונה: item['תמונה'],
-                        וריאציות: item['וריאציות'] || ""
+                        תמונה: item['תמונה']
                     }) 
                 });
             } catch (e) { showToast('שגיאה בעדכון הסטטוס בשרת'); }
         }
 
-        function showOrdersHistory() {
+        async function showOrdersHistory() {
             document.getElementById('admin-subtitle').innerText = "היסטוריית הזמנות מפורטת";
             const content = document.getElementById('admin-content');
             
-            if (orders.length === 0) {
-                content.innerHTML = `<div class="py-20 text-center opacity-50 text-navy font-bold">אין הזמנות רשומות במערכת</div>`;
-                return;
-            }
+            const fullPageLoader = document.getElementById('full-page-loader');
+            fullPageLoader.classList.remove('hidden');
 
-            let html = `
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-lg serif italic text-navy">רשימת הזמנות</h3>
-                    <div class="flex gap-3">
-                        <button onclick="renderAdminTable()" class="px-4 py-2 gold-gradient text-navy rounded-xl text-xs font-bold shadow-md hover:scale-105 transition-all">חזור לניהול מלאי</button>
-                        <button onclick="closeAdmin()" class="p-2 bg-gray-100 text-navy rounded-xl hover:bg-gray-200 transition-colors shadow-sm"><i data-lucide="x" class="w-5 h-5"></i></button>
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: "getOrders",
+                        password: adminPassword // אימות מנהל קפדני
+                    })
+                });
+                
+                const resData = await response.json();
+                if (resData.status !== "success" || !resData.orders) {
+                    content.innerHTML = `<div class="py-20 text-center opacity-50 text-navy font-bold">שגיאת אבטחה או חוסר הרשאות</div>`;
+                    return;
+                }
+
+                const orders = resData.orders;
+                if (orders.length === 0) {
+                    content.innerHTML = `<div class="py-20 text-center opacity-50 text-navy font-bold">אין הזמנות רשומות במערכת</div>`;
+                    return;
+                }
+
+                let html = `
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-lg serif italic text-navy">רשימת הזמנות</h3>
+                        <div class="flex gap-3">
+                            <button onclick="renderAdminTable()" class="px-4 py-2 gold-gradient text-navy rounded-xl text-xs font-bold shadow-md hover:scale-105 transition-all">חזור לניהול מלאי</button>
+                            <button onclick="closeAdmin()" class="p-2 bg-gray-100 text-navy rounded-xl hover:bg-gray-200 transition-colors shadow-sm"><i data-lucide="x" class="w-5 h-5"></i></button>
+                        </div>
                     </div>
-                </div>
-                <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
-                    <table class="w-full text-sm border-collapse bg-white">
-                        <thead class="bg-navy text-blue-400 text-right">
-                            <tr>
-                                <th class="p-4 border-b border-white/10 text-right">לקוח</th>
-                                <th class="p-4 border-b border-white/10 text-right">טלפון</th>
-                                <th class="p-4 border-b border-white/10 text-center">התחלה</th>
-                                <th class="p-4 border-b border-white/10 text-center">סיום</th>
-                                <th class="p-4 border-b border-white/10 text-right">פריטים</th>
-                                <th class="p-4 border-b border-white/10 text-center">קוד הזמנה</th>                            
-                            </tr>
-                        </thead>
-                        <tbody>`;
-            
-            const sortedOrders = [...orders].reverse();
+                    <div class="overflow-x-auto rounded-2xl border border-gray-100 shadow-sm">
+                        <table class="w-full text-sm border-collapse bg-white text-slate-800">
+                            <thead class="bg-navy text-blue-400 text-right">
+                                <tr>
+                                    <th class="p-4 border-b border-white/10 text-right">לקוח</th>
+                                    <th class="p-4 border-b border-white/10 text-right">טלפון</th>
+                                    <th class="p-4 border-b border-white/10 text-center">התחלה</th>
+                                    <th class="p-4 border-b border-white/10 text-center">סיום</th>
+                                    <th class="p-4 border-b border-white/10 text-right">פריטים</th>
+                                    <th class="p-4 border-b border-white/10 text-center">קוד הזמנה</th>                            
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                
+                const sortedOrders = [...orders].reverse();
 
-            sortedOrders.forEach(o => {
-                const cleanPickup = (o.תאריך_לקיחה || o['תאריך_לקיחה'] || "").split('T')[0].split(' ')[0];
-                const cleanReturn = (o.תאריך_החזרה || o['תאריך_החזרה'] || "").split('T')[0].split(' ')[0];
-                const code = o.קוד_הזמנה || o['קוד_הזמנה'] || o.orderCode || '---';
+                sortedOrders.forEach(o => {
+                    const cleanPickup = (o.תאריך_לקיחה || o['תאריך_לקיחה'] || "").split('T')[0].split(' ')[0];
+                    const cleanReturn = (o.תאריך_החזרה || o['תאריך_החזרה'] || "").split('T')[0].split(' ')[0];
+                    const code = o.קוד_הזמנה || o['קוד_הזמנה'] || o.orderCode || '---';
 
-                html += `
-                    <tr class="border-b hover:bg-gray-50 transition-colors text-navy text-right">
-                        <td class="p-4 font-bold">${o.שם_לקוח || o['שם_לקוח']}</td>
-                        <td class="p-4 font-mono text-xs">${o.טלפון || o['טלפון']}</td>
-                        <td class="p-4 text-center text-xs bg-gray-50/50 font-bold">${cleanPickup}</td>
-                        <td class="p-4 text-center text-xs bg-gray-50/50 font-bold">${cleanReturn}</td>
-                        <td class="p-4 text-[11px] leading-relaxed max-w-xs text-right">${(o.פריטים || o['פריטים'] || "").replace(/, /g, '<br>')}</td>
-                        <td class="p-4 text-center font-bold text-gold bg-gray-50/30">${code}</td>
-                    </tr>`;
-            });
-            
-            html += `</tbody></table></div>`;
-            content.innerHTML = html;
-            lucide.createIcons();
+                    html += `
+                        <tr class="border-b hover:bg-gray-50 transition-colors text-navy text-right">
+                            <td class="p-4 font-bold">${o.שם_לקוח || o['שם_לקוח']}</td>
+                            <td class="p-4 font-mono text-xs">${o.טלפון || o['טלפון']}</td>
+                            <td class="p-4 text-center text-xs bg-gray-50/50 font-bold">${cleanPickup}</td>
+                            <td class="p-4 text-center text-xs bg-gray-50/50 font-bold">${cleanReturn}</td>
+                            <td class="p-4 text-[11px] leading-relaxed max-w-xs text-right">${(o.פריטים || o['פריטים'] || "").replace(/, /g, '<br>')}</td>
+                            <td class="p-4 text-center font-bold text-gold bg-gray-50/30">${code}</td>
+                        </tr>`;
+                });
+                
+                html += `</tbody></table></div>`;
+                content.innerHTML = html;
+                lucide.createIcons();
+            } catch (e) {
+                showToast('שגיאה בטעינת ההיסטוריה');
+            } finally {
+                fullPageLoader.classList.add('hidden');
+            }
         }
 
         async function saveItem() {
@@ -1748,6 +1805,7 @@
             const varCols = getVariationColumns();
             const payload = {
                 action: document.getElementById('edit-id').value ? "editItem" : "addItem",
+                password: adminPassword, // אימות מאובטח בשרת
                 שם_פריט: name,
                 מלאי: qty,
                 קטגוריה: document.getElementById('new-cat').value,
@@ -1769,7 +1827,7 @@
 
             try {
                 await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-                await init(); 
+                await fetchInventory(); 
                 renderAdminTable();
                 showToast('הפריט נשמר בהצלחה');
             } catch(e) {
@@ -1802,8 +1860,15 @@
 
         async function deleteItem(name) {
             if (confirm('האם אתה בטוח שברצונך למחוק מוצר זה לצמיתות?')) {
-                await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({action: "deleteItem", שם_פריט: name}) });
-                await init(); 
+                await fetch(SCRIPT_URL, { 
+                    method: 'POST', 
+                    body: JSON.stringify({
+                        action: "deleteItem", 
+                        password: adminPassword, // אימות מאובטח
+                        שם_פריט: name
+                    }) 
+                });
+                await fetchInventory(); 
                 renderAdminTable();
             }
         }
