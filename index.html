@@ -1,4 +1,4 @@
-
+tml
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -14,12 +14,12 @@
     <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
       
- <!-- תגיות שיתוף מותאמות לווצאפ ורשתות חברתיות -->
-<meta property="og:title" id="og-title" content="[כל בו ישראל]">
-<meta property="og:description" id="og-desc" content="[אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ.]">
-<meta property="og:image" id="og-img" content="https://bv12345678.github.io/-/preview.jpg">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="he_IL">
+    <!-- תגיות שיתוף מותאמות לווצאפ ורשתות חברתיות -->
+    <meta property="og:title" id="og-title" content="كل בו ישראל">
+    <meta property="og:description" id="og-desc" content="אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ.">
+    <meta property="og:image" id="og-img" content="https://bv12345678.github.io/-/preview.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="he_IL">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -400,8 +400,8 @@
                     <i data-lucide="moon" class="w-4.5 h-4.5 text-navy dark:text-white"></i>
                 </button>        
 
-                <!-- כפתור עגלה מובנה בתפריט -->
-                <button id="cart-btn-icon" onclick="toggleCart(true)" class="relative bg-white dark:bg-zinc-800 p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all" aria-label="עגלת קניות">
+                <!-- כפתור מעבר לדף עגלה מרווח במקום סיידבר -->
+                <button id="cart-btn-icon" onclick="showView('cart')" class="relative bg-white dark:bg-zinc-800 p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all" aria-label="עגלת קניות">
                     <i data-lucide="shopping-cart" class="w-5 h-5 text-navy dark:text-white"></i>
                     <span id="cart-count" class="absolute -top-1.5 -right-1.5 gold-gradient text-navy text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-zinc-800 hidden">0</span>
                 </button>
@@ -424,6 +424,10 @@
             <i data-lucide="grid" class="text-gold w-5 h-5"></i>
             <span class="font-bold">קטגוריות</span>
         </button>
+        <button onclick="showView('cart'); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="shopping-bag" class="text-gold w-5 h-5"></i>
+            <span class="font-bold">סל הקניות והקופה</span>
+        </button>
         <button onclick="lookupOrder(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
             <i data-lucide="search" class="text-gold w-5 h-5"></i>
             <span class="font-bold">חיפוש/עריכת הזמנה</span>
@@ -438,7 +442,7 @@
         </button>
     </div>
 
-    <!-- באנר כותרת מותג (Hero Section) מובנה - תיקון: הגובה הוקטן בצורה משמעותית לנוחות מקסימלית -->
+    <!-- באנר כותרת מותג (Hero Section) מובנה -->
     <header class="hero-section min-h-[18vh] md:min-h-[25vh] flex flex-col relative text-white no-print justify-center items-center">
         <div class="text-center px-4 z-10 max-w-4xl mx-auto w-full py-6 md:py-8">
             <div class="space-y-2">
@@ -451,7 +455,7 @@
 
     <main class="max-w-7xl mx-auto px-4 py-8 md:py-16 no-print">
 
-        <!-- שורת חיפוש למובייל (רק במסכים קטנים) -->
+        <!-- שורת חיפוש למובייל -->
         <div class="relative w-full mb-8 md:hidden" id="mobile-search-container">
             <label for="searchInputMobile" class="sr-only">חפש בקטלוג...</label>
             <input type="text" id="searchInputMobile" oninput="handleSearchMobile()" placeholder="חפש מוצרים וקטגוריות בקטלוג..."
@@ -461,7 +465,7 @@
         
         <!-- ==================== 1. דף הבית העיצובי והשיווקי ==================== -->
         <section id="view-home" class="space-y-20 animate-fade-in">
-            <!-- אזור הסבר שיווקי / אודות מותאם אישית (ניתן לשליטה מלאה מגוגל שיטס) -->
+            <!-- אזור הסבר שיווקי -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="space-y-6 text-right order-2 lg:order-1">
                     <span class="text-xs font-bold uppercase tracking-widest text-gold border-b-2 border-gold/40 pb-2">קצת עלינו</span>
@@ -475,7 +479,6 @@
                         </button>
                     </div>
                 </div>
-                <!-- תיקון: הגדרת מזהה לתמונת האודות לשליטה דינמית מגוגל שיטס -->
                 <div class="box h-80 w-full overflow-hidden rounded-[2rem] shadow-2xl relative order-1 lg:order-2">
                     <div class="absolute inset-0 gold-gradient transform rotate-3 scale-102 opacity-25 blur"></div>
                     <img id="home-about-img" src="preview.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;100&quot; height=&quot;100&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23cccccc&quot; stroke-width=&quot;1&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/></svg>'" alt="תמונת המותג" class="relative z-10 w-full h-full object-cover rounded-[2rem]">
@@ -489,19 +492,16 @@
                     <p class="text-sm text-gray-400">חנות-קטלוג חכמה עם שליחה ישירה לוואטסאפ ללא עמלות תיווך</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- שלב 1 -->
                     <div class="bg-white dark:bg-zinc-900 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow text-center space-y-4 border border-gray-100 dark:border-zinc-800">
                         <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center font-black text-navy mx-auto">01</div>
                         <h4 class="font-bold text-lg text-navy dark:text-white">בוחרים מוצרים</h4>
                         <p class="text-xs text-gray-500 leading-relaxed">נכנסים לקטגוריות, בוחרים את הווריאציה המושלמת עבורכם ומוסיפים לעגלת הקניות.</p>
                     </div>
-                    <!-- שלב 2 -->
                     <div class="bg-white dark:bg-zinc-900 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow text-center space-y-4 border border-gray-100 dark:border-zinc-800">
                         <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center font-black text-navy mx-auto">02</div>
                         <h4 class="font-bold text-lg text-navy dark:text-white">מתאמים תאריכים</h4>
                         <p class="text-xs text-gray-500 leading-relaxed">בעגלת הקניות בוחרים את תאריכי האיסוף וההחזרה (או משלוח) לצורך בדיקת זמינות מלאי מלאה.</p>
                     </div>
-                    <!-- שלב 3 -->
                     <div class="bg-white dark:bg-zinc-900 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow text-center space-y-4 border border-gray-100 dark:border-zinc-800">
                         <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center font-black text-navy mx-auto">03</div>
                         <h4 class="font-bold text-lg text-navy dark:text-white">מאשרים בוואטסאפ</h4>
@@ -537,13 +537,74 @@
                         <p class="text-xs text-gray-400 mt-0.5">קטגוריה פעילה</p>
                     </div>
                 </div>
-                <!-- פילטרים פנימיים מהירים של קטגוריות אחרות -->
                 <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar scroll-smooth max-w-full" id="category-filters"></div>
             </div>
 
-            <!-- גריד מוצרי הקטלוג (מעוצב למנוע מתיחה של מוצר יחיד) -->
+            <!-- גריד מוצרי הקטלוג -->
             <div id="inventory-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12 md:mb-20">
                 <div class="col-span-full text-center py-20"><div class="loader mx-auto mb-4"></div>טוען פריטים...</div>
+            </div>
+        </section>
+
+        <!-- ==================== 4. דף עגלה, קופה מורחבת ועריכת הזמנה (חדש ומרווח) ==================== -->
+        <section id="view-cart" class="space-y-8 hidden animate-fade-in">
+            <div class="text-center md:text-right border-b border-gray-100 dark:border-white/5 pb-4">
+                <h2 class="text-2xl md:text-4xl font-bold serif text-navy dark:text-white">קופה וסיכום הזמנה</h2>
+                <p class="text-sm text-gray-500 mt-1">אנא עברו על הפריטים, קבעו תאריכים ואשרו את ההזמנה בצורה נוחה</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                <!-- צד ימין: תוכן התהליך לפי השלבים (מרווח ומפורט) -->
+                <div class="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow p-6 md:p-10 border border-gray-100 dark:border-zinc-800 space-y-8">
+                    <!-- בר שריון/שלבים בעיצוב מרווח -->
+                    <div id="full-cart-stepper" class="flex border-b dark:border-zinc-800 text-center text-xs font-bold uppercase tracking-wider pb-6">
+                        <div id="full-step-1-header" onclick="goToStep(1)" class="flex-1 py-3 step-item step-active transition-all relative cursor-pointer">
+                            <span>01. סל פריטים</span>
+                            <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
+                        </div>
+                        <div id="full-step-2-header" onclick="goToStep(2)" class="flex-1 py-3 step-item transition-all relative cursor-pointer">
+                            <span>02. תזמון ופרטי לקוח</span>
+                            <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
+                        </div>
+                        <div id="full-step-3-header" onclick="goToStep(3)" class="flex-1 py-3 step-item transition-all relative cursor-pointer">
+                            <span>03. אישור ושליחה</span>
+                            <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- אזור הזרקת התוכן המרכזי של הקופה -->
+                    <div id="full-cart-content" class="min-h-[250px]"></div>
+                </div>
+
+                <!-- צד שמאל: פנל סיכום צדדי קבוע, כפתורי ניווט ואישור -->
+                <div class="bg-gray-50 dark:bg-zinc-900/40 rounded-[2rem] p-6 md:p-8 space-y-6 border border-gray-100 dark:border-zinc-800">
+                    <h3 class="font-bold text-lg text-navy dark:text-white border-b pb-3 border-gray-200 dark:border-zinc-800">סיכום זמני בקופה</h3>
+                    
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">סה"כ פריטים שונים:</span>
+                            <span id="full-summary-count" class="font-bold text-navy dark:text-white">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">טווח תאריכים:</span>
+                            <span id="full-summary-dates" class="font-bold text-navy dark:text-white">טרם נבחרו</span>
+                        </div>
+                        <div id="full-active-order-label" class="hidden text-gold font-bold text-xs bg-gold/10 p-2 rounded-xl text-center border border-gold/20">
+                            עריכת הזמנה פעילה (קוד: <span id="full-active-code">---</span>)
+                        </div>
+                    </div>
+                    
+                    <!-- כפתורי השליטה והניווט בקופה -->
+                    <div class="pt-4 border-t border-gray-200 dark:border-zinc-800 space-y-3">
+                        <div id="full-cancel-order-area" class="hidden">
+                            <button onclick="cancelCurrentOrder()" class="w-full py-3 text-red-500 text-xs font-bold border border-red-100 dark:border-red-900/35 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors">ביטול ומחיקת ההזמנה מהמערכת</button>
+                        </div>
+                        <div class="flex gap-3">
+                            <button id="full-prevBtn" onclick="prevStep()" class="hidden flex-1 py-4 rounded-2xl border border-gray-200 dark:border-zinc-700 font-bold hover:bg-gray-50 dark:hover:bg-zinc-800 text-slate-800 dark:text-white transition-all text-xs md:text-sm">חזור</button>
+                            <button id="full-nextBtn" onclick="nextStep()" class="flex-[2] gold-gradient py-4 rounded-2xl font-bold text-navy shadow-xl hover:scale-[1.02] active:scale-95 transition-all text-xs md:text-sm">המשך לשלב הבא</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -576,49 +637,6 @@
         </div>
     </main>
 
-    <!-- Cart Sidebar -->
-    <div id="cart-sidebar" class="fixed inset-0 bg-navy/60 backdrop-blur-sm z-[100] transition-opacity duration-300 opacity-0 pointer-events-none no-print" onclick="toggleCart(false)">
-        <div class="fixed inset-y-0 left-0 w-full md:w-[500px] bg-white dark:bg-zinc-900 shadow-2xl transform -translate-x-full transition-transform duration-500 flex flex-col" onclick="event.stopPropagation()">
-            
-            <button onclick="toggleCart(false)" class="absolute top-4 left-4 z-50 p-2 bg-gray-100 dark:bg-zinc-800 rounded-full text-gray-600 dark:text-white hover:bg-gray-200 dark:hover:bg-zinc-700 shadow-sm" aria-label="סגור חלון">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-
-            <div id="cart-stepper" class="flex border-b dark:border-zinc-800 text-center text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 mt-12 md:mt-0">
-                <div id="step-1-header" class="flex-1 py-6 step-item step-active transition-all relative">
-                    <span class="z-10 relative">01. סל פריטים</span>
-                    <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
-                </div>
-                <div id="step-2-header" class="flex-1 py-6 step-item transition-all relative">
-                    <span class="z-10 relative">02. תזמון ופרטים</span>
-                    <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
-                </div>
-                <div id="step-3-header" class="flex-1 py-6 step-item transition-all relative">
-                    <span class="z-10 relative">03. אישור</span>
-                    <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
-                </div>
-            </div>
-            <div id="cart-content" class="flex-1 overflow-y-auto p-8"></div>
-            <div id="mini-summary" class="hidden sticky bottom-0 z-50 px-8 py-3 bg-white dark:bg-zinc-900 border-t border-b dark:border-zinc-800 text-xs flex justify-between items-center shadow-lg">
-                <div class="flex flex-col text-right">
-                    <span class="font-bold text-navy dark:text-white">סיכום הזמנה: <span id="summary-count">0</span> פריטים</span>
-                    <span class="text-[10px] text-gray-500 dark:text-gray-400" id="summary-dates"></span>
-                    <span id="active-order-label" class="text-gold font-bold hidden text-[10px] mt-1">עריכת הזמנה פעילה</span>
-                </div>
-                <button onclick="goToStep(1)" class="text-gold underline text-xs font-bold">עריכה</button>
-            </div>
-            <div id="cart-footer" class="p-8 bg-white dark:bg-zinc-900 border-t dark:border-zinc-800 space-y-4">
-                <div id="cancel-order-area" class="hidden pb-4">
-                    <button onclick="cancelCurrentOrder()" class="w-full py-3 text-red-500 text-xs font-bold border border-red-100 dark:border-red-900/35 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors">ביטול ומחיקת ההזמנה לחלוטין</button>
-                </div>
-                <div class="flex gap-3">
-                    <button id="prevBtn" onclick="prevStep()" class="hidden flex-1 py-4 rounded-2xl border border-gray-200 dark:border-zinc-700 font-bold hover:bg-gray-50 dark:hover:bg-zinc-800 text-slate-800 dark:text-white transition-colors">חזור</button>
-                    <button id="nextBtn" onclick="nextStep()" class="flex-[2] gold-gradient py-4 rounded-2xl font-bold text-navy shadow-xl hover:scale-[1.02] active:scale-95 transition-all">המשך</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Admin Modal -->
     <div id="admin-modal" class="fixed inset-0 bg-navy/80 backdrop-blur-md z-[200] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-[2rem] w-full max-w-7xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
@@ -637,8 +655,8 @@
         </div>
     </div>
 
-    <!-- Print Layout -->
-    <div id="print-area" class="hidden text-right p-16">
+    <!-- Print Layout (מיועד להורדת PDF והדפסה) -->
+    <div id="print-area" class="hidden text-right p-16 bg-white text-slate-900">
         <div class="border-b-4 border-navy pb-4 mb-8">
             <h1 id="print-brand-title" class="text-4xl font-bold serif italic">אישור הזמנה</h1>
             <p id="print-order-id" class="text-xl font-bold mt-2 text-gold"></p>
@@ -646,9 +664,9 @@
         <div id="print-user-info" class="mb-8 space-y-2 text-lg"></div>
         <table class="w-full border-collapse border border-gray-300">
             <thead>
-                <tr class="bg-navy text-white">
-                    <th class="p-3 border border-gray-300">פריט</th>
-                    <th class="p-3 border border-gray-300">כמות</th>
+                <tr class="bg-[#1A1C2C] text-white">
+                    <th class="p-3 border border-gray-300 text-right">פריט</th>
+                    <th class="p-3 border border-gray-300 text-center">כמות</th>
                 </tr>
             </thead>
             <tbody id="print-items-list"></tbody>
@@ -703,14 +721,11 @@
         let itemsToShow = 12;    
         const ITEMS_BATCH = 12;  
         let currentLayout = localStorage.getItem('inventoryLayout') || 'grid';
-        let currentView = 'home'; // 'home', 'categories', 'products'
+        let currentView = 'home'; // 'home', 'categories', 'products', 'cart'
 
         // פונקציית הגנה בסיסית על הקוד מפני העתקות של משתמשים פשוטים
         function enableBasicCodeProtection() {
-            // חסימת קליק ימני
             document.addEventListener('contextmenu', event => event.preventDefault());
-
-            // חסימת מקשים נפוצים לפתיחת כלי מפתחים
             document.addEventListener('keydown', event => {
                 if (
                     event.key === 'F12' || 
@@ -730,7 +745,6 @@
                 .filter(([k, v]) => v !== undefined && v !== null && v !== '')
                 .map(([k, v]) => [k.trim(), v.toString().trim()]);
             
-            // מיון אלפביתי של המפתחות כדי להבטיח זיהוי וסנכרון מדויק מול העגלה
             filtered.sort((a, b) => a[0].localeCompare(b[0]));
             
             const attrStr = filtered.map(([k, v]) => `${k}: ${v}`).join(', ');
@@ -755,6 +769,7 @@
             document.getElementById('view-home').classList.add('hidden');
             document.getElementById('view-categories').classList.add('hidden');
             document.getElementById('view-products').classList.add('hidden');
+            document.getElementById('view-cart').classList.add('hidden');
             
             const headerSearch = document.getElementById('header-search-container');
             const layoutToggle = document.getElementById('layout-toggle-container');
@@ -764,18 +779,25 @@
                 document.getElementById('view-home').classList.remove('hidden');
                 headerSearch.classList.add('invisible');
                 layoutToggle.classList.add('invisible');
-                if (heroSection) heroSection.classList.remove('hidden'); // הצגה רק בדף הבית
+                if (heroSection) heroSection.classList.remove('hidden');
             } else if (view === 'categories') {
                 document.getElementById('view-categories').classList.remove('hidden');
                 headerSearch.classList.add('invisible');
                 layoutToggle.classList.add('invisible');
-                if (heroSection) heroSection.classList.add('hidden'); // הסתרה מוחלטת בדף הקטגוריות
+                if (heroSection) heroSection.classList.add('hidden');
                 renderHomeCategories();
             } else if (view === 'products') {
                 document.getElementById('view-products').classList.remove('hidden');
                 headerSearch.classList.remove('invisible');
                 layoutToggle.classList.remove('invisible');
-                if (heroSection) heroSection.classList.add('hidden'); // הסתרה מוחלטת בדף המוצרים
+                if (heroSection) heroSection.classList.add('hidden');
+            } else if (view === 'cart') {
+                document.getElementById('view-cart').classList.remove('hidden');
+                headerSearch.classList.add('invisible');
+                layoutToggle.classList.add('invisible');
+                if (heroSection) heroSection.classList.add('hidden');
+                goToStep(1); // תמיד להתחיל משלב 1 של הקופה
+                updateCartSummary();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -806,9 +828,12 @@
             // התאריכים יוגבלו רק בעגלה (Step 2)
         }
 
-        async function fetchInventory(pDate = '', rDate = '') {
+        // שיפור: אפשרות להשתיק את מסך הטעינה כדי למנוע היתקעות UI לאחר שליחת הזמנה
+        async function fetchInventory(pDate = '', rDate = '', showLoader = true) {
             const fullPageLoader = document.getElementById('full-page-loader');
-            fullPageLoader.classList.remove('hidden');
+            if (showLoader) {
+                fullPageLoader.classList.remove('hidden');
+            }
 
             try {
                 let url = SCRIPT_URL;
@@ -831,8 +856,10 @@
                 initProductStates();
                 applyConfig();
                 
-                // אתחול והצגת דף הבית המוגדר בהתחלה
-                showView('home');
+                // עדכון התצוגה הנוכחית במידה ואנו כבר בדף הקטלוג
+                if (currentView === 'products') {
+                    filterByCategory(currentCategory);
+                }
                 
                 updateCartUI();
                 updateCartSummary();
@@ -939,7 +966,6 @@
             return DEFAULT_IMG;
         }
 
-        // שליטה מלאה בטקסטים, מטא-טאגים, תמונות וניווט מגוגל שיטס
         function applyConfig() {
             if (!aboutConfig) return;
             
@@ -951,7 +977,6 @@
             const waze = aboutConfig['קישור וויז'] || '';
             const bizId = aboutConfig['ח.פ / ע.מ'] || '';
 
-            // שליטה על ההירו
             const heroTitle = aboutConfig['כותרת הירו'] || name;
             const heroDesc = aboutConfig['תיאור הירו'] || desc;
             const bgImg = aboutConfig['תמונת רקע הירו'] || aboutConfig['תמונת רקע'] || '';
@@ -962,7 +987,6 @@
             document.getElementById('hero-desc').innerText = heroDesc;
             document.getElementById('print-brand-title').innerText = `אישור הזמנה - ${name}`;
 
-            // שליטה על תגיות שיתוף מטא (לווטסאפ ורשתות חברתיות)
             const metaDesc = document.getElementById('meta-desc') || document.querySelector('meta[name="description"]');
             if (metaDesc) metaDesc.setAttribute('content', desc);
 
@@ -975,7 +999,6 @@
             const ogImg = document.getElementById('og-img') || document.querySelector('meta[property="og:image"]');
             if (ogImg && bgImg) ogImg.setAttribute('content', formatImageUrl(bgImg));
 
-            // שליטה מלאה על אזור אודות/ברוכים הבאים
             const aboutTitle = aboutConfig['כותרת אודות'] || 'ברוכים הבאים';
             const aboutDesc = aboutConfig['תיאור אודות'] || aboutConfig['אודות'] || 'אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ.';
             const aboutImg = aboutConfig['תמונת אודות'] || '';
@@ -1001,7 +1024,6 @@
                 waFloat.classList.remove('hidden');
             }
 
-            // פתרון וארגון מלא של בלוק המיקום, כפתורי הניווט ומפות גוגל
             if (location || waze) {
                 document.getElementById('location-block').classList.remove('hidden');
                 document.getElementById('location-title').innerText = `מיקום ואיסוף - ${name}`;
@@ -1279,7 +1301,7 @@
                                     <span class="w-6 text-center font-bold text-slate-800 dark:text-white" id="${qtySpanId}">${inCart}</span>
                                     <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
                                 </div>
-                                <button onclick="toggleCart(true)" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה"><i data-lucide="shopping-bag"></i></button>
+                                <button onclick="showView('cart')" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה"><i data-lucide="shopping-bag"></i></button>
                             </div>
                         </div>
                     </div>`;
@@ -1344,7 +1366,10 @@
             saveCart();
             renderGrid(displayedItems); 
             
-            if (currentStep === 1) renderCartStep1(document.getElementById('cart-content'));
+            if (currentView === 'cart') {
+                if (currentStep === 1) renderCartStep1(document.getElementById('full-cart-content'));
+                updateCartSummary();
+            }
             updateCartUI();
         }
 
@@ -1366,25 +1391,7 @@
             requestAnimationFrame(() => img.classList.replace('scale-95', 'scale-100'));
         }
 
-        function toggleCart(show) {
-            const s = document.getElementById('cart-sidebar');
-            s.classList.toggle('opacity-0', !show);
-            s.classList.toggle('pointer-events-none', !show);
-            s.querySelector('div').classList.toggle('-translate-x-full', !show);
-            if (show) {
-                if (!activeOrderCode) {
-                    document.getElementById('cancel-order-area').classList.add('hidden');
-                }
-                document.getElementById('cart-footer').classList.remove('hidden');
-                document.getElementById('cart-stepper').classList.remove('hidden');
-                document.getElementById('mini-summary').classList.remove('hidden');
-                goToStep(1);
-                updateCartSummary();
-            } else {
-                document.getElementById('mini-summary').classList.add('hidden');
-            }
-        }
-
+        // שיפור: פונקציית מעבר שלבים חלקה עם בר שיוך לקופה מורחבת
         function goToStep(s) {
             if (s > currentStep) {
                 if (currentStep === 1 && cart.length === 0) return showToast('העגלה ריקה');
@@ -1407,16 +1414,18 @@
                 }
                 if (currentStep === 3 && !document.getElementById('terms-checkbox')?.checked) return showToast('חובה לאשר את תנאי ההזמנה');
             }
+            
             currentStep = s;
-            document.querySelectorAll('.step-item').forEach(el => {
-                el.classList.remove('step-active');
-                el.classList.remove('step-completed');
+            
+            // עדכון חזותי של הבר הראשי בקופה
+            document.querySelectorAll('#full-cart-stepper .step-item').forEach(el => {
+                el.classList.remove('step-active', 'step-completed');
                 const progressBar = el.querySelector('.step-progress-bar');
                 if (progressBar) progressBar.style.width = '0%';
             });
 
             for (let i = 1; i < s; i++) {
-                const completedStep = document.getElementById(`step-${i}-header`);
+                const completedStep = document.getElementById(`full-step-${i}-header`);
                 if (completedStep) {
                     completedStep.classList.add('step-completed');
                     const progressBar = completedStep.querySelector('.step-progress-bar');
@@ -1424,43 +1433,77 @@
                 }
             }
 
-            const activeStep = document.getElementById(`step-${s}-header`);
+            const activeStep = document.getElementById(`full-step-${s}-header`);
             if (activeStep) {
                 activeStep.classList.add('step-active');
                 const progressBar = activeStep.querySelector('.step-progress-bar');
                 if (progressBar) progressBar.style.width = '50%';
             }
             
-            document.getElementById('prevBtn').classList.toggle('hidden', s === 1);
+            // הגדרת נראות כפתור "חזור"
+            document.getElementById('full-prevBtn').classList.toggle('hidden', s === 1);
             
-            const cont = document.getElementById('cart-content');
+            // תיוג כפתור "המשך" / "אישור"
+            const nextBtn = document.getElementById('full-nextBtn');
+            if (s === 3) {
+                nextBtn.innerText = "אישור ושלח הזמנה ⇠";
+            } else {
+                nextBtn.innerText = "המשך לשלב הבא";
+            }
+
+            const cont = document.getElementById('full-cart-content');
             if (s === 1) renderCartStep1(cont);
             else if (s === 2) renderCartStep2(cont);
             else renderCartStep3(cont);
+            
+            updateCartSummary();
             lucide.createIcons();
         }
 
+        // שיפור: דף עריכת פריטים עם רשימה מלאה ומרווחת
         function renderCartStep1(cont) {
-            cont.innerHTML = `<h4 class="font-bold serif text-xl mb-6 text-navy dark:text-white text-right">הסל שלך</h4>` + cart.map(item => {
-                const pNameEscaped = escapeHtmlParam(item.parentName || item.שם_פריט);
-                const dispNameEscaped = escapeHtmlParam(item.displayName);
-                return `
-              <div class="flex items-center gap-4 bg-gray-50 dark:bg-zinc-800 p-4 rounded-2xl mb-3 relative border border-gray-100 dark:border-zinc-700 shadow-sm text-slate-800 dark:text-white">
-                <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}'}, '${dispNameEscaped}', -${item.qty})" class="absolute top-2 left-2 text-red-400 hover:text-red-600 transition-colors p-1" aria-label="הסר פריט">
-                    <i data-lucide="x" class="w-4 h-4"></i>
-                </button>
-                <img src="${formatImageUrl(item.תמונה)}" alt="${item.displayName}" class="w-14 h-14 rounded-xl object-cover shadow-sm border border-gray-200 dark:border-zinc-700">
-                <div class="flex-1 text-right">
-                    <div class="text-xs font-bold text-navy dark:text-white leading-tight">${item.displayName}</div>
-                    <div class="text-[10px] text-gray-400 mt-1">${item.קטגוריה}</div>
-                </div>
-                <div class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl p-1">
-                    <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${dispNameEscaped}', -1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white">-</button>
-                    <span class="w-4 text-center text-xs font-bold">${item.qty}</span>
-                    <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${dispNameEscaped}', 1)" class="w-6 h-6 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white">+</button>
-                </div>
-              </div>`;
-            }).join('');
+            if (cart.length === 0) {
+                cont.innerHTML = `
+                    <div class="text-center py-16 space-y-4">
+                        <div class="w-16 h-16 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto text-gray-400">
+                            <i data-lucide="shopping-cart" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-lg text-slate-400">סל הקניות שלך ריק כרגע</h4>
+                        <button onclick="showView('products')" class="px-6 py-2.5 gold-gradient font-bold text-navy text-xs rounded-xl shadow">חזור לקטלוג</button>
+                    </div>`;
+                return;
+            }
+
+            cont.innerHTML = `
+                <div class="space-y-4">
+                    <h4 class="font-bold serif text-lg text-navy dark:text-white text-right">רשימת הפריטים בקופה</h4>
+                    <div class="grid grid-cols-1 gap-4 max-h-[50vh] overflow-y-auto pr-2 no-scrollbar">
+                        ${cart.map(item => {
+                            const pNameEscaped = escapeHtmlParam(item.parentName || item.שם_פריט);
+                            const dispNameEscaped = escapeHtmlParam(item.displayName);
+                            return `
+                            <div class="flex items-center justify-between gap-4 bg-gray-50 dark:bg-zinc-800 p-4 rounded-2xl border border-gray-100 dark:border-zinc-700 shadow-sm text-slate-800 dark:text-white">
+                                <div class="flex items-center gap-4 text-right">
+                                    <img src="${formatImageUrl(item.תמונה)}" alt="${item.displayName}" class="w-16 h-16 rounded-xl object-cover shadow-sm border border-gray-200 dark:border-zinc-700">
+                                    <div>
+                                        <div class="text-sm font-bold text-navy dark:text-white leading-tight">${item.displayName}</div>
+                                        <div class="text-[10px] text-gray-400 mt-1">${item.קטגוריה}</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl p-1.5">
+                                        <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${dispNameEscaped}', -1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white font-bold">-</button>
+                                        <span class="w-6 text-center text-xs font-bold">${item.qty}</span>
+                                        <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${dispNameEscaped}', 1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white font-bold">+</button>
+                                    </div>
+                                    <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}'}, '${dispNameEscaped}', -${item.qty})" class="text-red-400 hover:text-red-600 transition-colors p-2 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl" aria-label="הסר פריט">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>`;
             lucide.createIcons();
         }
 
@@ -1491,17 +1534,20 @@
             const today = new Date().toISOString().split('T')[0];
 
             cont.innerHTML = `
-                <div class="space-y-5 text-right">
-                    <h4 class="font-bold serif text-xl text-navy dark:text-white">פרטי הזמנה ותאריכים</h4>
+                <div class="space-y-6 text-right">
+                    <h4 class="font-bold serif text-lg text-navy dark:text-white">פרטי הזמנה ותאריכים</h4>
                     
-                    <button onclick="setNextShabbat()" class="w-full py-3 bg-navy/5 text-navy dark:bg-white/5 dark:text-gold border border-navy/10 dark:border-white/10 rounded-xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-navy hover:text-white dark:hover:bg-zinc-800 transition-all group">
+                    <button onclick="setNextShabbat()" class="w-full py-3.5 bg-navy/5 text-navy dark:bg-white/5 dark:text-gold border border-navy/10 dark:border-white/10 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-navy hover:text-white dark:hover:bg-zinc-800 transition-all group">
                         <i data-lucide="calendar-check" class="text-gold"></i>
                         בחירה אוטומטית לסוף השבוע הקרוב
                     </button>
 
-                    <input type="text" id="u-name" placeholder="שם מלא" value="${pendingFormData.name || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
-                    <input type="tel" id="u-phone" placeholder="מספר טלפון" value="${pendingFormData.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="u-name" placeholder="שם מלא" value="${pendingFormData.name || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                        <input type="tel" id="u-phone" placeholder="מספר טלפון" value="${pendingFormData.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך התחלה / לקיחה</label>
                             <input type="date" id="p-date" min="${today}" value="${defaultP}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
@@ -1519,17 +1565,18 @@
         function renderCartStep3(cont) {
             cont.innerHTML = `
                 <div class="space-y-6 text-right">
-                    <div class="gold-gradient text-navy p-6 rounded-[2.5rem] shadow-xl border border-gold/50">
-                        <p class="text-xs opacity-80 uppercase tracking-widest mb-1 text-navy/70">סיכום הזמנה עבור</p>
+                    <div class="gold-gradient text-navy p-6 rounded-[2rem] shadow-xl border border-gold/50">
+                        <p class="text-[10px] opacity-80 uppercase tracking-widest mb-1 text-navy/70">סיכום הזמנה עבור</p>
                         <p class="font-bold text-2xl italic text-navy">${pendingFormData.name}</p>
                         <p class="text-sm mt-1 text-navy/80">${pendingFormData.pDate} ⇠ ${pendingFormData.rDate}</p>
                     </div>
 
-                    <div class="bg-gray-50 p-6 rounded-[2rem] space-y-3 text-sm border border-gray-100 dark:border-zinc-700 text-slate-800 dark:text-white">
+                    <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-[2rem] space-y-3 text-sm border border-gray-100 dark:border-zinc-700 text-slate-800 dark:text-white max-h-[30vh] overflow-y-auto pr-2 no-scrollbar">
                         ${cart.map(c => `<div class="flex justify-between items-center"><span class="text-gray-600 dark:text-gray-300">${c.displayName}</span><span class="font-bold text-navy dark:text-gold">${c.qty} יח'</span></div>`).join('')}
                     </div>
+                    
                     <div class="space-y-4">
-                        <details class="bg-gray-100 rounded-2xl p-4 transition-all">
+                        <details class="bg-gray-100 dark:bg-zinc-800 rounded-2xl p-4 transition-all">
                             <summary class="font-bold text-xs cursor-pointer flex justify-between items-center text-navy dark:text-white">מדיניות ותנאי המקום <i data-lucide="chevron-down" class="w-4 h-4"></i></summary>
                             <div class="text-[11px] mt-3 space-y-2 text-gray-600 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-zinc-700 pt-3 text-right">
                                 <p>• באחריות המזמין להחזיר את הפריטים כשהם שלמים, נקיים ותקינים.</p>
@@ -1539,7 +1586,7 @@
                         </details>
                         <label class="flex items-center gap-3 p-3 bg-gold/5 rounded-2xl border border-gold/10 cursor-pointer">
                             <input type="checkbox" id="terms-checkbox" class="w-5 h-5 text-gold rounded focus:ring-gold"> 
-                            <span class="text-xs font-bold text-navy/80 dark:text-white/80 text-right font-semibold">קראתי ואני מאשר את תנאי ומדיניות ההזמנה</span>
+                            <span class="text-xs font-bold text-navy/80 dark:text-white/80 text-right">קראתי ואני מאשר את תנאי ומדיניות ההזמנה</span>
                         </label>
                     </div>
                 </div>`;
@@ -1548,7 +1595,7 @@
 
         async function sendOrder() {
             if (!document.getElementById('terms-checkbox').checked) return showToast('חובה לקרוא ולאשר את התנאים');
-            const nextBtn = document.getElementById('nextBtn');
+            const nextBtn = document.getElementById('full-nextBtn');
             const originalText = nextBtn.innerText;
             nextBtn.disabled = true;
             nextBtn.innerHTML = '<div class="loader w-5 h-5 mx-auto"></div>';
@@ -1578,7 +1625,9 @@
                 const savedFormData = { ...pendingFormData };
                 pendingFormData = {};
                 updateCartUI();
-                await fetchInventory();
+                
+                // שיפור: טעינת המלאי החדש שקטה ברקע ללא חסימת הודעת ההצלחה
+                await fetchInventory('', '', false);
                 
                 setupWhatsAppButton(code, savedFormData, payload.פריטים);
             } catch (e) { 
@@ -1586,15 +1635,6 @@
                 nextBtn.disabled = false; 
                 nextBtn.innerText = originalText; 
             }
-        }
-
-        function generateSecureOrderCode() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let code = '';
-            for (let i = 0; i < 6; i++) {
-                code += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return code;
         }
 
         function setupWhatsAppButton(code, formData, itemsText) {
@@ -1619,19 +1659,18 @@ ${itemsText.replace(/, /g, '\n')}
             }
         }
 
+        // שיפור: תצוגת סיום הזמנה מורחבת עם תמיכה מלאה ב-PDF
         function renderSuccessState(code) {
-            document.getElementById('cart-footer').classList.add('hidden');
-            document.getElementById('cart-stepper').classList.add('hidden');
-            document.getElementById('mini-summary').classList.add('hidden');
+            document.getElementById('full-cart-stepper').classList.add('hidden');
             
-            document.getElementById('cart-content').innerHTML = `
+            document.getElementById('full-cart-content').innerHTML = `
                 <div class="text-center space-y-8 py-10 text-slate-800 dark:text-white">
-                    <div class="w-20 h-20 bg-green-100 dark:bg-green-950/40 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm">
+                    <div class="w-20 h-20 bg-green-100 dark:bg-green-950/40 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm animate-bounce">
                         <i data-lucide="check-circle-2" class="w-12 h-12"></i>
                     </div>
                     <div>
-                        <h3 class="text-3xl font-bold serif italic text-navy dark:text-gold">ההזמנה התקבלה!</h3>
-                        <p class="text-gray-500 dark:text-gray-400 mt-2">קיבלנו את פרטי ההזמנה שלך במערכת.</p>
+                        <h3 class="text-3xl font-bold serif italic text-navy dark:text-gold">ההזמנה התקבלה בהצלחה!</h3>
+                        <p class="text-gray-500 dark:text-gray-400 mt-2">קיבלנו את פרטי ההזמנה שלך במערכת והיא נשמרה בשרת.</p>
                     </div>
                     <div class="gold-gradient text-navy p-8 rounded-[2.5rem] shadow-2xl border-b-4 border-gold">
                         <p class="text-sm opacity-80 uppercase tracking-widest mb-2 text-navy/70">קוד ההזמנה המאובטח:</p>
@@ -1640,25 +1679,44 @@ ${itemsText.replace(/, /g, '\n')}
                             נא לשמור את הקוד לחיפוש, עדכון או ביטול ההזמנה בעתיד.
                         </p>
                     </div>
-                    <div class="space-y-3">
-                        <a href="#" target="_blank" id="whatsapp-send-btn" class="w-full py-5 bg-[#25D366] text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
-                            <i data-lucide="message-circle" class="w-5 h-5"></i> שלח הודעת אישור בוואטסאפ למנהל
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
+                        <a href="#" target="_blank" id="whatsapp-send-btn" class="py-5 bg-[#25D366] text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-all">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i> שלח הודעת אישור למנהל
                         </a>
-                        <button onclick="preparePrint()" class="w-full py-5 gold-gradient text-navy rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
-                            <i data-lucide="printer" class="w-5 h-5"></i> הדפסת אישור הזמנה
+                        <button onclick="preparePrint()" class="py-5 gold-gradient text-navy rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-all">
+                            <i data-lucide="printer" class="w-5 h-5"></i> הדפסת אישור
                         </button>
-                        <button onclick="downloadPdf()" class="w-full py-5 bg-navy text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-transform">
+                        <button onclick="downloadPdf()" class="py-5 bg-navy text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-all">
                             <i data-lucide="file-text" class="w-5 h-5"></i> הורד כקובץ PDF
                         </button>
-                        <button onclick="location.reload()" class="w-full py-4 text-gray-400 font-bold text-sm hover:text-navy dark:hover:text-white transition-colors">חזרה לדף הבית</button>
                     </div>
+                    <button onclick="location.reload()" class="w-full py-4 text-gray-400 font-bold text-sm hover:text-navy dark:hover:text-white transition-colors">חזרה לדף הבית ⇠</button>
                 </div>`;
             lucide.createIcons();
+        }
+
+        // שיפור: פונקציית הורדת ה-PDF התקינה עבור אישור ההזמנה
+        function downloadPdf() {
+            const element = document.getElementById('print-area');
+            const opt = {
+                margin:       0.5,
+                filename:     `order-confirmation-${activeOrderCode || 'code'}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            
+            // הצגה זמנית לצורך תפיסת המסמך והחזרה להסתרה
+            element.classList.remove('hidden');
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.add('hidden');
+            });
         }
 
         function nextStep() { if (currentStep < 3) goToStep(currentStep + 1); else sendOrder(); }
         function prevStep() { goToStep(currentStep - 1); }
 
+        // שיפור: בעת חיפוש הזמנה היא נפתחת אוטומטית בדף מרווח ומלא לעריכה נוחה
         async function lookupOrder() {
             let code = prompt('נא להזין קוד הזמנה (6 תווים):');
             if (!code) return;
@@ -1684,6 +1742,9 @@ ${itemsText.replace(/, /g, '\n')}
                 
                 const order = resData.order;
                 const customerName = order.שם_לקוח || order['שם_לקוח'] || 'אורח';
+                
+                fullPageLoader.classList.add('hidden');
+                
                 if (confirm(`נמצאה הזמנה על שם ${customerName}. האם ברצונך לערוך אותה?`)) {
                     activeOrderCode = code;
                     try {
@@ -1710,14 +1771,13 @@ ${itemsText.replace(/, /g, '\n')}
                     populatePrintArea(code);
                     saveCart(); 
                     updateCartUI(); 
-                    toggleCart(true);
-                    document.getElementById('cancel-order-area').classList.remove('hidden');
+                    showView('cart'); // שיפור: מעבר ישיר לדף קופה מורחב ומלא לעריכה קלה
+                    document.getElementById('full-cancel-order-area').classList.remove('hidden');
                 }
             } catch (e) {
                 console.error(e);
-                showToast('שגיאה באיתור ההזמנה');
-            } finally {
                 fullPageLoader.classList.add('hidden');
+                showToast('שגיאה באיתור ההזמנה');
             }
         }
 
@@ -1814,16 +1874,16 @@ ${itemsText.replace(/, /g, '\n')}
             
             const varInputsHTML = varCols.map(col => {
                 const cleanName = col.replace('וריאציה_', '');
-                return `<input type="text" id="new-${col}" placeholder="${cleanName}" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">`;
+                return `<input type="text" id="new-${col}" placeholder="${cleanName}" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">`;
             }).join('');
 
             content.innerHTML = `
                 <div id="admin-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 p-6 bg-gray-50 dark:bg-zinc-800/50 rounded-3xl border border-dashed border-gray-300 dark:border-zinc-700">
                     <input type="hidden" id="edit-id">
-                    <input type="text" id="new-name" placeholder="שם פריט" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
-                    <input type="number" id="new-qty" placeholder="מלאי" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
-                    <input type="text" id="new-cat" placeholder="קטגוריה" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
-                    <input type="text" id="new-img" placeholder="קישור תמונה" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="text" id="new-name" placeholder="שם פריט" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="number" id="new-qty" placeholder="מלאי" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="text" id="new-cat" placeholder="קטגוריה" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
+                    <input type="text" id="new-img" placeholder="קישור תמונה" class="p-3 border dark:border-zinc-700 dark:bg-zinc-800/50 dark:text-white rounded-xl text-sm outline-none text-right text-slate-800">
                     ${varInputsHTML}
                     <button onclick="saveItem()" id="save-btn" class="gold-gradient rounded-xl font-bold py-4 text-navy shadow-md md:col-span-4">שמור פריט</button>
                 </div>
@@ -2114,27 +2174,32 @@ ${itemsText.replace(/, /g, '\n')}
             t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
         }
 
+        // שיפור: פנל סיכום צדדי מורחב התואם את המראה החדש של הקופה
         function updateCartSummary() {
-            const summaryCount = document.getElementById('summary-count');
-            const summaryDates = document.getElementById('summary-dates');
-            const activeOrderLabel = document.getElementById('active-order-label');
+            const summaryCount = document.getElementById('full-summary-count');
+            const summaryDates = document.getElementById('full-summary-dates');
+            const activeOrderLabel = document.getElementById('full-active-order-label');
+            const activeCodeSpan = document.getElementById('full-active-code');
 
             const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
-            summaryCount.innerText = totalItems;
+            if (summaryCount) summaryCount.innerText = totalItems;
 
             const pDate = pendingFormData.pDate;
             const rDate = pendingFormData.rDate;
 
             if (pDate && rDate) {
-                summaryDates.innerText = `מ-${pDate} עד ${rDate}`;
+                if (summaryDates) summaryDates.innerText = `מ-${pDate} עד ${rDate}`;
             } else {
-                summaryDates.innerText = 'תאריכים לא נבחרו';
+                if (summaryDates) summaryDates.innerText = 'תאריכים לא נבחרו';
             }
 
             if (activeOrderCode) {
-                activeOrderLabel.classList.remove('hidden');
+                if (activeOrderLabel) activeOrderLabel.classList.remove('hidden');
+                if (activeCodeSpan) activeCodeSpan.innerText = activeOrderCode;
+                document.getElementById('full-cancel-order-area')?.classList.remove('hidden');
             } else {
-                activeOrderLabel.classList.add('hidden');
+                if (activeOrderLabel) activeOrderLabel.classList.add('hidden');
+                document.getElementById('full-cancel-order-area')?.classList.add('hidden');
             }
         }
 
