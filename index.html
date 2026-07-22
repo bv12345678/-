@@ -365,7 +365,7 @@
                 </div>
                 
                 <!-- קישורי ניווט צמודים לימין של השורה ליד הלוגו -->
-                <div class="hidden lg:flex items-center gap-4 border-r border-gray-200 dark:border-zinc-700 pr-6 mr-2">
+                <div class="hidden lg:flex items-center gap-4 border-r border-gray-100 dark:border-zinc-700 pr-6 mr-2">
                     <button onclick="showView('home')" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">דף הבית</button>
                     <button onclick="showView('categories')" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">קטגוריות</button>
                     <button onclick="lookupOrder()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">חיפוש/עריכת הזמנה</button>
@@ -436,13 +436,13 @@
         </button>
     </div>
 
-    <!-- באנר כותרת מותג (Hero Section) מובנה - יוצג רק בדף הבית ויוסתר בדף קטגוריות/מוצרים -->
-    <header class="hero-section min-h-[40vh] md:min-h-[50vh] flex flex-col relative text-white no-print justify-center items-center">
-        <div class="text-center px-4 z-10 max-w-4xl mx-auto w-full py-12">
-            <div class="space-y-4">
-                <h2 id="current-greeting" class="text-2xl md:text-3xl font-light tracking-wide text-white/95"></h2> 
-                <h1 id="hero-title" class="text-4xl md:text-7xl font-bold mb-2 serif text-white">טוען...</h1>
-                <p id="hero-desc" class="text-base md:text-xl text-white/95 max-w-2xl mx-auto font-light leading-relaxed"></p>
+    <!-- באנר כותרת מותג (Hero Section) מובנה - תיקון: הגובה הוקטן בצורה משמעותית לנוחות מקסימלית -->
+    <header class="hero-section min-h-[18vh] md:min-h-[25vh] flex flex-col relative text-white no-print justify-center items-center">
+        <div class="text-center px-4 z-10 max-w-4xl mx-auto w-full py-6 md:py-8">
+            <div class="space-y-2">
+                <h2 id="current-greeting" class="text-xl md:text-2xl font-light tracking-wide text-white/95"></h2> 
+                <h1 id="hero-title" class="text-3xl md:text-5xl font-bold mb-1 serif text-white">טוען...</h1>
+                <p id="hero-desc" class="text-sm md:text-base text-white/95 max-w-2xl mx-auto font-light leading-relaxed"></p>
             </div>
         </div>
     </header>
@@ -458,8 +458,8 @@
         </div>
         
         <!-- ==================== 1. דף הבית העיצובי והשיווקי ==================== -->
-        <section id="view-home" class="space-y-20">
-            <!-- אזור הסבר שיווקי / אודות מותאם אישית -->
+        <section id="view-home" class="space-y-20 animate-fade-in">
+            <!-- אזור הסבר שיווקי / אודות מותאם אישית (ניתן לשליטה מלאה מגוגל שיטס) -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <div class="space-y-6 text-right order-2 lg:order-1">
                     <span class="text-xs font-bold uppercase tracking-widest text-gold border-b-2 border-gold/40 pb-2">קצת עלינו</span>
@@ -468,15 +468,15 @@
                         אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ. המערכת מותאמת באופן אישי לצרכי העסק או הגמ"ח שלכם, ללא דמי מנוי חודשיים לעולם.
                     </p>
                     <div class="pt-4 flex flex-wrap gap-4 justify-start">
-                        <!-- תיקון: הושאר אך ורק לחצן הניווט לקטלוג, התקנון הועבר למטה -->
                         <button onclick="showView('categories')" class="px-8 py-4 gold-gradient text-navy font-bold rounded-2xl shadow-lg hover:scale-105 transition-all text-sm md:text-base">
                             לצפייה בקטלוג הציוד והזמנה ⇠
                         </button>
                     </div>
                 </div>
+                <!-- תיקון: הגדרת מזהה לתמונת האודות לשליטה דינמית מגוגל שיטס -->
                 <div class="box h-80 w-full overflow-hidden rounded-[2rem] shadow-2xl relative order-1 lg:order-2">
                     <div class="absolute inset-0 gold-gradient transform rotate-3 scale-102 opacity-25 blur"></div>
-                    <img src="preview.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;100&quot; height=&quot;100&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23cccccc&quot; stroke-width=&quot;1&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/></svg>'" alt="תמונת המותג" class="relative z-10 w-full h-full object-cover rounded-[2rem]">
+                    <img id="home-about-img" src="preview.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;100&quot; height=&quot;100&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23cccccc&quot; stroke-width=&quot;1&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/></svg>'" alt="תמונת המותג" class="relative z-10 w-full h-full object-cover rounded-[2rem]">
                 </div>
             </div>
 
@@ -613,16 +613,15 @@
         </div>
     </div>
 
-    <!-- Admin Modal - מוגדל לרוחב מקסימלי עם כפתורי מעבר ברורים -->
+    <!-- Admin Modal -->
     <div id="admin-modal" class="fixed inset-0 bg-navy/80 backdrop-blur-md z-[200] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-zinc-900 rounded-[2rem] w-full max-w-7xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
+        <div class="bg-white rounded-[2rem] w-full max-w-7xl max-h-[95vh] overflow-hidden flex flex-col shadow-2xl">
             <div class="p-6 md:p-8 bg-[#0b1f3a] text-[#f5d37a] flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h2 class="text-2xl font-bold serif italic leading-none text-[#f5d37a]">ניהול מלאי והזמנות</h2>
                     <p id="admin-subtitle" class="text-[10px] uppercase tracking-widest mt-2 text-[#e6c46f] opacity-70">Inventory & Order Management</p>
                 </div>
                 <div class="flex items-center gap-3 w-full md:w-auto">
-                    <!-- אפשרות לחזור לעמוד המוצרים גם כשנמצאים באזור ההזמנות -->
                     <button id="admin-back-inv" onclick="renderAdminTable()" class="px-4 py-2 bg-white/10 hover:bg-white/20 text-[#f5d37a] rounded-xl text-xs font-bold transition-colors hidden">חזור לניהול פריטים</button>
                     <button id="admin-view-toggle" onclick="showOrdersHistory()" class="px-4 py-2 bg-[#132f55] text-[#f5d37a] rounded-xl hover:bg-white/25 text-xs font-bold transition-colors">היסטוריית הזמנות</button>
                     <button onclick="closeAdmin()" class="p-2 text-[#f5d37a] bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="סגור"><i data-lucide="x"></i></button>
@@ -701,7 +700,6 @@
         let currentView = 'home'; // 'home', 'categories', 'products'
 
         // פונקציית הניתוב הפנימי ללא טעינה מחדש - Router
-        // תיקון: תמונת ה-Hero והכותרות שלה מוסתרות לחלוטין כאשר לא נמצאים בדף הבית
         function showView(view) {
             currentView = view;
             document.getElementById('view-home').classList.add('hidden');
@@ -904,7 +902,7 @@
             return attrStr ? `${pName} (${attrStr})` : pName;
         }
 
-        // תיקון: שליטה דינמית על כותרת, תיאור ותמונת ה-Hero ישירות מהגוגל שיטס
+        // תיקון: שליטה מלאה בטקסטים ובתמונה של אזור "קצת עלינו" מגוגל שיטס
         function applyConfig() {
             if (!aboutConfig) return;
             
@@ -916,7 +914,7 @@
             const waze = aboutConfig['קישור וויז'] || '';
             const bizId = aboutConfig['ח.פ / ע.מ'] || '';
 
-            // טעינת הגדרות הירו מותאמות אישית במידה וקיימות בגיליון
+            // שליטה על ההירו
             const heroTitle = aboutConfig['כותרת הירו'] || name;
             const heroDesc = aboutConfig['תיאור הירו'] || desc;
             const bgImg = aboutConfig['תמונת רקע הירו'] || aboutConfig['תמונת רקע'] || '';
@@ -927,9 +925,18 @@
             document.getElementById('hero-desc').innerText = heroDesc;
             document.getElementById('print-brand-title').innerText = `אישור הזמנה - ${name}`;
 
-            if (aboutConfig['אודות']) {
-                document.getElementById('home-about-title').innerText = `אודות - ${name}`;
-                document.getElementById('home-about-desc').innerText = aboutConfig['אודות'];
+            // שליטה מלאה על אזור אודות/ברוכים הבאים
+            const aboutTitle = aboutConfig['כותרת אודות'] || 'ברוכים הבאים';
+            const aboutDesc = aboutConfig['תיאור אודות'] || aboutConfig['אודות'] || 'אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ. המערכת מותאמת באופן אישי לצרכי העסק או הגמ"ח שלכם, ללא דמי מנוי חודשיים לעולם.';
+            const aboutImg = aboutConfig['תמונת אודות'] || '';
+
+            document.getElementById('home-about-title').innerText = aboutTitle;
+            document.getElementById('home-about-desc').innerText = aboutDesc;
+            
+            if (aboutImg) {
+                document.getElementById('home-about-img').src = formatImageUrl(aboutImg);
+            } else {
+                document.getElementById('home-about-img').src = 'preview.jpg';
             }
 
             if (bgImg) {
@@ -1458,11 +1465,11 @@
                         <p class="text-sm mt-1 text-navy/80">${pendingFormData.pDate} ⇠ ${pendingFormData.rDate}</p>
                     </div>
 
-                    <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-[2rem] space-y-3 text-sm border border-gray-100 dark:border-zinc-700 text-slate-800 dark:text-white">
+                    <div class="bg-gray-50 p-6 rounded-[2rem] space-y-3 text-sm border border-gray-100 dark:border-zinc-700 text-slate-800 dark:text-white">
                         ${cart.map(c => `<div class="flex justify-between items-center"><span class="text-gray-600 dark:text-gray-300">${c.displayName}</span><span class="font-bold text-navy dark:text-gold">${c.qty} יח'</span></div>`).join('')}
                     </div>
                     <div class="space-y-4">
-                        <details class="bg-gray-100 dark:bg-zinc-800 rounded-2xl p-4 transition-all">
+                        <details class="bg-gray-100 rounded-2xl p-4 transition-all">
                             <summary class="font-bold text-xs cursor-pointer flex justify-between items-center text-navy dark:text-white">מדיניות ותנאי המקום <i data-lucide="chevron-down" class="w-4 h-4"></i></summary>
                             <div class="text-[11px] mt-3 space-y-2 text-gray-600 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-zinc-700 pt-3 text-right">
                                 <p>• באחריות המזמין להחזיר את הפריטים כשהם שלמים, נקיים ותקינים.</p>
@@ -2062,7 +2069,6 @@ ${itemsText.replace(/, /g, '\n')}
             }
         }
 
-        // ניהול מנגנון התקנון המשפטי המובנה
         function openLegalModal(type) {
             const titleEl = document.getElementById('legal-modal-title');
             const contentEl = document.getElementById('legal-modal-content');
