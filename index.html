@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -14,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
       
     <!-- תגיות שיתוף מותאמות לווצאפ ורשתות חברתיות -->
-    <meta property="og:title" id="og-title" content="كل בו ישראל">
+    <meta property="og:title" id="og-title" content="כל בו ישראל">
     <meta property="og:description" id="og-desc" content="אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ.">
     <meta property="og:image" id="og-img" content="https://bv12345678.github.io/-/preview.jpg">
     <meta property="og:type" content="website">
@@ -540,9 +541,12 @@
             </div>
 
             <!-- גריד מוצרי הקטלוג -->
-            <div id="inventory-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12 md:mb-20">
+            <div id="inventory-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-4">
                 <div class="col-span-full text-center py-20"><div class="loader mx-auto mb-4"></div>טוען פריטים...</div>
             </div>
+            
+            <!-- כפתור טען עוד מוצרים מותאם אישית -->
+            <div id="load-more-container" class="flex justify-center mt-8 mb-12"></div>
         </section>
 
         <!-- ==================== 4. דף עגלה, קופה מורחבת ועריכת הזמנה (חדש ומרווח) ==================== -->
@@ -762,6 +766,16 @@
             return getDisplayName(pName, selections);
         }
 
+        // פונקציה לייצור קוד הזמנה מאובטח ייחודי (נחוץ לפתרון קריסת ההזמנה)
+        function generateSecureOrderCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
         // פונקציית הניתוב הפנימי ללא טעינה מחדש - Router
         function showView(view) {
             currentView = view;
@@ -819,12 +833,7 @@
 
         async function init() {
             enableBasicCodeProtection();
-            restrictPastDates();
             await fetchInventory();
-        }
-
-        function restrictPastDates() {
-            // התאריכים יוגבלו רק בעגלה (Step 2)
         }
 
         // שיפור: אפשרות להשתיק את מסך הטעינה כדי למנוע היתקעות UI לאחר שליחת הזמנה
@@ -1075,11 +1084,22 @@
             menu.classList.toggle('hidden');
         }
 
+        // שיפור 1: הוספת כרטיסיית "כל המוצרים" לעמוד הקטגוריות
         function renderHomeCategories() {
             const homeContainer = document.getElementById('home-categories-container');
             const categories = [...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
             
-            homeContainer.innerHTML = categories.map(cat => {
+            const repAllItem = groupedProducts.find(i => i.images[0] !== DEFAULT_IMG);
+            const allProductsBg = repAllItem ? repAllItem.images[0] : DEFAULT_IMG;
+
+            let html = `
+                <div role="button" tabindex="0" onclick="enterCategory('הכל')" onkeypress="if(event.key === 'Enter') enterCategory('הכל')" class="category-box" aria-label="כל המוצרים">
+                    <img src="${allProductsBg}" alt="כל המוצרים">
+                    <h3>כל המוצרים</h3>
+                </div>
+            `;
+
+            html += categories.map(cat => {
                 const repItem = groupedProducts.find(i => i.קטגוריה === cat && i.images[0] !== DEFAULT_IMG);
                 const bgImage = repItem ? repItem.images[0] : DEFAULT_IMG;
                 const catEscaped = cat.replace(/'/g, "\\'");
@@ -1091,6 +1111,8 @@
                     </div>
                 `;
             }).join('');
+
+            homeContainer.innerHTML = html;
         }
 
         function enterCategory(cat) {
@@ -1195,6 +1217,15 @@
             return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         }
 
+        // פונקציית עזר לשליפת תמונת מוצר בעגלה עם גיבוי מושלם למניעת תמונות ריקות
+        function getCartItemImage(item) {
+            if (item.תמונה) return formatImageUrl(item.תמונה);
+            const p = groupedProducts.find(x => x.שם_פריט === item.parentName || x.שם_פריט === item.שם_פריט);
+            if (p && p.images && p.images[0]) return p.images[0];
+            return DEFAULT_IMG;
+        }
+
+        // שיפור 2 ו-3: הוספת כפתור "טען עוד" תקין ושינוי הוספה לעגלה בלחיצה על כפתור בלבד
         function renderGrid(items = null, isAppend = false) {
             const grid = document.getElementById('inventory-grid');
             const hasDates = pendingFormData.pDate && pendingFormData.rDate;
@@ -1203,21 +1234,18 @@
                 displayedItems = items;
                 if (!isAppend) {
                     itemsToShow = ITEMS_BATCH;
-                    grid.innerHTML = ''; 
                 }
             } else if (!isAppend) {
                 displayedItems = groupedProducts;
                 itemsToShow = ITEMS_BATCH;
-                grid.innerHTML = '';
             }
 
-            const itemsToRender = displayedItems.slice(
-                isAppend ? itemsToShow - ITEMS_BATCH : 0, 
-                itemsToShow
-            );
+            // פתרון באג פגינציה: כעת נחתכים כל המוצרים שיש להציג מההתחלה ועד ה-limit הנוכחי
+            const itemsToRender = displayedItems.slice(0, itemsToShow);
 
-            if (itemsToRender.length === 0 && !isAppend) {
+            if (itemsToRender.length === 0) {
                 grid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-400 font-bold">לא נמצאו פריטים תואמים</div>';
+                document.getElementById('load-more-container').innerHTML = '';
                 return;
             }
 
@@ -1276,6 +1304,31 @@
                 const inCart = cartItem ? cartItem.qty : 0;
                 const qtySpanId = `qty-${pName.replace(/\s+/g, '-')}`;
 
+                // שיפור 3: פתרון של הוספה ידנית באמצעות כפתור ייעודי ולא אוטומטי
+                let actionAreaHTML = '';
+                if (inCart > 0) {
+                    actionAreaHTML = `
+                        <div class="flex items-center justify-between w-full">
+                            <div class="flex items-center gap-2 bg-gray-50 dark:bg-zinc-800 p-1 rounded-xl border border-gray-200/50 dark:border-zinc-700">
+                                <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold" aria-label="הפחת כמות">-</button>
+                                <span class="w-6 text-center font-bold text-slate-800 dark:text-white text-sm" id="${qtySpanId}">${inCart}</span>
+                                <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
+                            </div>
+                            <button onclick="showView('cart')" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה">
+                                <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    actionAreaHTML = `
+                        <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} 
+                            class="w-full flex items-center justify-center gap-2 py-3 bg-navy text-gold dark:bg-zinc-800 dark:text-gold hover:bg-gold hover:text-navy dark:hover:bg-gold dark:hover:text-navy rounded-xl transition-all shadow-md font-bold text-xs ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : ''}">
+                            <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+                            הוסף לעגלה
+                        </button>
+                    `;
+                }
+
                 return `
                     <div class="item-card bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75' : ''}">
                         <div class="item-image-wrapper h-64 ${currentLayout === 'list' ? 'w-48 h-auto' : 'w-full'} overflow-hidden relative bg-gray-100 dark:bg-zinc-800">
@@ -1294,20 +1347,34 @@
                                 </p>
                                 ${selectorsHTML}
                             </div>
-                            <div class="item-actions mt-4 flex items-center justify-between">
-                                <div class="flex items-center gap-3 bg-gray-50 dark:bg-zinc-800 p-1 rounded-xl">
-                                    <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white" aria-label="הפחת כמות">-</button>
-                                    <span class="w-6 text-center font-bold text-slate-800 dark:text-white" id="${qtySpanId}">${inCart}</span>
-                                    <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
-                                </div>
-                                <button onclick="showView('cart')" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה"><i data-lucide="shopping-bag"></i></button>
+                            <div class="item-actions mt-4">
+                                ${actionAreaHTML}
                             </div>
                         </div>
                     </div>`;
             }).join('');
             
             grid.innerHTML = html;
+
+            // רינדור דינמי של כפתור "טען עוד" רק במידה וישנם פריטים נוספים
+            const loadMoreContainer = document.getElementById('load-more-container');
+            if (itemsToShow < displayedItems.length) {
+                loadMoreContainer.innerHTML = `
+                    <button onclick="loadMoreProducts()" class="px-8 py-3.5 bg-navy text-gold dark:bg-zinc-800 hover:bg-gold hover:text-navy dark:hover:bg-gold dark:hover:text-navy font-bold rounded-2xl shadow-lg transition-all text-sm flex items-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        טען מוצרים נוספים (${displayedItems.length - itemsToShow} נותרו)
+                    </button>
+                `;
+            } else {
+                loadMoreContainer.innerHTML = '';
+            }
+
             lucide.createIcons();
+        }
+
+        function loadMoreProducts() {
+            itemsToShow += ITEMS_BATCH;
+            renderGrid(null, true);
         }
 
         function addProductToCart(pName) {
@@ -1372,16 +1439,6 @@
             updateCartUI();
         }
 
-        window.addEventListener('scroll', () => {
-            if(document.getElementById('view-products').classList.contains('hidden')) return;
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
-                if (itemsToShow < displayedItems.length) {
-                    itemsToShow += ITEMS_BATCH;
-                    renderGrid(displayedItems, true);
-                }
-            }
-        });
-
         function openImage(url) {
             const box = document.getElementById('lightbox');
             const img = document.getElementById('lightbox-img');
@@ -1390,7 +1447,7 @@
             requestAnimationFrame(() => img.classList.replace('scale-95', 'scale-100'));
         }
 
-        // שיפור: פונקציית מעבר שלבים חלקה עם בר שיוך לקופה מורחבת
+        // שיפור: מעבר שלבים חלקה עם בר שיוך לקופה מורחבת
         function goToStep(s) {
             if (s > currentStep) {
                 if (currentStep === 1 && cart.length === 0) return showToast('העגלה ריקה');
@@ -1459,7 +1516,7 @@
             lucide.createIcons();
         }
 
-        // שיפור: דף עריכת פריטים עם רשימה מלאה ומרווחת
+        // שיפור 4: הצגת תמונת מוצר ברורה גם בשלב 1 של עגלת הקניות
         function renderCartStep1(cont) {
             if (cart.length === 0) {
                 cont.innerHTML = `
@@ -1480,10 +1537,11 @@
                         ${cart.map(item => {
                             const pNameEscaped = escapeHtmlParam(item.parentName || item.שם_פריט);
                             const dispNameEscaped = escapeHtmlParam(item.displayName);
+                            const imgUrl = getCartItemImage(item);
                             return `
                             <div class="flex items-center justify-between gap-4 bg-gray-50 dark:bg-zinc-800 p-4 rounded-2xl border border-gray-100 dark:border-zinc-700 shadow-sm text-slate-800 dark:text-white">
                                 <div class="flex items-center gap-4 text-right">
-                                    <img src="${formatImageUrl(item.תמונה)}" alt="${item.displayName}" class="w-16 h-16 rounded-xl object-cover shadow-sm border border-gray-200 dark:border-zinc-700">
+                                    <img src="${imgUrl}" alt="${item.displayName}" class="w-16 h-16 rounded-xl object-cover shadow-sm border border-gray-200 dark:border-zinc-700">
                                     <div>
                                         <div class="text-sm font-bold text-navy dark:text-white leading-tight">${item.displayName}</div>
                                         <div class="text-[10px] text-gray-400 mt-1">${item.קטגוריה}</div>
@@ -1561,6 +1619,7 @@
             lucide.createIcons();
         }
 
+        // שיפור 4: הוספת תמונות מוצר מוקטנות ומעוצבות גם בשלב 3 (שלב אישור ההזמנה הסופי)
         function renderCartStep3(cont) {
             cont.innerHTML = `
                 <div class="space-y-6 text-right">
@@ -1571,7 +1630,18 @@
                     </div>
 
                     <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-[2rem] space-y-3 text-sm border border-gray-100 dark:border-zinc-700 text-slate-800 dark:text-white max-h-[30vh] overflow-y-auto pr-2 no-scrollbar">
-                        ${cart.map(c => `<div class="flex justify-between items-center"><span class="text-gray-600 dark:text-gray-300">${c.displayName}</span><span class="font-bold text-navy dark:text-gold">${c.qty} יח'</span></div>`).join('')}
+                        ${cart.map(c => {
+                            const imgUrl = getCartItemImage(c);
+                            return `
+                                <div class="flex justify-between items-center gap-4 py-2 border-b border-gray-100 dark:border-zinc-700 last:border-b-0">
+                                    <div class="flex items-center gap-3">
+                                        <img src="${imgUrl}" alt="${c.displayName}" class="w-10 h-10 rounded-lg object-cover shadow-sm">
+                                        <span class="text-gray-600 dark:text-gray-300 font-medium">${c.displayName}</span>
+                                    </div>
+                                    <span class="font-bold text-navy dark:text-gold">${c.qty} יח'</span>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
                     
                     <div class="space-y-4">
@@ -1592,6 +1662,7 @@
             lucide.createIcons();
         }
 
+        // פתרון 5: מניעת קריסה בשליחת הזמנה על ידי הוספת פונקציית הקוד החסרה ומניעת קריסת אלמנטים חסרים
         async function sendOrder() {
             if (!document.getElementById('terms-checkbox').checked) return showToast('חובה לקרוא ולאשר את התנאים');
             const nextBtn = document.getElementById('full-nextBtn');
@@ -1599,6 +1670,7 @@
             nextBtn.disabled = true;
             nextBtn.innerHTML = '<div class="loader w-5 h-5 mx-auto"></div>';
 
+            // ייצור קוד ההזמנה בצורה מאובטחת ללא קריסה
             const code = activeOrderCode || generateSecureOrderCode();
             const payload = {
                 action: activeOrderCode ? "updateOrder" : "addOrder",
@@ -1614,7 +1686,10 @@
 
             try {
                 await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-                document.getElementById('mini-summary').classList.add('hidden');
+                
+                // שימוש ב-Optional Chaining למניעת קריסה אם אלמנט mini-summary אינו מופיע ב-HTML
+                document.getElementById('mini-summary')?.classList.add('hidden');
+                
                 populatePrintArea(code);
                 renderSuccessState(code);
                 activeOrderCode = code;
@@ -1625,11 +1700,12 @@
                 pendingFormData = {};
                 updateCartUI();
                 
-                // שיפור: טעינת המלאי החדש שקטה ברקע ללא חסימת הודעת ההצלחה
+                // טעינת המלאי החדש שקטה ברקע ללא חסימת הודעת ההצלחה
                 await fetchInventory('', '', false);
                 
                 setupWhatsAppButton(code, savedFormData, payload.פריטים);
             } catch (e) { 
+                console.error("Error sending order:", e);
                 showToast('שגיאה בשליחת ההזמנה'); 
                 nextBtn.disabled = false; 
                 nextBtn.innerText = originalText; 
@@ -1715,7 +1791,7 @@ ${itemsText.replace(/, /g, '\n')}
         function nextStep() { if (currentStep < 3) goToStep(currentStep + 1); else sendOrder(); }
         function prevStep() { goToStep(currentStep - 1); }
 
-        // שיפור: בעת חיפוש הזמנה היא נפתחת אוטומטית בדף מרווח ומלא לעריכה נוחה
+        // חיפוש הזמנה קיים (כולל שימוש בקוד האבטחה החדש ללא קריסה)
         async function lookupOrder() {
             let code = prompt('נא להזין קוד הזמנה (6 תווים):');
             if (!code) return;
@@ -1770,8 +1846,8 @@ ${itemsText.replace(/, /g, '\n')}
                     populatePrintArea(code);
                     saveCart(); 
                     updateCartUI(); 
-                    showView('cart'); // שיפור: מעבר ישיר לדף קופה מורחב ומלא לעריכה קלה
-                    document.getElementById('full-cancel-order-area').classList.remove('hidden');
+                    showView('cart'); // מעבר ישיר לדף קופה מורחב ומלא לעריכה קלה
+                    document.getElementById('full-cancel-order-area')?.classList.remove('hidden');
                 }
             } catch (e) {
                 console.error(e);
@@ -2173,7 +2249,7 @@ ${itemsText.replace(/, /g, '\n')}
             t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        // שיפור: פנל סיכום צדדי מורחב התואם את המראה החדש של הקופה
+        // פנל סיכום צדדי מורחב התואם את המראה החדש של הקופה
         function updateCartSummary() {
             const summaryCount = document.getElementById('full-summary-count');
             const summaryDates = document.getElementById('full-summary-dates');
@@ -2239,7 +2315,7 @@ ${itemsText.replace(/, /g, '\n')}
                 } else if (type === 'הצהרת נגישות') {
                     content = `הצהרת נגישות ומתן שירות חלופי
 
-אתר זה פטור מחובת נגישות טכנולוגית מלאה בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות. 
+אתר זה פטור מחובת נגישות טכנות מלאה בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות. 
 
 עם זאת, אנו מחויבים להעניק שירות שוויוני ומכבד לכולם. במידה ונתקלת בקושי טכני בגלישה, בצפייה במוצרים או בביצוע הזמנה דיגיטלית - אנו מעניקים סיוע ומענה אנושי מלא לביצוע הזמנות טלפוניות או בוואטסאפ בפרטי הקשר המופיעים בתחתית האתר.`;
                 }
