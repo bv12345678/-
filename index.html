@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -365,7 +366,7 @@
                     </div>
                 </div>
                 
-                <!-- שיפור 3: הגדלת טקסט תפריט הניווט ב-50% (מ-text-xs ל-text-base/lg) -->
+                <!-- תפריט הניווט -->
                 <div class="hidden lg:flex items-center gap-6 border-r border-gray-100 dark:border-zinc-700 pr-6 mr-2">
                     <button onclick="showView('home')" class="text-base md:text-[17px] font-extrabold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">דף הבית</button>
                     <button onclick="showView('categories')" class="text-base md:text-[17px] font-extrabold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">קטגוריות</button>
@@ -610,7 +611,7 @@
                 </div>
             </div>
 
-            <!-- שיפור 2: קונטיינר הצלחה חדש ברוחב מלא למניעת הצגת הסיכום התקוע בטעינה -->
+            <!-- קונטיינר הצלחה חדש ברוחב מלא למניעת הצגת הסיכום התקוע בטעינה -->
             <div id="cart-success-container" class="hidden bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow p-6 md:p-10 border border-gray-100 dark:border-zinc-800 max-w-4xl mx-auto">
                 <!-- ירונדר דינמית לאחר סיום הזמנה מוצלח -->
             </div>
@@ -663,10 +664,10 @@
         </div>
     </div>
 
-    <!-- שיפור 1: עימוד אישור הזמנה (הזמנה) בעיצוב A4 קומפקטי ומאוזן להדפסה והורדה מושלמת ל-PDF ללא חיתוך -->
+    <!-- עימוד אישור הזמנה בעיצוב A4 קומפקטי ומאוזן להדפסה והורדה מושלמת ל-PDF ללא חיתוך -->
     <div id="print-area" class="hidden text-right p-6 bg-white text-slate-900 max-w-2xl mx-auto border border-gray-200 rounded-xl">
         <div class="border-b-4 border-navy pb-3 mb-6">
-            <h1 id="print-brand-title" class="text-3xl font-extrabold serif text-navy">הזמנה</h1>
+            <h1 id="print-brand-title" class="text-3xl font-extrabold serif text-navy">אישור הזמנה</h1>
             <p id="print-order-id" class="text-lg font-bold mt-1 text-gold"></p>
         </div>
         <div id="print-user-info" class="mb-6 space-y-2 text-base border-b pb-4 border-gray-100"></div>
@@ -846,7 +847,7 @@
             await fetchInventory();
         }
 
-        // שיפור: אפשרות להשתיק את מסך הטעינה כדי למנוע היתקעות UI לאחר שליחת הזמנה
+        // אפשרות להשתיק את מסך הטעינה כדי למנוע היתקעות UI לאחר שליחת הזמנה
         async function fetchInventory(pDate = '', rDate = '', showLoader = true) {
             const fullPageLoader = document.getElementById('full-page-loader');
             if (showLoader) {
@@ -1003,7 +1004,7 @@
             document.getElementById('nav-brand-title').innerText = name;
             document.getElementById('hero-title').innerText = heroTitle;
             document.getElementById('hero-desc').innerText = heroDesc;
-            document.getElementById('print-brand-title').innerText = `הזמנה - ${name}`;
+            document.getElementById('print-brand-title').innerText = `אישור הזמנה - ${name}`;
 
             const metaDesc = document.getElementById('meta-desc') || document.querySelector('meta[name="description"]');
             if (metaDesc) metaDesc.setAttribute('content', desc);
@@ -1094,7 +1095,6 @@
             menu.classList.toggle('hidden');
         }
 
-        // שיפור 1: הוספת כרטיסיית "כל המוצרים" לעמוד הקטגוריות
         function renderHomeCategories() {
             const homeContainer = document.getElementById('home-categories-container');
             const categories = [...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
@@ -1153,9 +1153,8 @@
             }).join('');
         }
 
-        // שיפור 4: הגדרת מנגנון סינון קטגוריות עמיד ואיתן ללא קריסות (תמיכה מלאה בכפתור הכל/כל המוצרים)
         function filterByCategory(cat) {
-            const sanitizedCat = String(cat || 'הכל').trim();
+            const sanitizedCat = String(cat).trim();
             currentCategory = sanitizedCat;
             document.getElementById('current-category-title').innerText = sanitizedCat;
             renderCategories();
@@ -1229,7 +1228,14 @@
             return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
         }
 
-        // שיפור 2 ו-5: הוספת כפתור "טען עוד" תקין והחזרת התנהגות "הוסף לעגלה" בלחיצה עד שבוחרים כמות
+        // פונקציית עזר לשליפת תמונת מוצר בעגלה עם גיבוי למניעת תמונות ריקות
+        function getCartItemImage(item) {
+            if (item.תמונה) return formatImageUrl(item.תמונה);
+            const p = groupedProducts.find(x => x.שם_פריט === item.parentName || x.שם_פריט === item.שם_פריט);
+            if (p && p.images && p.images[0]) return p.images[0];
+            return DEFAULT_IMG;
+        }
+
         function renderGrid(items = null, isAppend = false) {
             const grid = document.getElementById('inventory-grid');
             const hasDates = pendingFormData.pDate && pendingFormData.rDate;
@@ -1244,7 +1250,6 @@
                 itemsToShow = ITEMS_BATCH;
             }
 
-            // פתרון באג פגינציה: כעת נחתכים כל המוצרים שיש להציג מההתחלה ועד ה-limit הנוכחי
             const itemsToRender = displayedItems.slice(0, itemsToShow);
 
             if (itemsToRender.length === 0) {
@@ -1308,30 +1313,18 @@
                 const inCart = cartItem ? cartItem.qty : 0;
                 const qtySpanId = `qty-${pName.replace(/\s+/g, '-')}`;
 
-                // שיפור 5: החזרת הכפתור המקורי "הוסף לעגלה" כשיש 0 בעגלה, ושינוי לבורר כמויות רק לאחר ההוספה הראשונית
-                let actionAreaHTML = '';
-                if (inCart > 0) {
-                    actionAreaHTML = `
-                        <div class="flex items-center justify-between w-full">
-                            <div class="flex items-center gap-2 bg-gray-50 dark:bg-zinc-800 p-1 rounded-xl border border-gray-200/50 dark:border-zinc-700 shadow-sm">
-                                <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold" aria-label="הפחת כמות">-</button>
-                                <span class="w-6 text-center font-bold text-slate-800 dark:text-white text-sm" id="${qtySpanId}">${inCart}</span>
-                                <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
-                            </div>
-                            <button onclick="showView('cart')" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה">
-                                <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-                            </button>
+                const actionAreaHTML = `
+                    <div class="flex items-center justify-between w-full">
+                        <div class="flex items-center gap-2 bg-gray-50 dark:bg-zinc-800 p-1 rounded-xl border border-gray-200/50 dark:border-zinc-700 shadow-sm">
+                            <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold" aria-label="הפחת כמות">-</button>
+                            <span class="w-6 text-center font-bold text-slate-800 dark:text-white text-sm" id="${qtySpanId}">${inCart}</span>
+                            <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
                         </div>
-                    `;
-                } else {
-                    actionAreaHTML = `
-                        <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} 
-                            class="w-full flex items-center justify-center gap-2 py-3 bg-navy text-gold dark:bg-zinc-800 dark:text-gold hover:bg-gold hover:text-navy dark:hover:bg-gold dark:hover:text-navy rounded-xl transition-all shadow-md font-bold text-xs ${isOutOfStock ? 'opacity-50 cursor-not-allowed' : ''}">
-                            <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-                            הוסף לעגלה
+                        <button onclick="showView('cart')" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה">
+                            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                         </button>
-                    `;
-                }
+                    </div>
+                `;
 
                 return `
                     <div class="item-card bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75' : ''}">
@@ -1360,7 +1353,6 @@
             
             grid.innerHTML = html;
 
-            // רינדור דינמי של כפתור "טען עוד" רק במידה וישנם פריטים נוספים
             const loadMoreContainer = document.getElementById('load-more-container');
             if (itemsToShow < displayedItems.length) {
                 loadMoreContainer.innerHTML = `
@@ -1443,6 +1435,35 @@
             updateCartUI();
         }
 
+        // פונקציית עזר לשינוי כמות המוצר בעגלה ישירות באמצעות מזהה המוצר המצומצם והבטוח
+        function changeCartItemQty(displayName, delta) {
+            const item = cart.find(c => c.displayName === displayName);
+            if (!item) return;
+            
+            const pName = item.parentName || item.שם_פריט;
+            const match = getMatchingVariation(pName);
+            const variationToUse = match || item;
+
+            updateQtyWithVariation(variationToUse, displayName, delta);
+        }
+
+        // סנכרון תאריכים ופרטי לקוח מהעגלה בזמן אמת ל-pendingFormData ועדכון הסיכום
+        function syncCartDates() {
+            const pDateEl = document.getElementById('p-date');
+            const rDateEl = document.getElementById('r-date');
+            const uNameEl = document.getElementById('u-name');
+            const uPhoneEl = document.getElementById('u-phone');
+            const uNotesEl = document.getElementById('u-notes');
+
+            if (pDateEl) pendingFormData.pDate = pDateEl.value;
+            if (rDateEl) pendingFormData.rDate = rDateEl.value;
+            if (uNameEl) pendingFormData.name = uNameEl.value;
+            if (uPhoneEl) pendingFormData.phone = uPhoneEl.value;
+            if (uNotesEl) pendingFormData.notes = uNotesEl.value;
+
+            updateCartSummary();
+        }
+
         function openImage(url) {
             const box = document.getElementById('lightbox');
             const img = document.getElementById('lightbox-img');
@@ -1451,7 +1472,6 @@
             requestAnimationFrame(() => img.classList.replace('scale-95', 'scale-100'));
         }
 
-        // שיפור: מעבר שלבים חלקה עם בר שיוך לקופה מורחבת
         function goToStep(s) {
             if (s > currentStep) {
                 if (currentStep === 1 && cart.length === 0) return showToast('העגלה ריקה');
@@ -1500,10 +1520,8 @@
                 if (progressBar) progressBar.style.width = '50%';
             }
             
-            // הגדרת נראות כפתור "חזור"
             document.getElementById('full-prevBtn').classList.toggle('hidden', s === 1);
             
-            // תיוג כפתור "המשך" / "אישור"
             const nextBtn = document.getElementById('full-nextBtn');
             if (s === 3) {
                 nextBtn.innerText = "אישור ושלח הזמנה ⇠";
@@ -1520,7 +1538,7 @@
             lucide.createIcons();
         }
 
-        // שיפור 4: הצגת תמונת מוצר ברורה גם בשלב 1 של עגלת הקניות
+        // שיפור: הצגת תמונת מוצר בצורה נקייה ויציבה לחלוטין ללא שגיאות סינטקס
         function renderCartStep1(cont) {
             if (cart.length === 0) {
                 cont.innerHTML = `
@@ -1539,7 +1557,6 @@
                     <h4 class="font-bold serif text-lg text-navy dark:text-white text-right">רשימת הפריטים בקופה</h4>
                     <div class="grid grid-cols-1 gap-4 max-h-[50vh] overflow-y-auto pr-2 no-scrollbar">
                         ${cart.map(item => {
-                            const pNameEscaped = escapeHtmlParam(item.parentName || item.שם_פריט);
                             const dispNameEscaped = escapeHtmlParam(item.displayName);
                             const imgUrl = getCartItemImage(item);
                             return `
@@ -1548,16 +1565,16 @@
                                     <img src="${imgUrl}" alt="${item.displayName}" class="w-16 h-16 rounded-xl object-cover shadow-sm border border-gray-200 dark:border-zinc-700">
                                     <div>
                                         <div class="text-sm font-bold text-navy dark:text-white leading-tight">${item.displayName}</div>
-                                        <div class="text-[10px] text-gray-400 mt-1">${item.קטגוריה}</div>
+                                        <div class="text-[10px] text-gray-400 mt-1">${item.קטגוריה || ''}</div>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-4">
                                     <div class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl p-1.5">
-                                        <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${dispNameEscaped}', -1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white font-bold">-</button>
+                                        <button onclick="changeCartItemQty('${dispNameEscaped}', -1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white font-bold">-</button>
                                         <span class="w-6 text-center text-xs font-bold">${item.qty}</span>
-                                        <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}', מלאי: ${item.מלאי}, תמונה: '${item.תמונה}', available_stock: ${item.available_stock}}, '${dispNameEscaped}', 1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white font-bold">+</button>
+                                        <button onclick="changeCartItemQty('${dispNameEscaped}', 1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white font-bold">+</button>
                                     </div>
-                                    <button onclick="updateQtyWithVariation({שם_פריט: '${pNameEscaped}'}, '${dispNameEscaped}', -${item.qty})" class="text-red-400 hover:text-red-600 transition-colors p-2 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl" aria-label="הסר פריט">
+                                    <button onclick="changeCartItemQty('${dispNameEscaped}', -${item.qty})" class="text-red-400 hover:text-red-600 transition-colors p-2 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl" aria-label="הסר פריט">
                                         <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     </button>
                                 </div>
@@ -1584,8 +1601,12 @@
                 return `${year}-${month}-${day}`;
             };
 
-            document.getElementById('p-date').value = formatDate(friday);
-            document.getElementById('r-date').value = formatDate(sunday);
+            const pDateEl = document.getElementById('p-date');
+            const rDateEl = document.getElementById('r-date');
+            if (pDateEl) pDateEl.value = formatDate(friday);
+            if (rDateEl) rDateEl.value = formatDate(sunday);
+
+            syncCartDates();
             showToast('תאריכים עודכנו בהצלחה');
         }
 
@@ -1604,26 +1625,25 @@
                     </button>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input type="text" id="u-name" placeholder="שם מלא" value="${pendingFormData.name || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
-                        <input type="tel" id="u-phone" placeholder="מספר טלפון" value="${pendingFormData.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                        <input type="text" id="u-name" oninput="syncCartDates()" placeholder="שם מלא" value="${pendingFormData.name || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                        <input type="tel" id="u-phone" oninput="syncCartDates()" placeholder="מספר טלפון" value="${pendingFormData.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך התחלה / לקיחה</label>
-                            <input type="date" id="p-date" min="${today}" value="${defaultP}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                            <input type="date" id="p-date" oninput="syncCartDates()" min="${today}" value="${defaultP}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
                         </div>
                         <div>
                             <label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך סיום / החזרה</label>
-                            <input type="date" id="r-date" min="${today}" value="${defaultR}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                            <input type="date" id="r-date" oninput="syncCartDates()" min="${today}" value="${defaultR}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
                         </div>
                     </div>
-                    <textarea id="u-notes" placeholder="הערות מיוחדות להזמנה..." class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl h-24 border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">${pendingFormData.notes || ''}</textarea>
+                    <textarea id="u-notes" oninput="syncCartDates()" placeholder="הערות מיוחדות להזמנה..." class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl h-24 border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">${pendingFormData.notes || ''}</textarea>
                 </div>`;
             lucide.createIcons();
         }
 
-        // שיפור 4: הוספת תמונות מוצר מוקטנות ומעוצבות גם בשלב 3 (שלב אישור ההזמנה הסופי)
         function renderCartStep3(cont) {
             cont.innerHTML = `
                 <div class="space-y-6 text-right">
@@ -1666,7 +1686,6 @@
             lucide.createIcons();
         }
 
-        // פתרון 5: מניעת קריסה בשליחת הזמנה על ידי הוספת פונקציית הקוד החסרה ומניעת קריסת אלמנטים חסרים
         async function sendOrder() {
             if (!document.getElementById('terms-checkbox').checked) return showToast('חובה לקרוא ולאשר את התנאים');
             const nextBtn = document.getElementById('full-nextBtn');
@@ -1674,7 +1693,6 @@
             nextBtn.disabled = true;
             nextBtn.innerHTML = '<div class="loader w-5 h-5 mx-auto"></div>';
 
-            // ייצור קוד ההזמנה בצורה מאובטחת ללא קריסה
             const code = activeOrderCode || generateSecureOrderCode();
             const payload = {
                 action: activeOrderCode ? "updateOrder" : "addOrder",
@@ -1689,9 +1707,13 @@
             };
 
             try {
-                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
+                // שליחה יציבה יותר ללא הגדרת headers מורכבים במצב no-cors למניעת חסימות דפדפן
+                await fetch(SCRIPT_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    body: JSON.stringify(payload) 
+                });
                 
-                // שימוש ב-Optional Chaining למניעת קריסה אם אלמנט mini-summary אינו מופיע ב-HTML
                 document.getElementById('mini-summary')?.classList.add('hidden');
                 
                 populatePrintArea(code);
@@ -1704,7 +1726,6 @@
                 pendingFormData = {};
                 updateCartUI();
                 
-                // טעינת המלאי החדש שקטה ברקע ללא חסימת הודעת ההצלחה
                 await fetchInventory('', '', false);
                 
                 setupWhatsAppButton(code, savedFormData, payload.פריטים);
@@ -1738,12 +1759,9 @@ ${itemsText.replace(/, /g, '\n')}
             }
         }
 
-        // שיפור 2: הסתרת הסיכום הזמני התקוע בטעינה והצגת ההצלחה ברוחב מלא במרכז
         function renderSuccessState(code) {
-            // הסתרת גריד הקופה הראשי
             document.getElementById('cart-main-grid').classList.add('hidden');
             
-            // הצגת קונטיינר ההצלחה הממורכז והגדול
             const successContainer = document.getElementById('cart-success-container');
             successContainer.classList.remove('hidden');
             
@@ -1779,31 +1797,25 @@ ${itemsText.replace(/, /g, '\n')}
             lucide.createIcons();
         }
 
-        // פתרון 1: תיקון קובץ PDF לבן באמצעות ייצוא אלמנט משוכפל הפעיל מחוץ לטווח הסתרת ה-DOM
         function downloadPdf() {
             const element = document.getElementById('print-area');
-            
-            // שכפול האלמנט למניעת שגיאות html2canvas עקב display: none
-            const clonedElement = element.cloneNode(true);
-            clonedElement.classList.remove('hidden');
-            clonedElement.style.display = 'block';
-            clonedElement.style.position = 'relative';
-            
             const opt = {
-                margin:       [0.4, 0.4, 0.4, 0.4], // שוליים אחידים מכל הצדדים
-                filename:     `order-${activeOrderCode || 'code'}.pdf`,
+                margin:       [0.4, 0.4, 0.4, 0.4], 
+                filename:     `order-confirmation-${activeOrderCode || 'code'}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { scale: 2, useCORS: true, logging: false },
                 jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
             };
             
-            html2pdf().set(opt).from(clonedElement).save();
+            element.classList.remove('hidden');
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.add('hidden');
+            });
         }
 
         function nextStep() { if (currentStep < 3) goToStep(currentStep + 1); else sendOrder(); }
         function prevStep() { goToStep(currentStep - 1); }
 
-        // חיפוש הזמנה קיים (כולל שימוש בקוד האבטחה החדש ללא קריסה)
         async function lookupOrder() {
             let code = prompt('נא להזין קוד הזמנה (6 תווים):');
             if (!code) return;
@@ -1824,7 +1836,7 @@ ${itemsText.replace(/, /g, '\n')}
                 const resData = await response.json();
                 if (resData.status !== "success" || !resData.order) {
                     fullPageLoader.classList.add('hidden');
-                    return showToast('הזמנה לא נמצאה במערכת. אנו ודא שהקוד נכון.');
+                    return showToast('הזמנה לא נמצאה במערכת. אנא ודא שהקוד נכון.');
                 }
                 
                 const order = resData.order;
@@ -1858,7 +1870,7 @@ ${itemsText.replace(/, /g, '\n')}
                     populatePrintArea(code);
                     saveCart(); 
                     updateCartUI(); 
-                    showView('cart'); // מעבר ישיר לדף קופה מורחב ומלא לעריכה קלה
+                    showView('cart');
                     document.getElementById('full-cancel-order-area')?.classList.remove('hidden');
                 }
             } catch (e) {
@@ -2261,7 +2273,7 @@ ${itemsText.replace(/, /g, '\n')}
             t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        // פנל סיכום צדדי מורחב התואם את המראה החדש של הקופה
+        // פנל סיכום צדדי מורחב התואם את המראה החדש של הקופה ומעדכן תאריכים בזמן אמת
         function updateCartSummary() {
             const summaryCount = document.getElementById('full-summary-count');
             const summaryDates = document.getElementById('full-summary-dates');
@@ -2327,7 +2339,7 @@ ${itemsText.replace(/, /g, '\n')}
                 } else if (type === 'הצהרת נגישות') {
                     content = `הצהרת נגישות ומתן שירות חלופי
 
-אתר זה פצור מחובת נגישות טכנולוגית מלאה בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות. 
+אתר זה פטור מחובת נגישות טכנולוגית מלאה בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות. 
 
 עם זאת, אנו מחויבים להעניק שירות שוויוני ומכבד לכולם. במידה ונתקלת בקושי טכני בגלישה, בצפייה במוצרים או בביצוע הזמנה דיגיטלית - אנו מעניקים סיוע ומענה אנושי מלא לביצוע הזמנות טלפוניות או בוואטסאפ בפרטי הקשר המופיעים בתחתית האתר.`;
                 }
@@ -2342,7 +2354,6 @@ ${itemsText.replace(/, /g, '\n')}
             document.getElementById('legal-modal').classList.add('hidden');
         }
 
-        // פונקציית עדכון ברכה דינמית לפי שעות היום
         function updateGreetingAndDateTime() {
             const hr = new Date().getHours();
             let gr = "יום נעים";
