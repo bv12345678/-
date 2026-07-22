@@ -79,7 +79,7 @@
         .card-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); }
         
         .hero-section {
-            background: linear-gradient(to bottom, rgba(26, 28, 44, 0.3), rgba(26, 28, 44, 0.7)), url('preview.jpg');
+            background: linear-gradient(to bottom, rgba(26, 28, 44, 0.4), rgba(26, 28, 44, 0.7)), url('preview.jpg');
             background-size: cover; 
             background-position: center; 
             background-repeat: no-repeat;
@@ -213,7 +213,7 @@
             position: relative;
             overflow: hidden;
             border-radius: 1.5rem;
-            height: 220px;
+            height: 240px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -231,12 +231,12 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: rgba(26, 28, 44, 0.4);
+            background: rgba(26, 28, 44, 0.45);
             transition: background 0.2s;
             z-index: 1;
         }
         
-        .category-box:hover::before { background: rgba(26, 28, 44, 0.2); }
+        .category-box:hover::before { background: rgba(26, 28, 44, 0.25); }
         
         .category-box img {
             position: absolute;
@@ -269,7 +269,6 @@
             display: inline-block;
         }
 
-        /* תיקון: שימוש ב-auto-fill במקום auto-fit מונע ממוצר יחיד להימתח על פני כל הדף */
         #inventory-grid.grid-view {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -352,7 +351,7 @@
     <nav class="sticky top-0 z-50 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-b border-gray-100 dark:border-white/10 px-4 md:px-6 py-4 no-print shadow-sm transition-all">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             <!-- לוגו וכותרת מותג -->
-            <div class="flex items-center gap-3 cursor-pointer" onclick="backToMain()">
+            <div class="flex items-center gap-3 cursor-pointer animate-fade-in" onclick="showView('home')">
                 <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center shadow-md">
                     <i data-lucide="sparkles" class="text-navy w-5 h-5"></i>
                 </div>
@@ -362,8 +361,8 @@
                 </div>
             </div>
 
-            <!-- שורת חיפוש מובנית בתפריט (למחשב) -->
-            <div class="flex-1 max-w-md mx-6 relative hidden md:block">
+            <!-- שורת חיפוש מובנית בתפריט (מסתנכרנת ועוברת אוטומטית לקטלוג) -->
+            <div class="flex-1 max-w-md mx-6 relative hidden md:block" id="header-search-container">
                 <label for="searchInput" class="sr-only">חפש בקטלוג...</label>
                 <input type="text" id="searchInput" oninput="handleSearch()" placeholder="חפש מוצרים וקטגוריות בקטלוג..."
                     class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-sm outline-none focus:ring-2 focus:ring-gold focus:border-transparent transition-all text-slate-800">
@@ -372,11 +371,13 @@
 
             <!-- כפתורי שליטה וניווט מהיר -->
             <div class="flex items-center gap-2 md:gap-4">
+                <button onclick="showView('home')" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors hidden md:block">דף הבית</button>
+                <button onclick="showView('categories')" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors hidden md:block">קטגוריות</button>
                 <button onclick="lookupOrder()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors hidden lg:block">חיפוש/עריכת הזמנה</button>
                 <button onclick="showAdminLogin()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors hidden lg:block">ניהול מלאי</button>
                 
-                <!-- החלפת תצוגה גריד/רשימה -->
-                <div class="items-center gap-1 bg-gray-100 dark:bg-zinc-800 p-1 rounded-xl hidden sm:flex">
+                <!-- החלפת תצוגה גריד/רשימה (רלוונטי לקטלוג) -->
+                <div id="layout-toggle-container" class="items-center gap-1 bg-gray-100 dark:bg-zinc-800 p-1 rounded-xl hidden sm:flex">
                     <button onclick="setLayout('grid')" id="grid-view-btn" class="p-1.5 rounded-lg transition-colors bg-navy text-gold dark:bg-gold dark:text-navy" aria-label="תצוגת גריד">
                         <i data-lucide="layout-grid" class="w-4 h-4"></i>
                     </button>
@@ -404,8 +405,32 @@
         </div>
     </nav>
 
-    <!-- באנר כותרת דף הבית (Hero Section) ללא תאריכים ושעות -->
-    <header class="hero-section min-h-[45vh] md:min-h-[55vh] flex flex-col relative text-white no-print justify-center items-center">
+    <!-- המבורגר תפריט מובייל -->
+    <div id="mobile-menu" class="hidden absolute top-[70px] left-0 right-0 bg-navy/95 backdrop-blur-xl border-t border-white/10 p-4 z-50 flex flex-col gap-4 md:hidden shadow-2xl">
+        <button onclick="showView('home'); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="home" class="text-gold w-5 h-5"></i>
+            <span class="font-bold">דף הבית</span>
+        </button>
+        <button onclick="showView('categories'); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="grid" class="text-gold w-5 h-5"></i>
+            <span class="font-bold">קטגוריות</span>
+        </button>
+        <button onclick="lookupOrder(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="search" class="text-gold w-5 h-5"></i>
+            <span class="font-bold">חיפוש/עריכת הזמנה</span>
+        </button>
+        <button onclick="showAdminLogin(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="lock" class="text-gold w-5 h-5"></i>
+            <span class="font-bold">ניהול מלאי</span>
+        </button>
+        <button onclick="toggleDarkMode(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="moon" class="text-gold w-5 h-5"></i>
+            <span id="theme-text" class="font-bold">מצב כהה</span>
+        </button>
+    </div>
+
+    <!-- באנר כותרת מותג (Hero Section) מובנה לכלל העמודים -->
+    <header class="hero-section min-h-[40vh] md:min-h-[50vh] flex flex-col relative text-white no-print justify-center items-center">
         <div class="text-center px-4 z-10 max-w-4xl mx-auto w-full py-12">
             <div class="space-y-4">
                 <h2 id="current-greeting" class="text-2xl md:text-3xl font-light tracking-wide text-white/95"></h2> 
@@ -415,33 +440,91 @@
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 py-8 md:py-12 no-print">
+    <main class="max-w-7xl mx-auto px-4 py-8 md:py-16 no-print">
 
-        <!-- שורת חיפוש למובייל (מוצגת רק במסכים קטנים) -->
-        <div class="relative w-full mb-8 md:hidden">
+        <!-- שורת חיפוש למובייל (רק במסכים קטנים) -->
+        <div class="relative w-full mb-8 md:hidden" id="mobile-search-container">
             <label for="searchInputMobile" class="sr-only">חפש בקטלוג...</label>
             <input type="text" id="searchInputMobile" oninput="handleSearchMobile()" placeholder="חפש מוצרים וקטגוריות בקטלוג..."
                 class="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-white border border-gray-200 shadow-sm focus:ring-2 focus:ring-gold transition-all outline-none dark:bg-zinc-800 dark:border-zinc-700 dark:text-white">
             <i data-lucide="search" class="absolute left-4 top-4 text-gray-400 w-5 h-5"></i>
         </div>
         
-        <!-- דף הבית: תצוגת קטגוריות בלבד -->
-        <section id="home-view" class="space-y-8">
-            <div class="text-center md:text-right">
-                <h2 class="text-2xl md:text-3xl font-bold serif text-navy dark:text-white">קטגוריות הציוד שלנו</h2>
-                <p class="text-sm text-gray-500 mt-1">בחר קטגוריה כדי לצפות במוצרים הזמינים להזמנה</p>
+        <!-- ==================== 1. דף הבית העיצובי והשיווקי ==================== -->
+        <section id="view-home" class="space-y-20">
+            <!-- אזור הסבר שיווקי / אודות מותאם אישית -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 text-right order-2 lg:order-1">
+                    <span class="text-xs font-bold uppercase tracking-widest text-gold border-b-2 border-gold/40 pb-2">קצת עלינו</span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold serif text-navy dark:text-gold" id="home-about-title">ברוכים הבאים</h2>
+                    <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed font-light" id="home-about-desc">
+                        אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ. המערכת מותאמת באופן אישי לצרכי העסק או הגמ"ח שלכם, ללא דמי מנוי חודשיים לעולם.
+                    </p>
+                    <div class="pt-4 flex flex-wrap gap-4">
+                        <button onclick="showView('categories')" class="px-8 py-4 gold-gradient text-navy font-bold rounded-2xl shadow-lg hover:scale-105 transition-all text-sm md:text-base">
+                            לצפייה בקטלוג הציוד והזמנה ⇠
+                        </button>
+                        <button onclick="openLegalModal('תקנון')" class="px-6 py-4 bg-gray-100 dark:bg-zinc-800 text-slate-800 dark:text-white font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-all text-xs">
+                            תקנון ומדיניות המקום
+                        </button>
+                    </div>
+                </div>
+                <div class="order-1 lg:order-2">
+                    <div class="relative max-w-md mx-auto">
+                        <div class="absolute inset-0 gold-gradient rounded-[2.5rem] transform rotate-3 scale-102 opacity-25 blur"></div>
+                        <img src="preview.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;100&quot; height=&quot;100&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23cccccc&quot; stroke-width=&quot;1&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/></svg>'" alt="תמונת המותג" class="relative z-10 w-full h-80 object-cover rounded-[2rem] shadow-2xl">
+                    </div>
+                </div>
             </div>
-            <div id="home-categories-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="col-span-full text-center py-20"><div class="loader mx-auto mb-4"></div>טוען קטגוריות...</div>
+
+            <!-- אזור "איך זה עובד" בשלושה שלבים -->
+            <div class="bg-gray-50/50 dark:bg-zinc-800/10 rounded-[3rem] p-8 md:p-16 border border-gray-100/50 dark:border-zinc-800/40 text-center space-y-12">
+                <div class="max-w-2xl mx-auto space-y-2">
+                    <h3 class="text-2xl md:text-3xl font-bold serif text-navy dark:text-white">איך מתבצע תהליך השריון וההזמנה?</h3>
+                    <p class="text-sm text-gray-400">חנות-קטלוג חכמה עם שליחה ישירה לוואטסאפ ללא עמלות תיווך</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- שלב 1 -->
+                    <div class="bg-white dark:bg-zinc-900 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow text-center space-y-4 border border-gray-100 dark:border-zinc-800">
+                        <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center font-black text-navy mx-auto">01</div>
+                        <h4 class="font-bold text-lg text-navy dark:text-white">בוחרים מוצרים</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">נכנסים לקטגוריות, בוחרים את הווריאציה המושלמת עבורכם ומוסיפים לעגלת הקניות.</p>
+                    </div>
+                    <!-- שלב 2 -->
+                    <div class="bg-white dark:bg-zinc-900 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow text-center space-y-4 border border-gray-100 dark:border-zinc-800">
+                        <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center font-black text-navy mx-auto">02</div>
+                        <h4 class="font-bold text-lg text-navy dark:text-white">מתאמים תאריכים</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">בעגלת הקניות בוחרים את תאריכי האיסוף וההחזרה (או משלוח) לצורך בדיקת זמינות מלאי מלאה.</p>
+                    </div>
+                    <!-- שלב 3 -->
+                    <div class="bg-white dark:bg-zinc-900 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow text-center space-y-4 border border-gray-100 dark:border-zinc-800">
+                        <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center font-black text-navy mx-auto">03</div>
+                        <h4 class="font-bold text-lg text-navy dark:text-white">מאשרים בוואטסאפ</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">שולחים את סיכום ההזמנה וסך התשלום המחושב לוואטסאפ של המנהל ומבצעים תשלום ידני (בביט/פייבוקס).</p>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- דף הקטלוג והמוצרים: מופרד לחלוטין מדף הבית ומוסתר בהתחלה -->
-        <section id="catalog-view" class="space-y-8 hidden">
-            <!-- כותרת הקטגוריה וניווט חזרה -->
+        <!-- ==================== 2. דף קטגוריות בלבד ==================== -->
+        <section id="view-categories" class="space-y-8 hidden">
+            <div class="text-center md:text-right flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold serif text-navy dark:text-white">קטגוריות הציוד והמוצרים</h2>
+                    <p class="text-sm text-gray-500 mt-1">אנא בחר קטגוריה כדי לצפות במוצרים המשויכים אליה</p>
+                </div>
+                <button onclick="showView('home')" class="text-xs font-bold text-gray-400 hover:text-navy dark:hover:text-white transition-colors flex items-center gap-1">⇠ חזור לדף הבית</button>
+            </div>
+            <div id="home-categories-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- ירונדר דינמית -->
+            </div>
+        </section>
+
+        <!-- ==================== 3. דף המוצרים והקטלוג ==================== -->
+        <section id="view-products" class="space-y-8 hidden">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 dark:border-white/5 pb-4">
                 <div class="flex items-center gap-4">
-                    <button onclick="backToMain()" class="bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 p-3 rounded-full transition-all flex items-center justify-center gap-2 text-xs font-bold px-4 text-navy dark:text-white shadow-sm">
+                    <button onclick="showView('categories')" class="bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 p-3 rounded-full transition-all flex items-center justify-center gap-2 text-xs font-bold px-4 text-navy dark:text-white shadow-sm">
                         <i data-lucide="arrow-right" class="w-4 h-4"></i> חזור לקטגוריות
                     </button>
                     <div>
@@ -460,7 +543,7 @@
         </section>
 
         <!-- בלוק המיקום והוויז -->
-        <div id="location-block" class="bg-white dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-xl border border-gray-100 dark:border-zinc-800 flex flex-col md:flex-row gap-8 items-center justify-between mt-12 hidden">
+        <div id="location-block" class="bg-white dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-xl border border-gray-100 dark:border-zinc-800 flex flex-col md:flex-row gap-8 items-center justify-between mt-20 hidden">
             <div class="w-full md:w-1/2 space-y-6">
                 <div>
                     <h2 id="location-title" class="text-2xl font-bold serif text-navy dark:text-white mb-2">מיקום ואיסוף</h2>
@@ -612,6 +695,35 @@
         let itemsToShow = 12;    
         const ITEMS_BATCH = 12;  
         let currentLayout = localStorage.getItem('inventoryLayout') || 'grid';
+        let currentView = 'home'; // 'home', 'categories', 'products'
+
+        // פונקציית הניתוב הפנימי ללא טעינה מחדש - Router
+        function showView(view) {
+            currentView = view;
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-categories').classList.add('hidden');
+            document.getElementById('view-products').classList.add('hidden');
+            
+            // מניעת כפילויות בשירות חיפוש בדף הבית
+            const headerSearch = document.getElementById('header-search-container');
+            const layoutToggle = document.getElementById('layout-toggle-container');
+
+            if (view === 'home') {
+                document.getElementById('view-home').classList.remove('hidden');
+                headerSearch.classList.add('invisible');
+                layoutToggle.classList.add('invisible');
+            } else if (view === 'categories') {
+                document.getElementById('view-categories').classList.remove('hidden');
+                headerSearch.classList.add('invisible');
+                layoutToggle.classList.add('invisible');
+                renderHomeCategories();
+            } else if (view === 'products') {
+                document.getElementById('view-products').classList.remove('hidden');
+                headerSearch.classList.remove('invisible');
+                layoutToggle.classList.remove('invisible');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function formatImageUrl(url) {
             if (!url) return DEFAULT_IMG;
@@ -635,7 +747,7 @@
         }
 
         function restrictPastDates() {
-            // התאריכים יוגדלו ויוגבלו רק בתוך טופס מודל העגלה (Step 2)
+            // התאריכים יוגבלו רק בעגלה (Step 2)
         }
 
         async function fetchInventory(pDate = '', rDate = '') {
@@ -655,6 +767,7 @@
                     ...i,
                     status: (i['תיאור_אפשרי'] && i['תיאור_אפשרי'].trim().toLowerCase() === 'hidden') ? 'hidden' : 'active',
                     מלאי: parseInt(i.מלאי || i['מלאי'] || 0),
+                    // קבלת מלאי זמין המחושב בצורה מאובטחת מהשרת
                     available_stock: i.available_stock !== undefined ? parseInt(i.available_stock) : parseInt(i.מלאי || i['מלאי'] || 0)
                 }));
                 aboutConfig = data.About || {};
@@ -663,8 +776,8 @@
                 initProductStates();
                 applyConfig();
                 
-                // אתחול דף הבית המופרד: בהתחלה מציגים רק קטגוריות
-                renderHomeCategories();
+                // אתחול והצגת דף הבית המוגדר בהתחלה
+                showView('home');
                 
                 updateCartUI();
                 updateCartSummary();
@@ -759,7 +872,7 @@
             return match;
         }
 
-        // תיקון: גלריית התמונות קוראת את המפתח שנבחר בגלריית החיצים
+        // תיקון: החלפת התמונות קוראת את המפתח שנבחר בגלריית החיצים
         function getCardImage(pName) {
             const p = groupedProducts.find(x => x.שם_פריט === pName);
             if (!p) return DEFAULT_IMG;
@@ -803,6 +916,11 @@
             document.getElementById('hero-title').innerText = name;
             document.getElementById('hero-desc').innerText = desc;
             document.getElementById('print-brand-title').innerText = `אישור הזמנה - ${name}`;
+
+            if (aboutConfig['אודות']) {
+                document.getElementById('home-about-title').innerText = `אודות - ${name}`;
+                document.getElementById('home-about-desc').innerText = aboutConfig['אודות'];
+            }
 
             if (bgImg) {
                 document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(to bottom, rgba(26, 28, 44, 0.3), rgba(26, 28, 44, 0.7)), url('${formatImageUrl(bgImg)}')`;
@@ -854,10 +972,7 @@
         }
 
         function renderHomeCategories() {
-            document.getElementById('catalog-view').classList.add('hidden');
-            document.getElementById('home-view').classList.remove('hidden');
             const homeContainer = document.getElementById('home-categories-container');
-
             const categories = [...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
             
             homeContainer.innerHTML = categories.map(cat => {
@@ -875,15 +990,12 @@
         }
 
         function enterCategory(cat) {
-            document.getElementById('home-view').classList.add('hidden');
-            document.getElementById('catalog-view').classList.remove('hidden');
             filterByCategory(cat);
-            document.getElementById('catalog-view').scrollIntoView({behavior: 'smooth'});
+            showView('products');
         }
 
         function backToMain() {
-            document.getElementById('catalog-view').classList.add('hidden');
-            document.getElementById('home-view').classList.remove('hidden');
+            showView('home');
             document.getElementById('searchInput').value = '';
             document.getElementById('searchInputMobile').value = '';
         }
@@ -918,11 +1030,7 @@
             }
         }
 
-        async function handleDateFilter() {
-            // הוסר מדף הבית
-        }
-
-        // תיקון: גלריית תמונות הפוכה - תוקן וסונכרן עם ה-DOM
+        // תיקון: גלריית תמונות - תנועת חיצים הפוכה תוקנה
         function slideImage(pName, direction, event) {
             if (event) event.stopPropagation();
             const p = groupedProducts.find(x => x.שם_פריט === pName);
@@ -1016,7 +1124,6 @@
                 const state = productState[pName];
                 const match = getMatchingVariation(pName);
                 
-                // המלאי הזמין מתקבל בצורה מאובטחת מהשרת
                 let displayStock = match ? (match.available_stock !== undefined ? match.available_stock : match.מלאי) : 0;
 
                 const isOutOfStock = displayStock <= 0;
@@ -1025,7 +1132,7 @@
                 const pNameEscaped = escapeHtmlParam(pName);
                 
                 const showSlider = p.images.length > 1;
-                // תיקון חיצים הפוכים בגלריה
+                // תיקון: חיצים הפוכים בגלריה
                 const sliderHTML = showSlider ? `
                     <button onclick="slideImage('${pNameEscaped}', -1, event)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-zinc-800/80 hover:bg-white text-navy dark:text-white p-1.5 rounded-full shadow z-10 transition-all" aria-label="תמונה קודמת">
                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
@@ -1134,7 +1241,6 @@
             const pDate = document.getElementById('p-date')?.value || pendingFormData.pDate;
             const rDate = document.getElementById('r-date')?.value || pendingFormData.rDate;
 
-            // המלאי הפנוי המעודכן ביותר
             let limit = variationRow.available_stock !== undefined ? variationRow.available_stock : variationRow.מלאי;
 
             let cartItem = cart.find(c => c.displayName === displayName);
@@ -1170,7 +1276,7 @@
         }
 
         window.addEventListener('scroll', () => {
-            if(document.getElementById('catalog-view').classList.contains('hidden')) return;
+            if(document.getElementById('view-products').classList.contains('hidden')) return;
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 800) {
                 if (itemsToShow < displayedItems.length) {
                     itemsToShow += ITEMS_BATCH;
@@ -1220,7 +1326,6 @@
                         return showToast('תאריך החזרה לא יכול להיות מוקדם מתאריך לקיחה');
                     }
 
-                    // וידוא מלאי מול המלאי שחושב בצד השרת
                     for (let c of cart) {
                         let limit = c.available_stock !== undefined ? c.available_stock : c.מלאי;
                         if (c.qty > limit) return showToast(`המלאי של ${c.displayName} השתנה או אזל.`);
@@ -1861,7 +1966,7 @@ ${itemsText.replace(/, /g, '\n')}
             count.innerText = total; count.classList.toggle('hidden', total === 0);
         }
 
-        // תיקון: מנגנון חיפוש חכם ודינמי בתוך שורת החיפוש
+        // תיקון: מנגנון חיפוש חכם ודינמי בתוך שורת החיפוש העליונה
         function handleSearch() {
             const searchInput = document.getElementById('searchInput');
             const term = searchInput.value.trim().toLowerCase();
@@ -1874,8 +1979,10 @@ ${itemsText.replace(/, /g, '\n')}
                 return;
             }
 
-            document.getElementById('home-view').classList.add('hidden');
-            document.getElementById('catalog-view').classList.remove('hidden');
+            // העברה אוטומטית לעמוד המוצרים אם המשתמש מחפש
+            if (currentView !== 'products') {
+                showView('products');
+            }
 
             const filtered = groupedProducts.filter(p => 
                 p.שם_פריט.toLowerCase().includes(term) || 
@@ -1885,9 +1992,8 @@ ${itemsText.replace(/, /g, '\n')}
             if (filtered.length === 0) {
                 searchInput.classList.add('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
                 searchInput.placeholder = "לא נמצאו תוצאות חיפוש!";
-                // ריקון הצעות מוצרים כדי למנוע בלבול
                 const grid = document.getElementById('inventory-grid');
-                grid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-400 font-bold">לא נמצאו פריטים התואמים לחיפוש שלך בתיבת החיפוש</div>';
+                grid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-400 font-bold">לא נמצאו פריטים תואמים לחיפוש שלך בתיבת החיפוש</div>';
             } else {
                 renderGrid(filtered);
             }
@@ -1898,15 +2004,16 @@ ${itemsText.replace(/, /g, '\n')}
             const term = mobileInput.value.trim().toLowerCase();
             
             mobileInput.classList.remove('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
-            mobileInput.placeholder = "חפש מוצרים וקטגוריות בקטלוג...";
+            mobileInput.placeholder = "חפש מוצרים וקטגוריות בקטלוג..."
 
             if (term.length === 0) {
                 backToMain();
                 return;
             }
 
-            document.getElementById('home-view').classList.add('hidden');
-            document.getElementById('catalog-view').classList.remove('hidden');
+            if (currentView !== 'products') {
+                showView('products');
+            }
 
             const filtered = groupedProducts.filter(p => 
                 p.שם_פריט.toLowerCase().includes(term) || 
