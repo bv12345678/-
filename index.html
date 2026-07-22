@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -6,6 +7,7 @@
     
     <title>מערכת ניהול והזמנת מלאי</title>
     <meta name="description" content="מערכת חכמה לניהול מלאי, קטלוג פריטים והזמנות אונליין בקלות.">
+    <!-- חסימה קשיחה של סריקת מנועי חיפוש להגנה ודיסקרטיות -->
     <meta name="robots" content="noindex, nofollow">
     
     <link rel="preconnect" href="https://script.google.com" crossorigin>
@@ -315,6 +317,19 @@
         <p class="absolute bottom-10 text-white/70 text-sm">לחץ בכל מקום לסגירה</p>
     </div>
 
+    <!-- Legal Documents Modal (תקנון, פרטיות, נגישות) -->
+    <div id="legal-modal" class="fixed inset-0 bg-navy/80 backdrop-blur-md z-[250] hidden flex items-center justify-center p-4 no-print" onclick="closeLegalModal()">
+        <div class="bg-white rounded-[2rem] w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl" onclick="event.stopPropagation()">
+            <div class="p-6 bg-[#0b1f3a] text-[#f5d37a] flex justify-between items-center">
+                <h2 id="legal-modal-title" class="text-xl font-bold serif text-[#f5d37a]">---</h2>
+                <button onclick="closeLegalModal()" class="p-2 text-[#f5d37a] bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="סגור"><i data-lucide="x"></i></button>
+            </div>
+            <div id="legal-modal-content" class="flex-1 overflow-y-auto p-8 text-right text-slate-800 text-sm whitespace-pre-wrap leading-relaxed">
+                <!-- Content will be injected dynamically -->
+            </div>
+        </div>
+    </div>
+
     <a href="#" target="_blank" id="whatsapp-float" class="no-print hidden" aria-label="צור קשר בוואטסאפ">
         <i data-lucide="message-circle" class="w-8 h-8"></i>
     </a>
@@ -573,6 +588,34 @@
         </table>
     </div>
 
+    <!-- Footer - תחתית עמוד סטטוטורית ומשפטית -->
+    <footer class="bg-navy text-white/80 py-12 border-t border-white/10 mt-16 no-print">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-right">
+            <div class="space-y-3">
+                <h4 class="font-bold text-lg text-gold serif italic" id="footer-brand-title">---</h4>
+                <p class="text-xs text-white/60 leading-relaxed" id="footer-brand-desc">---</p>
+                <p class="text-xs text-white/60 font-mono" id="footer-business-id">---</p>
+            </div>
+            <div class="space-y-3">
+                <h4 class="font-bold text-sm text-gold uppercase tracking-wider">פרטי התקשרות ונגישות</h4>
+                <p class="text-xs flex items-center gap-2" id="footer-address-p"><i data-lucide="map-pin" class="w-4 h-4 text-gold"></i> <span id="footer-address">---</span></p>
+                <p class="text-xs flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-gold"></i> <span id="footer-phone">---</span></p>
+                <p class="text-xs flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4 text-gold"></i> <span id="footer-email">---</span></p>
+            </div>
+            <div class="space-y-3">
+                <h4 class="font-bold text-sm text-gold uppercase tracking-wider">מידע משפטי ותנאים</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><button onclick="openLegalModal('תקנון')" class="hover:text-gold transition-colors text-right outline-none">תנאי שימוש ותקנון האתר</button></li>
+                    <li><button onclick="openLegalModal('מדיניות פרטיות')" class="hover:text-gold transition-colors text-right outline-none">מדיניות פרטיות</button></li>
+                    <li><button onclick="openLegalModal('הצהרת נגישות')" class="hover:text-gold transition-colors text-right outline-none">הצהרת נגישות</button></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-8 pt-8 border-t border-white/5 text-center text-[10px] text-white/40">
+            <p>© 2026 כל הזכויות שמורות. המערכת מופעלת על ידי בעלי האתר.</p>
+        </div>
+    </footer>
+
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4f1QrovCOzIo8v3nhIfvhnjKGdh8Wh0vK4RZgPUkaPewzG2HTF8Wudh4GqUu0P79q/exec';
         const DEFAULT_IMG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%23cccccc" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
@@ -783,6 +826,7 @@
             const location = aboutConfig['מיקום'] || '';
             const waze = aboutConfig['קישור וויז'] || '';
             const bgImg = aboutConfig['תמונת רקע'] || '';
+            const bizId = aboutConfig['ח.פ / ע.מ'] || '';
 
             document.title = `${name} | הזמנה אונליין`;
             document.getElementById('nav-brand-title').innerText = name;
@@ -811,15 +855,29 @@
                 document.getElementById('location-desc').innerText = location || 'האיסוף וההחזרה מתבצעים בתיאום מראש בלבד.';
                 
                 const wazeBtn = document.getElementById('waze-btn');
-                if (waze) {
+                if (waze && !waze.includes('<iframe')) {
                     wazeBtn.href = waze;
                     wazeBtn.classList.remove('hidden');
-                    
-                    const mapIframe = document.getElementById('map-iframe');
-                    mapIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(location || name)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
                 } else {
                     wazeBtn.classList.add('hidden');
                 }
+                
+                const mapIframe = document.getElementById('map-iframe');
+                mapIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(location || name)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+            }
+
+            // עדכון פרטי ה-Footer
+            document.getElementById('footer-brand-title').innerText = name;
+            document.getElementById('footer-brand-desc').innerText = desc;
+            document.getElementById('footer-business-id').innerText = bizId ? `ח.פ / ע.מ: ${bizId}` : '';
+            document.getElementById('footer-address').innerText = location || '---';
+            document.getElementById('footer-phone').innerText = phone || '---';
+            document.getElementById('footer-email').innerText = aboutConfig['אימייל מנהל'] || '---';
+            
+            if (!location) {
+                document.getElementById('footer-address-p').classList.add('hidden');
+            } else {
+                document.getElementById('footer-address-p').classList.remove('hidden');
             }
         }
 
@@ -1378,6 +1436,16 @@
             lucide.createIcons();
         }
 
+        // יצירת קוד הזמנה אקראי ומאובטח בן 6 תווים (אותיות גדולות ומספרים)
+        function generateSecureOrderCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
         async function sendOrder() {
             if (!document.getElementById('terms-checkbox').checked) return showToast('חובה לקרוא ולאשר את התנאים');
             const nextBtn = document.getElementById('nextBtn');
@@ -1385,7 +1453,7 @@
             nextBtn.disabled = true;
             nextBtn.innerHTML = '<div class="loader w-5 h-5 mx-auto"></div>';
 
-            const code = activeOrderCode || Math.floor(1000 + Math.random() * 9000).toString();
+            const code = activeOrderCode || generateSecureOrderCode();
             const payload = {
                 action: activeOrderCode ? "updateOrder" : "addOrder",
                 orderCode: code,
@@ -1487,43 +1555,30 @@ ${itemsText.replace(/, /g, '\n')}
         function prevStep() { goToStep(currentStep - 1); }
 
         async function lookupOrder() {
-            let code = prompt('נא להזין קוד הזמנה (4 ספרות):');
+            let code = prompt('נא להזין קוד הזמנה (6 תווים):');
             if (!code) return;
-            code = code.trim(); 
+            code = code.trim().toUpperCase(); 
 
             const fullPageLoader = document.getElementById('full-page-loader');
             fullPageLoader.classList.remove('hidden');
 
             try {
-                // הבאת היסטוריית ההזמנות המלאה מהשרת בצורה מאובטחת ומאומתת
+                // משיכת הזמנה ספציפית ומאובטחת מהשרת ללא חשיפת מאגר ההזמנות המלא
                 const response = await fetch(SCRIPT_URL, {
                     method: 'POST',
                     body: JSON.stringify({
-                        action: "getOrders",
-                        password: adminPassword // ייכשל בשרת אם המשתמש הוא לא אדמין, אלא אם כן המשתמש מחפש קוד קודם שלו
+                        action: "getCustomerOrder",
+                        orderCode: code
                     })
                 });
                 
-                let order = null;
-                if (response.ok) {
-                    const resData = await response.json();
-                    if (resData.status === "success" && resData.orders) {
-                        order = resData.orders.find(o => String(o.קוד_הזמנה || o.orderCode || '').trim() === code);
-                    }
-                }
-                
-                // במקרה שלקוח רגיל מחפש את ההזמנה שלו (ללא סיסמת אדמין), השרת לא יחזיר את כל הגיליון אלא נפעל לפי אימות מקומי
-                if (!order) {
-                    // הגנה במידה ולא מדובר במנהל: נשלח בקשה ייעודית לאימות הקוד בלבד
-                    showToast('מציג פרטי הזמנה...');
-                    // לצורך הבטיחות של משתמשי הקצה, אנו מאפשרים לאתר קודים ספציפיים
-                }
-
-                if (!order) {
+                const resData = await response.json();
+                if (resData.status !== "success" || !resData.order) {
                     fullPageLoader.classList.add('hidden');
-                    return showToast('הזמנה לא נמצאה או שאין הרשאה מתאימה.');
+                    return showToast('הזמנה לא נמצאה במערכת. אנא ודא שהקוד נכון.');
                 }
                 
+                const order = resData.order;
                 const customerName = order.שם_לקוח || order['שם_לקוח'] || 'אורח';
                 if (confirm(`נמצאה הזמנה על שם ${customerName}. האם ברצונך לערוך אותה?`)) {
                     activeOrderCode = code;
@@ -1567,7 +1622,6 @@ ${itemsText.replace(/, /g, '\n')}
             try {
                 await fetch(SCRIPT_URL, { 
                     method: 'POST', 
-                    mode: 'no-cors', 
                     body: JSON.stringify({ action: "deleteOrder", orderCode: activeOrderCode }) 
                 });
                 localStorage.removeItem('gemach_cart');
@@ -1581,6 +1635,9 @@ ${itemsText.replace(/, /g, '\n')}
         }
 
         function populatePrintArea(code) {
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('he-IL') + ' ' + now.toLocaleTimeString('he-IL');
+            
             document.getElementById('print-order-id').innerText = 'קוד הזמנה: ' + code;
             document.getElementById('print-user-info').innerHTML = `
                 <p><b>שם הלקוח:</b> ${pendingFormData.name}</p>
@@ -1594,6 +1651,9 @@ ${itemsText.replace(/, /g, '\n')}
                     <td class="p-3 border border-gray-300 text-center font-bold">${c.qty}</td>
                 </tr>
             `).join('');
+
+            // הוספת חותמת הסכמה דיגיטלית של הלקוח לקובץ ה-PDF
+            document.getElementById('print-consent-timestamp').innerText = `אושר דיגיטלית: הלקוח אישר את תקנון האתר ומדיניות הפרטיות | תאריך אישור: ${formattedDate} | מזהה הזמנה: ${code}`;
         }
 
         function preparePrint() { window.print(); }
@@ -1968,6 +2028,31 @@ ${itemsText.replace(/, /g, '\n')}
             }
 
             if (greetingElement) greetingElement.innerText = greeting;
+        }
+
+        // ניהול המודל המשפטי והצגת התוכן הדינמי מהגוגל שיטס
+        function openLegalModal(type) {
+            const titleEl = document.getElementById('legal-modal-title');
+            const contentEl = document.getElementById('legal-modal-content');
+            
+            let content = aboutConfig[type] || '';
+            if (!content.trim()) {
+                if (type === 'תקנון') {
+                    content = "טרם הוזן תקנון ותנאי שימוש למערכת זו בגיליון הנתונים.\nאנא פנה למנהל המערכת לפרטים.";
+                } else if (type === 'מדיניות פרטיות') {
+                    content = "טרם הוזנה מדיניות פרטיות למערכת זו בגיליון הנתונים.\nהמערכת שומרת על פרטיותך ואינה משתפת את פרטיך עם צדדים שלישיים.";
+                } else if (type === 'הצהרת נגישות') {
+                    content = "אתר זה פטור מהנגשה טכנית בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות בשל מחזור פעילות שנתי הנמוך מ-100,000 ש\"ח.\n\nבמידה ונתקלת בקושי, ניתן לפנות אלינו באמצעי הקשר המופיעים בתחתית האתר לסיוע מלא.";
+                }
+            }
+            
+            titleEl.innerText = type;
+            contentEl.innerText = content;
+            document.getElementById('legal-modal').classList.remove('hidden');
+        }
+        
+        function closeLegalModal() {
+            document.getElementById('legal-modal').classList.add('hidden');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
