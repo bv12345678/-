@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <title>מערכת ניהול והזמנת מלאי</title>
-    <meta name="description" content="מערכת חכמה לניהול מלאי, קטלוג פריטים והזמנות אונליין בקלות.">
+    <meta name="description" id="meta-desc" content="מערכת חכמה לניהול מלאי, קטלוג פריטים והזמנות אונליין בקלות.">
     <!-- חסימה קשיחה של סריקת מנועי חיפוש להגנה ודיסקרטיות -->
     <meta name="robots" content="noindex, nofollow">
     
@@ -14,8 +14,10 @@
     <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
       
-    <meta property="og:title" content="קטלוג ומערכת הזמנות">
-    <meta property="og:description" content="מערכת הזמנות חכמה ונוחה אונליין.">
+    <!-- תגיות שיתוף מותאמות לווצאפ ורשתות חברתיות - מומלץ לערוך גם ידנית כאן לערכי ברירת מחדל קבועים -->
+    <meta property="og:title" id="og-title" content="קטלוג ומערכת הזמנות">
+    <meta property="og:description" id="og-desc" content="מערכת הזמנות חכמה ונוחה אונליין.">
+    <meta property="og:image" id="og-img" content="preview.jpg">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="he_IL">
 
@@ -545,17 +547,21 @@
             </div>
         </section>
 
-        <!-- בלוק המיקום והוויז -->
+        <!-- בלוק המיקום והניווט המשודרג -->
         <div id="location-block" class="bg-white dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-xl border border-gray-100 dark:border-zinc-800 flex flex-col md:flex-row gap-8 items-center justify-between mt-20 hidden">
             <div class="w-full md:w-1/2 space-y-6">
                 <div>
                     <h2 id="location-title" class="text-2xl font-bold serif text-navy dark:text-white mb-2">מיקום ואיסוף</h2>
                     <p id="location-desc" class="text-gray-500 dark:text-gray-400 text-sm md:text-base">האיסוף וההחזרה מתבצעים בתיאום מראש בלבד בשעות הפעילות.</p>
                 </div>
-                <div class="flex gap-3 md:gap-4">
-                    <a id="waze-btn" href="#" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 bg-[#33CCFF] hover:bg-[#2cb5e3] text-white py-3 px-4 md:px-6 rounded-xl font-bold transition-transform hover:scale-105 shadow-lg shadow-blue-200 text-sm md:text-base hidden">
-                        <i data-lucide="navigation" class="w-4 h-4 md:w-5 md:h-5"></i>
+                <div class="flex flex-col sm:flex-row gap-3 w-full">
+                    <a id="waze-btn" href="#" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 bg-[#33CCFF] hover:bg-[#2cb5e3] text-white py-3.5 px-4 rounded-xl font-bold transition-transform hover:scale-105 shadow-md text-xs sm:text-sm hidden">
+                        <i data-lucide="navigation" class="w-4 h-4"></i>
                         נווט עם Waze
+                    </a>
+                    <a id="gmaps-btn" href="#" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 px-4 rounded-xl font-bold transition-transform hover:scale-105 shadow-md text-xs sm:text-sm hidden">
+                        <i data-lucide="map" class="w-4 h-4"></i>
+                        נווט עם Google Maps
                     </a>
                 </div>
             </div>
@@ -699,6 +705,50 @@
         let currentLayout = localStorage.getItem('inventoryLayout') || 'grid';
         let currentView = 'home'; // 'home', 'categories', 'products'
 
+        // פונקציית הגנה בסיסית על הקוד מפני העתקות של משתמשים פשוטים
+        function enableBasicCodeProtection() {
+            // חסימת קליק ימני
+            document.addEventListener('contextmenu', event => event.preventDefault());
+
+            // חסימת מקשים נפוצים לפתיחת כלי מפתחים
+            document.addEventListener('keydown', event => {
+                if (
+                    event.key === 'F12' || 
+                    (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'i' || event.key === 'C' || event.key === 'c' || event.key === 'J' || event.key === 'j')) ||
+                    (event.ctrlKey && (event.key === 'U' || event.key === 'u'))
+                ) {
+                    event.preventDefault();
+                    showToast('העתקת קוד חסומה במערכת זו.');
+                }
+            });
+        }
+
+        // פונקציה לייצור שם תצוגה אחיד וממוין המונעת באגים בכמויות
+        function getDisplayName(pName, selections) {
+            if (!selections) return pName;
+            const filtered = Object.entries(selections)
+                .filter(([k, v]) => v !== undefined && v !== null && v !== '')
+                .map(([k, v]) => [k.trim(), v.toString().trim()]);
+            
+            // מיון אלפביתי של המפתחות כדי להבטיח זיהוי וסנכרון מדויק מול העגלה
+            filtered.sort((a, b) => a[0].localeCompare(b[0]));
+            
+            const attrStr = filtered.map(([k, v]) => `${k}: ${v}`).join(', ');
+            return attrStr ? `${pName} (${attrStr})` : pName;
+        }
+
+        function getDisplayNameForVariation(vRow) {
+            if (!vRow) return '';
+            const pName = vRow.שם_פריט;
+            const selections = {};
+            Object.keys(vRow).forEach(key => {
+                if (key.startsWith('וריאציה_') && vRow[key]) {
+                    selections[key.replace('וריאציה_', '').trim()] = vRow[key];
+                }
+            });
+            return getDisplayName(pName, selections);
+        }
+
         // פונקציית הניתוב הפנימי ללא טעינה מחדש - Router
         function showView(view) {
             currentView = view;
@@ -747,6 +797,7 @@
         }
 
         async function init() {
+            enableBasicCodeProtection();
             restrictPastDates();
             await fetchInventory();
         }
@@ -888,21 +939,7 @@
             return DEFAULT_IMG;
         }
 
-        function getDisplayNameForVariation(vRow) {
-            const pName = vRow.שם_פריט;
-            const attrs = {};
-            Object.keys(vRow).forEach(key => {
-                if (key.startsWith('וריאציה_') && vRow[key]) {
-                    attrs[key.replace('וריאציה_', '').trim()] = vRow[key];
-                }
-            });
-            const attrStr = Object.entries(attrs)
-                .map(([k, v]) => `${k}: ${v}`)
-                .join(', ');
-            return attrStr ? `${pName} (${attrStr})` : pName;
-        }
-
-        // תיקון: שליטה מלאה בטקסטים ובתמונה של אזור "קצת עלינו" מגוגל שיטס
+        // שליטה מלאה בטקסטים, מטא-טאגים, תמונות וניווט מגוגל שיטס
         function applyConfig() {
             if (!aboutConfig) return;
             
@@ -925,9 +962,22 @@
             document.getElementById('hero-desc').innerText = heroDesc;
             document.getElementById('print-brand-title').innerText = `אישור הזמנה - ${name}`;
 
+            // שליטה על תגיות שיתוף מטא (לווטסאפ ורשתות חברתיות)
+            const metaDesc = document.getElementById('meta-desc') || document.querySelector('meta[name="description"]');
+            if (metaDesc) metaDesc.setAttribute('content', desc);
+
+            const ogTitle = document.getElementById('og-title') || document.querySelector('meta[property="og:title"]');
+            if (ogTitle) ogTitle.setAttribute('content', heroTitle);
+
+            const ogDesc = document.getElementById('og-desc') || document.querySelector('meta[property="og:description"]');
+            if (ogDesc) ogDesc.setAttribute('content', heroDesc);
+
+            const ogImg = document.getElementById('og-img') || document.querySelector('meta[property="og:image"]');
+            if (ogImg && bgImg) ogImg.setAttribute('content', formatImageUrl(bgImg));
+
             // שליטה מלאה על אזור אודות/ברוכים הבאים
             const aboutTitle = aboutConfig['כותרת אודות'] || 'ברוכים הבאים';
-            const aboutDesc = aboutConfig['תיאור אודות'] || aboutConfig['אודות'] || 'אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ. המערכת מותאמת באופן אישי לצרכי העסק או הגמ"ח שלכם, ללא דמי מנוי חודשיים לעולם.';
+            const aboutDesc = aboutConfig['תיאור אודות'] || aboutConfig['אודות'] || 'אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ.';
             const aboutImg = aboutConfig['תמונת אודות'] || '';
 
             document.getElementById('home-about-title').innerText = aboutTitle;
@@ -951,21 +1001,37 @@
                 waFloat.classList.remove('hidden');
             }
 
+            // פתרון וארגון מלא של בלוק המיקום, כפתורי הניווט ומפות גוגל
             if (location || waze) {
                 document.getElementById('location-block').classList.remove('hidden');
                 document.getElementById('location-title').innerText = `מיקום ואיסוף - ${name}`;
                 document.getElementById('location-desc').innerText = location || 'האיסוף וההחזרה מתבצעים בתיאום מראש בלבד.';
                 
                 const wazeBtn = document.getElementById('waze-btn');
-                if (waze && !waze.includes('<iframe')) {
+                if (waze && waze.trim() !== '') {
                     wazeBtn.href = waze;
                     wazeBtn.classList.remove('hidden');
                 } else {
                     wazeBtn.classList.add('hidden');
                 }
+
+                const gmapsBtn = document.getElementById('gmaps-btn');
+                if (location && location.trim() !== '') {
+                    gmapsBtn.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+                    gmapsBtn.classList.remove('hidden');
+                } else {
+                    gmapsBtn.classList.add('hidden');
+                }
                 
                 const mapIframe = document.getElementById('map-iframe');
-                mapIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(location || name)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+                if (location && location.trim() !== '') {
+                    mapIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+                    mapIframe.parentElement.classList.remove('hidden');
+                } else {
+                    mapIframe.parentElement.classList.add('hidden');
+                }
+            } else {
+                document.getElementById('location-block').classList.add('hidden');
             }
 
             // עדכון פרטי ה-Footer
@@ -1227,11 +1293,8 @@
             const match = getMatchingVariation(pName);
             if (!match) return;
 
-            const selections = productState[pName].selectedAttributes;
-            const attrStr = Object.entries(selections)
-                .map(([k, v]) => `${k}: ${v}`)
-                .join(', ');
-            const displayName = attrStr ? `${pName} (${attrStr})` : pName;
+            const selections = productState[pName]?.selectedAttributes || {};
+            const displayName = getDisplayName(pName, selections);
 
             updateQtyWithVariation(match, displayName, 1);
         }
@@ -1240,11 +1303,8 @@
             const match = getMatchingVariation(pName);
             if (!match) return;
 
-            const selections = productState[pName].selectedAttributes;
-            const attrStr = Object.entries(selections)
-                .map(([k, v]) => `${k}: ${v}`)
-                .join(', ');
-            const displayName = attrStr ? `${pName} (${attrStr})` : pName;
+            const selections = productState[pName]?.selectedAttributes || {};
+            const displayName = getDisplayName(pName, selections);
 
             updateQtyWithVariation(match, displayName, -1);
         }
@@ -1526,6 +1586,15 @@
                 nextBtn.disabled = false; 
                 nextBtn.innerText = originalText; 
             }
+        }
+
+        function generateSecureOrderCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
         }
 
         function setupWhatsAppButton(code, formData, itemsText) {
@@ -2119,6 +2188,19 @@ ${itemsText.replace(/, /g, '\n')}
         
         function closeLegalModal() {
             document.getElementById('legal-modal').classList.add('hidden');
+        }
+
+        // פונקציית עדכון ברכה דינמית לפי שעות היום
+        function updateGreetingAndDateTime() {
+            const hr = new Date().getHours();
+            let gr = "יום נעים";
+            if (hr >= 5 && hr < 12) gr = "בוקר טוב";
+            else if (hr >= 12 && hr < 17) gr = "צהריים טובים";
+            else if (hr >= 17 && hr < 21) gr = "אחר הצהריים נעימים";
+            else gr = "ערב טוב";
+            
+            const greetEl = document.getElementById('current-greeting');
+            if (greetEl) greetEl.innerText = gr + " 🌟";
         }
 
         document.addEventListener('DOMContentLoaded', () => {
