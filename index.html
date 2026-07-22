@@ -347,21 +347,33 @@
         <i data-lucide="message-circle" class="w-8 h-8"></i>
     </a>
 
-    <!-- תפריט עליון קבוע ומקצועי (Sticky Navigation Bar) -->
+    <!-- תפריט עליון קבוע ומקצועי (Sticky Navigation Bar - RTL Aligned) -->
     <nav class="sticky top-0 z-50 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-b border-gray-100 dark:border-white/10 px-4 md:px-6 py-4 no-print shadow-sm transition-all">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <!-- לוגו וכותרת מותג -->
-            <div class="flex items-center gap-3 cursor-pointer animate-fade-in" onclick="showView('home')">
-                <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center shadow-md">
-                    <i data-lucide="sparkles" class="text-navy w-5 h-5"></i>
+            
+            <!-- אזור ימין: לוגו וקישורי הניווט הראשיים ביחד -->
+            <div class="flex items-center gap-6">
+                <!-- לוגו מותג -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="showView('home')">
+                    <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center shadow-md">
+                        <i data-lucide="sparkles" class="text-navy w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div id="nav-brand-title" class="text-lg md:text-xl font-bold serif leading-none text-navy dark:text-white">מערכת הזמנות</div>
+                        <p class="text-[9px] tracking-[0.15em] uppercase opacity-70 dark:text-white/60">Inventory Platform</p>
+                    </div>
                 </div>
-                <div>
-                    <div id="nav-brand-title" class="text-lg md:text-xl font-bold serif leading-none text-navy dark:text-white">מערכת הזמנות</div>
-                    <p class="text-[9px] tracking-[0.15em] uppercase opacity-70 dark:text-white/60">Inventory Platform</p>
+                
+                <!-- קישורי ניווט צמודים לימין של השורה ליד הלוגו -->
+                <div class="hidden lg:flex items-center gap-4 border-r border-gray-200 dark:border-zinc-700 pr-6 mr-2">
+                    <button onclick="showView('home')" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">דף הבית</button>
+                    <button onclick="showView('categories')" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">קטגוריות</button>
+                    <button onclick="lookupOrder()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">חיפוש/עריכת הזמנה</button>
+                    <button onclick="showAdminLogin()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">ניהול מלאי</button>
                 </div>
             </div>
 
-            <!-- שורת חיפוש מובנית בתפריט (מסתנכרנת ועוברת אוטומטית לקטלוג) -->
+            <!-- מרכז: שורת חיפוש מהירה (מסתנכרנת ועוברת לקטלוג) -->
             <div class="flex-1 max-w-md mx-6 relative hidden md:block" id="header-search-container">
                 <label for="searchInput" class="sr-only">חפש בקטלוג...</label>
                 <input type="text" id="searchInput" oninput="handleSearch()" placeholder="חפש מוצרים וקטגוריות בקטלוג..."
@@ -369,13 +381,8 @@
                 <i data-lucide="search" class="absolute left-3 top-3 text-gray-400 w-4.5 h-4.5"></i>
             </div>
 
-            <!-- כפתורי שליטה וניווט מהיר -->
-            <div class="flex items-center gap-2 md:gap-4">
-                <button onclick="showView('home')" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors hidden md:block">דף הבית</button>
-                <button onclick="showView('categories')" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors hidden md:block">קטגוריות</button>
-                <button onclick="lookupOrder()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors hidden lg:block">חיפוש/עריכת הזמנה</button>
-                <button onclick="showAdminLogin()" class="text-xs font-bold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors hidden lg:block">ניהול מלאי</button>
-                
+            <!-- שמאל: לחצני מערכת עגלה וערכות נושא -->
+            <div class="flex items-center gap-2 md:gap-3">
                 <!-- החלפת תצוגה גריד/רשימה (רלוונטי לקטלוג) -->
                 <div id="layout-toggle-container" class="items-center gap-1 bg-gray-100 dark:bg-zinc-800 p-1 rounded-xl hidden sm:flex">
                     <button onclick="setLayout('grid')" id="grid-view-btn" class="p-1.5 rounded-lg transition-colors bg-navy text-gold dark:bg-gold dark:text-navy" aria-label="תצוגת גריד">
@@ -429,7 +436,7 @@
         </button>
     </div>
 
-    <!-- באנר כותרת מותג (Hero Section) מובנה לכלל העמודים -->
+    <!-- באנר כותרת מותג (Hero Section) מובנה - יוצג רק בדף הבית ויוסתר בדף קטגוריות/מוצרים -->
     <header class="hero-section min-h-[40vh] md:min-h-[50vh] flex flex-col relative text-white no-print justify-center items-center">
         <div class="text-center px-4 z-10 max-w-4xl mx-auto w-full py-12">
             <div class="space-y-4">
@@ -460,20 +467,16 @@
                     <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed font-light" id="home-about-desc">
                         אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ. המערכת מותאמת באופן אישי לצרכי העסק או הגמ"ח שלכם, ללא דמי מנוי חודשיים לעולם.
                     </p>
-                    <div class="pt-4 flex flex-wrap gap-4">
+                    <div class="pt-4 flex flex-wrap gap-4 justify-start">
+                        <!-- תיקון: הושאר אך ורק לחצן הניווט לקטלוג, התקנון הועבר למטה -->
                         <button onclick="showView('categories')" class="px-8 py-4 gold-gradient text-navy font-bold rounded-2xl shadow-lg hover:scale-105 transition-all text-sm md:text-base">
                             לצפייה בקטלוג הציוד והזמנה ⇠
                         </button>
-                        <button onclick="openLegalModal('תקנון')" class="px-6 py-4 bg-gray-100 dark:bg-zinc-800 text-slate-800 dark:text-white font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-all text-xs">
-                            תקנון ומדיניות המקום
-                        </button>
                     </div>
                 </div>
-                <div class="order-1 lg:order-2">
-                    <div class="relative max-w-md mx-auto">
-                        <div class="absolute inset-0 gold-gradient rounded-[2.5rem] transform rotate-3 scale-102 opacity-25 blur"></div>
-                        <img src="preview.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;100&quot; height=&quot;100&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23cccccc&quot; stroke-width=&quot;1&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/></svg>'" alt="תמונת המותג" class="relative z-10 w-full h-80 object-cover rounded-[2rem] shadow-2xl">
-                    </div>
+                <div class="box h-80 w-full overflow-hidden rounded-[2rem] shadow-2xl relative order-1 lg:order-2">
+                    <div class="absolute inset-0 gold-gradient transform rotate-3 scale-102 opacity-25 blur"></div>
+                    <img src="preview.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;100&quot; height=&quot;100&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23cccccc&quot; stroke-width=&quot;1&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/></svg>'" alt="תמונת המותג" class="relative z-10 w-full h-full object-cover rounded-[2rem]">
                 </div>
             </div>
 
@@ -698,29 +701,33 @@
         let currentView = 'home'; // 'home', 'categories', 'products'
 
         // פונקציית הניתוב הפנימי ללא טעינה מחדש - Router
+        // תיקון: תמונת ה-Hero והכותרות שלה מוסתרות לחלוטין כאשר לא נמצאים בדף הבית
         function showView(view) {
             currentView = view;
             document.getElementById('view-home').classList.add('hidden');
             document.getElementById('view-categories').classList.add('hidden');
             document.getElementById('view-products').classList.add('hidden');
             
-            // מניעת כפילויות בשירות חיפוש בדף הבית
             const headerSearch = document.getElementById('header-search-container');
             const layoutToggle = document.getElementById('layout-toggle-container');
+            const heroSection = document.querySelector('.hero-section');
 
             if (view === 'home') {
                 document.getElementById('view-home').classList.remove('hidden');
                 headerSearch.classList.add('invisible');
                 layoutToggle.classList.add('invisible');
+                if (heroSection) heroSection.classList.remove('hidden'); // הצגה רק בדף הבית
             } else if (view === 'categories') {
                 document.getElementById('view-categories').classList.remove('hidden');
                 headerSearch.classList.add('invisible');
                 layoutToggle.classList.add('invisible');
+                if (heroSection) heroSection.classList.add('hidden'); // הסתרה מוחלטת בדף הקטגוריות
                 renderHomeCategories();
             } else if (view === 'products') {
                 document.getElementById('view-products').classList.remove('hidden');
                 headerSearch.classList.remove('invisible');
                 layoutToggle.classList.remove('invisible');
+                if (heroSection) heroSection.classList.add('hidden'); // הסתרה מוחלטת בדף המוצרים
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -767,7 +774,6 @@
                     ...i,
                     status: (i['תיאור_אפשרי'] && i['תיאור_אפשרי'].trim().toLowerCase() === 'hidden') ? 'hidden' : 'active',
                     מלאי: parseInt(i.מלאי || i['מלאי'] || 0),
-                    // קבלת מלאי זמין המחושב בצורה מאובטחת מהשרת
                     available_stock: i.available_stock !== undefined ? parseInt(i.available_stock) : parseInt(i.מלאי || i['מלאי'] || 0)
                 }));
                 aboutConfig = data.About || {};
@@ -872,7 +878,6 @@
             return match;
         }
 
-        // תיקון: החלפת התמונות קוראת את המפתח שנבחר בגלריית החיצים
         function getCardImage(pName) {
             const p = groupedProducts.find(x => x.שם_פריט === pName);
             if (!p) return DEFAULT_IMG;
@@ -899,6 +904,7 @@
             return attrStr ? `${pName} (${attrStr})` : pName;
         }
 
+        // תיקון: שליטה דינמית על כותרת, תיאור ותמונת ה-Hero ישירות מהגוגל שיטס
         function applyConfig() {
             if (!aboutConfig) return;
             
@@ -908,13 +914,17 @@
             const whatsapp = aboutConfig['וואטסאפ'] || '';
             const location = aboutConfig['מיקום'] || '';
             const waze = aboutConfig['קישור וויז'] || '';
-            const bgImg = aboutConfig['תמונת רקע'] || '';
             const bizId = aboutConfig['ח.פ / ע.מ'] || '';
+
+            // טעינת הגדרות הירו מותאמות אישית במידה וקיימות בגיליון
+            const heroTitle = aboutConfig['כותרת הירו'] || name;
+            const heroDesc = aboutConfig['תיאור הירו'] || desc;
+            const bgImg = aboutConfig['תמונת רקע הירו'] || aboutConfig['תמונת רקע'] || '';
 
             document.title = `${name} | הזמנה אונליין`;
             document.getElementById('nav-brand-title').innerText = name;
-            document.getElementById('hero-title').innerText = name;
-            document.getElementById('hero-desc').innerText = desc;
+            document.getElementById('hero-title').innerText = heroTitle;
+            document.getElementById('hero-desc').innerText = heroDesc;
             document.getElementById('print-brand-title').innerText = `אישור הזמנה - ${name}`;
 
             if (aboutConfig['אודות']) {
@@ -1030,7 +1040,6 @@
             }
         }
 
-        // תיקון: גלריית תמונות - תנועת חיצים הפוכה תוקנה
         function slideImage(pName, direction, event) {
             if (event) event.stopPropagation();
             const p = groupedProducts.find(x => x.שם_פריט === pName);
@@ -1087,7 +1096,6 @@
             lucide.createIcons();
         }
 
-        // פונקציית עזר למניעת שבירת פקודות JS Inline בשל תווים מיוחדים וגרשיים
         function escapeHtmlParam(str) {
             if (!str) return '';
             return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
@@ -1132,7 +1140,6 @@
                 const pNameEscaped = escapeHtmlParam(pName);
                 
                 const showSlider = p.images.length > 1;
-                // תיקון: חיצים הפוכים בגלריה
                 const sliderHTML = showSlider ? `
                     <button onclick="slideImage('${pNameEscaped}', -1, event)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-zinc-800/80 hover:bg-white text-navy dark:text-white p-1.5 rounded-full shadow z-10 transition-all" aria-label="תמונה קודמת">
                         <i data-lucide="chevron-left" class="w-4 h-4"></i>
@@ -1193,7 +1200,6 @@
                                 </p>
                                 ${selectorsHTML}
                             </div>
-                            <!-- תיקון: לחצני פלוס ומינוס מוגנים ורספונסיביים לחלוטין -->
                             <div class="item-actions mt-4 flex items-center justify-between">
                                 <div class="flex items-center gap-3 bg-gray-50 dark:bg-zinc-800 p-1 rounded-xl">
                                     <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white" aria-label="הפחת כמות">-</button>
@@ -1725,7 +1731,6 @@ ${itemsText.replace(/, /g, '\n')}
         }
 
         function renderAdminTable() {
-            // כפתור חזרה חבוי כשנמצאים כבר בעריכת המוצרים
             document.getElementById('admin-back-inv').classList.add('hidden');
             document.getElementById('admin-subtitle').innerText = "ניהול פריטים ומלאי";
             const content = document.getElementById('admin-content');
@@ -1803,7 +1808,6 @@ ${itemsText.replace(/, /g, '\n')}
         }
 
         async function showOrdersHistory() {
-            // הוספת לחצן "חזור לעמוד הפריטים" באזור ההזמנות
             document.getElementById('admin-back-inv').classList.remove('hidden');
             document.getElementById('admin-subtitle').innerText = "היסטוריית הזמנות מפורטת";
             const content = document.getElementById('admin-content');
@@ -1966,7 +1970,6 @@ ${itemsText.replace(/, /g, '\n')}
             count.innerText = total; count.classList.toggle('hidden', total === 0);
         }
 
-        // תיקון: מנגנון חיפוש חכם ודינמי בתוך שורת החיפוש העליונה
         function handleSearch() {
             const searchInput = document.getElementById('searchInput');
             const term = searchInput.value.trim().toLowerCase();
@@ -1979,7 +1982,6 @@ ${itemsText.replace(/, /g, '\n')}
                 return;
             }
 
-            // העברה אוטומטית לעמוד המוצרים אם המשתמש מחפש
             if (currentView !== 'products') {
                 showView('products');
             }
@@ -2004,7 +2006,7 @@ ${itemsText.replace(/, /g, '\n')}
             const term = mobileInput.value.trim().toLowerCase();
             
             mobileInput.classList.remove('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
-            mobileInput.placeholder = "חפש מוצרים וקטגוריות בקטלוג..."
+            mobileInput.placeholder = "חפש מוצרים וקטגוריות בקטלוג...";
 
             if (term.length === 0) {
                 backToMain();
@@ -2060,48 +2062,7 @@ ${itemsText.replace(/, /g, '\n')}
             }
         }
 
-        function downloadPdf() {
-            const element = document.getElementById('print-area');
-            if (!element) {
-                showToast('שגיאה ביצירת קובץ ה-PDF');
-                return;
-            }
-
-            element.classList.remove('hidden');
-            element.style.display = 'block'; 
-
-            const options = {
-                margin: 10,
-                filename: `Confirmation_${activeOrderCode || 'ORDER'}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().from(element).set(options).save().then(() => {
-                element.classList.add('hidden');
-                element.style.display = ''; 
-            });
-        }
-
-        function updateGreetingAndDateTime() {
-            const greetingElement = document.getElementById('current-greeting');
-            const now = new Date();
-            const hour = now.getHours();
-
-            let greeting = '';
-            if (hour >= 5 && hour < 12) {
-                greeting = 'בוקר טוב!';
-            } else if (hour >= 12 && hour < 18) {
-                greeting = 'צהריים טובים!';
-            } else {
-                greeting = 'ערב טוב!';
-            }
-
-            if (greetingElement) greetingElement.innerText = greeting;
-        }
-
-        // ניהול מנגנון התקנון המשפטי המובנה (עם פולבק מקצועי למקרה שלא הוזן בגוגל שיטס)
+        // ניהול מנגנון התקנון המשפטי המובנה
         function openLegalModal(type) {
             const titleEl = document.getElementById('legal-modal-title');
             const contentEl = document.getElementById('legal-modal-content');
