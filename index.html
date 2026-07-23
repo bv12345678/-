@@ -533,7 +533,6 @@
                     </button>
                     <div>
                         <h2 class="text-2xl md:text-3xl font-bold serif text-navy dark:text-white" id="current-category-title">הקטלוג שלנו</h2>
-                        <p class="text-xs text-gray-400 mt-0.5">קטגוריה פעילה</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar scroll-smooth max-w-full" id="category-filters"></div>
@@ -548,7 +547,7 @@
             <div id="load-more-container" class="flex justify-center mt-8 mb-12"></div>
         </section>
 
-        <!-- ==================== 4. דף עגלה, קופה מורחבת ועריכת הזמנה (חדש ומרווח) ==================== -->
+        <!-- ==================== 4. דף עגלה, קופה מורחבת ועריכת הזמנה ==================== -->
         <section id="view-cart" class="space-y-8 hidden animate-fade-in">
             <div class="text-center md:text-right border-b border-gray-100 dark:border-white/5 pb-4">
                 <h2 class="text-2xl md:text-4xl font-bold serif text-navy dark:text-white">קופה וסיכום הזמנה</h2>
@@ -882,7 +881,7 @@
                 updateCartUI();
                 updateCartSummary();
                 
-                if (window.lucide) lucide.createIcons();
+                try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
             } catch (e) { 
                 console.error(e);
                 showToast('שגיאה בטעינת הנתונים מהשרת'); 
@@ -1049,7 +1048,14 @@
                 
                 const wazeBtn = document.getElementById('waze-btn');
                 if (waze && waze.trim() !== '') {
-                    wazeBtn.href = waze;
+                    let wazeUrl = waze.trim();
+                    if (!wazeUrl.startsWith('http://') && !wazeUrl.startsWith('https://') && !wazeUrl.startsWith('waze://')) {
+                        wazeUrl = `https://waze.com/ul?q=${encodeURIComponent(wazeUrl)}&navigate=yes`;
+                    }
+                    wazeBtn.href = wazeUrl;
+                    wazeBtn.classList.remove('hidden');
+                } else if (location && location.trim() !== '') {
+                    wazeBtn.href = `https://waze.com/ul?q=${encodeURIComponent(location.trim())}&navigate=yes`;
                     wazeBtn.classList.remove('hidden');
                 } else {
                     wazeBtn.classList.add('hidden');
@@ -1097,8 +1103,18 @@
         function renderHomeCategories() {
             const homeContainer = document.getElementById('home-categories-container');
             const categories = [...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
+            
+            const repAllItem = groupedProducts.find(i => i.images[0] !== DEFAULT_IMG);
+            const allProductsBg = repAllItem ? repAllItem.images[0] : DEFAULT_IMG;
 
-            let html = categories.map(cat => {
+            let html = `
+                <div role="button" tabindex="0" onclick="enterCategory('הכל')" onkeypress="if(event.key === 'Enter') enterCategory('הכל')" class="category-box" aria-label="כל המוצרים">
+                    <img src="${allProductsBg}" alt="כל המוצרים">
+                    <h3>כל המוצרים</h3>
+                </div>
+            `;
+
+            html += categories.map(cat => {
                 const repItem = groupedProducts.find(i => i.קטגוריה === cat && i.images[0] !== DEFAULT_IMG);
                 const bgImage = repItem ? repItem.images[0] : DEFAULT_IMG;
                 const catEscaped = cat.replace(/'/g, "\\'");
@@ -1189,7 +1205,6 @@
             renderGrid(displayedItems);
         }
 
-        // הגדרת פריסת עמוד
         function setLayout(layout) {
             currentLayout = layout;
             localStorage.setItem('inventoryLayout', layout);
@@ -1210,7 +1225,7 @@
                 gridBtn.className = "p-1.5 rounded-lg transition-colors text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700";
             }
             renderGrid(displayedItems);
-            lucide.createIcons();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
         }
 
         function escapeHtmlParam(str) {
@@ -1250,6 +1265,20 @@
 
             const html = itemsToRender.map(p => {
                 const pName = p.שם_פריט;
+                
+                // הגנה ואתחול דינמי במידה וה-State המקומי אינו מוגדר כדי למנוע קריסות
+                if (!productState[pName]) {
+                    productState[pName] = {
+                        selectedAttributes: {},
+                        currentImageIndex: 0
+                    };
+                    if (p.attributes) {
+                        Object.keys(p.attributes).forEach(attr => {
+                            productState[pName].selectedAttributes[attr] = p.attributes[attr][0] || '';
+                        });
+                    }
+                }
+
                 const state = productState[pName];
                 const match = getMatchingVariation(pName);
                 
@@ -1274,14 +1303,14 @@
                 Object.keys(p.attributes).forEach(attrName => {
                     const options = p.attributes[attrName];
                     if (options.length > 0) {
-                        const currentSelected = state.selectedAttributes[attrName];
+                        const currentSelected = state.selectedAttributes[attrName] || '';
+                        const attrNameEscaped = escapeHtmlParam(attrName);
                         selectorsHTML += `
                             <div class="mb-3 text-right">
                                 <label class="block text-[11px] text-gray-400 font-bold mb-1">${attrName}:</label>
                                 <div class="flex flex-wrap gap-1">
                                     ${options.map(opt => {
                                         const isSelected = opt === currentSelected;
-                                        const attrNameEscaped = escapeHtmlParam(attrName);
                                         const optEscaped = escapeHtmlParam(opt);
                                         return `
                                             <button onclick="selectAttribute('${pNameEscaped}', '${attrNameEscaped}', '${optEscaped}')" 
@@ -1301,14 +1330,14 @@
                 const activeVarDisplayName = getDisplayNameForVariation(match || p.variations[0]);
                 const cartItem = cart.find(c => c.displayName === activeVarDisplayName);
                 const inCart = cartItem ? cartItem.qty : 0;
-                const qtySpanId = `qty-${pName.replace(/\s+/g, '-')}`;
+                const qtySpanId = `qty-${pName.replace(/[^a-zA-Z0-9א-ת]/g, '-')}`;
 
                 const actionAreaHTML = `
                     <div class="flex items-center justify-between w-full">
                         <div class="flex items-center gap-2 bg-gray-50 dark:bg-zinc-800 p-1 rounded-xl border border-gray-200/50 dark:border-zinc-700 shadow-sm">
-                            <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold" aria-label="הפחת כמות">-</button>
+                            <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white font-bold" aria-label="הפחת כמות">-</button>
                             <span class="w-6 text-center font-bold text-slate-800 dark:text-white text-sm" id="${qtySpanId}">${inCart}</span>
-                            <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-700 rounded-lg transition-colors active:scale-95 text-slate-800 dark:text-white font-bold ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
+                            <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white font-bold ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
                         </div>
                         <button onclick="showView('cart')" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה">
                             <i data-lucide="shopping-cart" class="w-5 h-5"></i>
@@ -1319,12 +1348,12 @@
                 return `
                     <div class="item-card bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75' : ''}">
                         <div class="item-image-wrapper h-64 ${currentLayout === 'list' ? 'w-48 h-auto' : 'w-full'} overflow-hidden relative bg-gray-100 dark:bg-zinc-800">
-                            ${sliderHTML}
-                            <img src="${cardImg}" loading="lazy" decoding="async" alt="${pNameSafe}" class="w-full h-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-105" onclick="openImage('${cardImg}')">
-                            <div class="absolute bottom-2 right-2 bg-white/90 dark:bg-zinc-800/95 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-navy dark:text-white shadow-sm">
-                                ${p.קטגוריה}
-                            </div>
-                            ${isOutOfStock ? `<div class="absolute inset-0 bg-navy/30 flex items-center justify-center"><span class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold text-xs shadow-lg transform -rotate-6">אזל מהמלאי</span></div>` : ''}
+                           ${sliderHTML}
+                           <img src="${cardImg}" loading="lazy" decoding="async" alt="${pNameSafe}" class="w-full h-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-105" onclick="openImage('${cardImg}')">
+                           <div class="absolute bottom-2 right-2 bg-white/90 dark:bg-zinc-800/95 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-navy dark:text-white shadow-sm">
+                               ${p.קטגוריה}
+                           </div>
+                           ${isOutOfStock ? `<div class="absolute inset-0 bg-navy/30 flex items-center justify-center"><span class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold text-xs shadow-lg transform -rotate-6">אזל מהמלאי</span></div>` : ''}
                         </div>
                         <div class="item-content p-6 flex flex-col flex-1">
                             <div class="item-details flex-1">
@@ -1332,10 +1361,10 @@
                                 <p class="text-xs text-right ${hasDates ? 'text-gold font-bold' : 'text-gray-500'} mb-3">
                                     ${hasDates ? `פנוי לתאריך הנבחר: ${displayStock}` : `במלאי כולל: ${displayStock}`}
                                 </p>
-                                ${selectorsHTML}
+                               ${selectorsHTML}
                             </div>
                             <div class="item-actions mt-4">
-                                ${actionAreaHTML}
+                               ${actionAreaHTML}
                             </div>
                         </div>
                     </div>`;
@@ -1355,7 +1384,7 @@
                 loadMoreContainer.innerHTML = '';
             }
 
-            lucide.createIcons();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
         }
 
         function loadMoreProducts() {
@@ -1523,7 +1552,7 @@
             else renderCartStep3(cont);
             
             updateCartSummary();
-            lucide.createIcons();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
         }
 
         function renderCartStep1(cont) {
@@ -1569,7 +1598,7 @@
                         }).join('')}
                     </div>
                 </div>`;
-            lucide.createIcons();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
         }
 
         function setNextShabbat() {
@@ -1628,7 +1657,7 @@
                     </div>
                     <textarea id="u-notes" oninput="syncCartDates()" placeholder="הערות מיוחדות להזמנה..." class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl h-24 border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">${pendingFormData.notes || ''}</textarea>
                 </div>`;
-            lucide.createIcons();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
         }
 
         function renderCartStep3(cont) {
@@ -1670,7 +1699,7 @@
                         </label>
                     </div>
                 </div>`;
-            lucide.createIcons();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
         }
 
         async function sendOrder() {
@@ -1751,7 +1780,7 @@
                     </div>
                     <button onclick="location.reload()" class="w-full py-4 text-gray-400 font-bold text-sm hover:text-navy dark:hover:text-white transition-colors">חזרה לדף הבית ⇠</button>
                 </div>`;
-            lucide.createIcons();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
         }
 
         function nextStep() { if (currentStep < 3) goToStep(currentStep + 1); else sendOrder(); }
@@ -1955,7 +1984,7 @@
                     </div>
                 </div>`;
             }).join('');
-            lucide.createIcons();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
         }
 
         async function toggleItemVisibility(name, currentStatus) {
@@ -2054,7 +2083,7 @@
                 
                 html += `</tbody></table></div>`;
                 content.innerHTML = html;
-                lucide.createIcons();
+                try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
             } catch (e) {
                 showToast('שגיאה בטעינת ההיסטוריה');
             } finally {
@@ -2321,7 +2350,7 @@
             document.querySelectorAll('[data-lucide="moon"], [data-lucide="sun"]').forEach(icon => {
                 icon.setAttribute('data-lucide', isDarkMode ? 'sun' : 'moon');
             });
-            lucide.createIcons();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
 
             const themeText = document.getElementById('theme-text');
             if (themeText) {
@@ -2338,7 +2367,7 @@
             document.querySelectorAll('[data-lucide="moon"], [data-lucide="sun"]').forEach(icon => {
                 icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
             });
-            lucide.createIcons();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
 
             const themeText = document.getElementById('theme-text');
             if (themeText) {
