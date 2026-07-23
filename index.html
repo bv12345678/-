@@ -845,7 +845,7 @@
             await fetchInventory();
         }
 
-        // אפשרות להשתיק את מסך הטעינה כדי למנוע היתקעות UI לאחר שליחת הזמנה
+        // תומך בגמישות ובשמות הגליונות מלאי ואודות גם בעברית וגם באנגלית
         async function fetchInventory(pDate = '', rDate = '', showLoader = true) {
             const fullPageLoader = document.getElementById('full-page-loader');
             if (showLoader) {
@@ -861,13 +861,17 @@
                 const res = await fetch(url);
                 const data = await res.json();
                 
-                inventory = (data.Inventory || []).map(i => ({
+                // תומך ב-"Inventory" או ב-"מלאי"
+                const rawInventory = data.Inventory || data['מלאי'] || [];
+                inventory = rawInventory.map(i => ({
                     ...i,
                     status: (i['תיאור_אפשרי'] && i['תיאור_אפשרי'].trim().toLowerCase() === 'hidden') ? 'hidden' : 'active',
                     מלאי: parseInt(i.מלאי || i['מלאי'] || 0),
                     available_stock: i.available_stock !== undefined ? parseInt(i.available_stock) : parseInt(i.מלאי || i['מלאי'] || 0)
                 }));
-                aboutConfig = data.About || {};
+
+                // תומך ב-"About" או ב-"אודות"
+                aboutConfig = data.About || data['אודות'] || {};
                 
                 processInventory();
                 initProductStates();
@@ -991,7 +995,9 @@
             const phone = aboutConfig['טלפון'] || '';
             const whatsapp = aboutConfig['וואטסאפ'] || '';
             const location = aboutConfig['מיקום'] || '';
-            const waze = aboutConfig['קישור וויז'] || '';
+            
+            // תומך בקישור waze באנגלית או וויז בעברית ישירות מהטבלה
+            const waze = aboutConfig['קישור waze'] || aboutConfig['קישור וויז'] || '';
             const bizId = aboutConfig['ח.פ / ע.מ'] || '';
 
             const heroTitle = aboutConfig['כותרת הירו'] || name;
@@ -1041,6 +1047,7 @@
                 waFloat.classList.remove('hidden');
             }
 
+            // מציג ופותר את הניווט לווייז ישירות מהקישור בגיליון אודות (עמודה L)
             if (location || waze) {
                 document.getElementById('location-block').classList.remove('hidden');
                 document.getElementById('location-title').innerText = `מיקום ואיסוף - ${name}`;
@@ -1100,21 +1107,12 @@
             menu.classList.toggle('hidden');
         }
 
+        // מייצר את דף הקטגוריות ללא כפתור "כל המוצרים" כפי שנתבקש
         function renderHomeCategories() {
             const homeContainer = document.getElementById('home-categories-container');
             const categories = [...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
-            
-            const repAllItem = groupedProducts.find(i => i.images[0] !== DEFAULT_IMG);
-            const allProductsBg = repAllItem ? repAllItem.images[0] : DEFAULT_IMG;
 
-            let html = `
-                <div role="button" tabindex="0" onclick="enterCategory('הכל')" onkeypress="if(event.key === 'Enter') enterCategory('הכל')" class="category-box" aria-label="כל המוצרים">
-                    <img src="${allProductsBg}" alt="כל המוצרים">
-                    <h3>כל המוצרים</h3>
-                </div>
-            `;
-
-            html += categories.map(cat => {
+            let html = categories.map(cat => {
                 const repItem = groupedProducts.find(i => i.קטגוריה === cat && i.images[0] !== DEFAULT_IMG);
                 const bgImage = repItem ? repItem.images[0] : DEFAULT_IMG;
                 const catEscaped = cat.replace(/'/g, "\\'");
@@ -1141,8 +1139,9 @@
             document.getElementById('searchInputMobile').value = '';
         }
 
+        // מייצר את שורת הפילטרים בקטלוג ללא מסנן "הכל" כפי שנתבקש
         function renderCategories() {
-            const categories = ['הכל', ...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
+            const categories = [...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
             const container = document.getElementById('category-filters');
             
             container.innerHTML = categories.map(cat => {
@@ -2012,6 +2011,7 @@
             } catch (e) { showToast('שגיאה בעדכון הסטטוס בשרת'); }
         }
 
+        // תומך בגמישות ובשמות גיליון הזמנות גם בעברית וגם באנגלית
         async function showOrdersHistory() {
             document.getElementById('admin-back-inv').classList.remove('hidden');
             document.getElementById('admin-subtitle').innerText = "היסטוריית הזמנות מפורטת";
@@ -2030,12 +2030,12 @@
                 });
                 
                 const resData = await response.json();
-                if (resData.status !== "success" || !resData.orders) {
+                if (resData.status !== "success" || (!resData.orders && !resData['הזמנות'])) {
                     content.innerHTML = `<div class="py-20 text-center opacity-50 text-navy font-bold">שגיאת אבטחה או חוסר הרשאות</div>`;
                     return;
                 }
 
-                const orders = resData.orders;
+                const orders = resData.orders || resData['הזמנות'] || [];
                 if (orders.length === 0) {
                     content.innerHTML = `<div class="py-20 text-center opacity-50 text-navy font-bold">אין הזמנות רשומות במערכת</div>`;
                     return;
