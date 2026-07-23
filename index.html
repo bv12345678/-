@@ -36,7 +36,6 @@
         }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Assistant:wght=300;400;600;800&family=Playfair+Display:ital,wght=0,700;1,700&display=swap');
@@ -1098,18 +1097,8 @@
         function renderHomeCategories() {
             const homeContainer = document.getElementById('home-categories-container');
             const categories = [...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
-            
-            const repAllItem = groupedProducts.find(i => i.images[0] !== DEFAULT_IMG);
-            const allProductsBg = repAllItem ? repAllItem.images[0] : DEFAULT_IMG;
 
-            let html = `
-                <div role="button" tabindex="0" onclick="enterCategory('הכל')" onkeypress="if(event.key === 'Enter') enterCategory('הכל')" class="category-box" aria-label="כל המוצרים">
-                    <img src="${allProductsBg}" alt="כל המוצרים">
-                    <h3>כל המוצרים</h3>
-                </div>
-            `;
-
-            html += categories.map(cat => {
+            let html = categories.map(cat => {
                 const repItem = groupedProducts.find(i => i.קטגוריה === cat && i.images[0] !== DEFAULT_IMG);
                 const bgImage = repItem ? repItem.images[0] : DEFAULT_IMG;
                 const catEscaped = cat.replace(/'/g, "\\'");
@@ -1200,6 +1189,7 @@
             renderGrid(displayedItems);
         }
 
+        // הגדרת פריסת עמוד
         function setLayout(layout) {
             currentLayout = layout;
             localStorage.setItem('inventoryLayout', layout);
@@ -1435,7 +1425,6 @@
             updateCartUI();
         }
 
-        // פונקציית עזר לשינוי כמות המוצר בעגלה ישירות באמצעות מזהה המוצר המצומצם והבטוח
         function changeCartItemQty(displayName, delta) {
             const item = cart.find(c => c.displayName === displayName);
             if (!item) return;
@@ -1447,7 +1436,6 @@
             updateQtyWithVariation(variationToUse, displayName, delta);
         }
 
-        // סנכרון תאריכים ופרטי לקוח מהעגלה בזמן אמת ל-pendingFormData ועדכון הסיכום
         function syncCartDates() {
             const pDateEl = document.getElementById('p-date');
             const rDateEl = document.getElementById('r-date');
@@ -1538,7 +1526,6 @@
             lucide.createIcons();
         }
 
-        // שיפור: הצגת תמונת מוצר בצורה נקייה ויציבה לחלוטין ללא שגיאות סינטקס
         function renderCartStep1(cont) {
             if (cart.length === 0) {
                 cont.innerHTML = `
@@ -1674,7 +1661,7 @@
                             <div class="text-[11px] mt-3 space-y-2 text-gray-600 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-zinc-700 pt-3 text-right">
                                 <p>• באחריות המזמין להחזיר את הפריטים כשהם שלמים, נקיים ותקינים.</p>
                                 <p>• יש להחזיר את הציוד בזמן המוסכם על מנת למנוע פגיעה בהזמנות הבאות.</p>
-                                <p>• במקרה של אובדן או נזק בלתי הפיך לציוד, המזמין ישפה את המקום בגובה עלות התיקון/רכישה.</p>
+                                <p>• במקרה של אובדן, קלקול או נזק משמעותי, המזמין ישפה את בעלי האתר בגובה עלות התיקון/רכישה.</p>
                             </div>
                         </details>
                         <label class="flex items-center gap-3 p-3 bg-gold/5 rounded-2xl border border-gold/10 cursor-pointer">
@@ -1707,7 +1694,7 @@
             };
 
             try {
-                // שליחה יציבה יותר ללא הגדרת headers מורכבים במצב no-cors למניעת חסימות דפדפן
+                // שליחה יציבה ללא הגדרת headers מורכבים במצב no-cors
                 await fetch(SCRIPT_URL, { 
                     method: 'POST', 
                     mode: 'no-cors', 
@@ -1727,35 +1714,11 @@
                 updateCartUI();
                 
                 await fetchInventory('', '', false);
-                
-                setupWhatsAppButton(code, savedFormData, payload.פריטים);
             } catch (e) { 
                 console.error("Error sending order:", e);
                 showToast('שגיאה בשליחת ההזמנה'); 
                 nextBtn.disabled = false; 
                 nextBtn.innerText = originalText; 
-            }
-        }
-
-        function setupWhatsAppButton(code, formData, itemsText) {
-            const managerPhone = aboutConfig['וואטסאפ'] || aboutConfig['טלפון'] || '';
-            if (!managerPhone) return;
-
-            const cleanPhone = managerPhone.replace(/\D/g, '');
-            const formattedPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.substring(1) : cleanPhone;
-
-            const textMessage = `היי, שלחתי בקשת הזמנה חדשה במערכת! 🌟
-👤 שם: ${formData.name}
-📱 טלפון: ${formData.phone}
-🔑 קוד הזמנה: *${code}*
-📅 תאריכים: מ-${formData.pDate} עד ${formData.rDate}
-📦 ציוד מבוקש:
-${itemsText.replace(/, /g, '\n')}
-✍️ הערות: ${formData.notes || 'אין הערות'}`;
-
-            const waBtn = document.getElementById('whatsapp-send-btn');
-            if (waBtn) {
-                waBtn.href = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(textMessage)}`;
             }
         }
 
@@ -1781,36 +1744,14 @@ ${itemsText.replace(/, /g, '\n')}
                             נא לשמור את הקוד לחיפוש, עדכון או ביטול ההזמנה בעתיד.
                         </p>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
-                        <a href="#" target="_blank" id="whatsapp-send-btn" class="py-5 bg-[#25D366] text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-all">
-                            <i data-lucide="message-circle" class="w-5 h-5"></i> שלח הודעת אישור למנהל
-                        </a>
-                        <button onclick="preparePrint()" class="py-5 gold-gradient text-navy rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-all">
+                    <div class="flex justify-center pt-4">
+                        <button onclick="preparePrint()" class="w-full md:w-1/2 py-5 gold-gradient text-navy rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-all">
                             <i data-lucide="printer" class="w-5 h-5"></i> הדפסת אישור
-                        </button>
-                        <button onclick="downloadPdf()" class="py-5 bg-navy text-white rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-all">
-                            <i data-lucide="file-text" class="w-5 h-5"></i> הורד כקובץ PDF
                         </button>
                     </div>
                     <button onclick="location.reload()" class="w-full py-4 text-gray-400 font-bold text-sm hover:text-navy dark:hover:text-white transition-colors">חזרה לדף הבית ⇠</button>
                 </div>`;
             lucide.createIcons();
-        }
-
-        function downloadPdf() {
-            const element = document.getElementById('print-area');
-            const opt = {
-                margin:       [0.4, 0.4, 0.4, 0.4], 
-                filename:     `order-confirmation-${activeOrderCode || 'code'}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-            
-            element.classList.remove('hidden');
-            html2pdf().set(opt).from(element).save().then(() => {
-                element.classList.add('hidden');
-            });
         }
 
         function nextStep() { if (currentStep < 3) goToStep(currentStep + 1); else sendOrder(); }
@@ -1890,7 +1831,7 @@ ${itemsText.replace(/, /g, '\n')}
                 localStorage.removeItem('gemach_cart');
                 activeOrderCode = null;
                 cart = [];
-                showToast('ההזמנה בוטלה ונמחקה בהצלחה');
+                showToast('ההזמנה בבוטלה ונמחקה בהצלחה');
                 setTimeout(() => location.reload(), 1500);
             } catch (e) {
                 showToast('שגיאה בביטול ההזמנה');
@@ -2273,7 +2214,6 @@ ${itemsText.replace(/, /g, '\n')}
             t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        // פנל סיכום צדדי מורחב התואם את המראה החדש של הקופה ומעדכן תאריכים בזמן אמת
         function updateCartSummary() {
             const summaryCount = document.getElementById('full-summary-count');
             const summaryDates = document.getElementById('full-summary-dates');
