@@ -717,7 +717,29 @@
         let groupedProducts = [];
         let productState = {};
         let aboutConfig = {};
-        let cart = JSON.parse(localStorage.getItem('gemach_cart')) || [];
+// פונקציה לגישה בטוחה למניעת קריסות במובייל / גלישה בסתר
+function safeGetItem(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch (e) {
+        console.warn("LocalStorage blocked in this browser context.");
+        return null;
+    }
+}
+
+function safeSetItem(key, value) {
+    try {
+        localStorage.setItem(key, value);
+    } catch (e) {}
+}
+
+let cart = [];
+try {
+    const savedCart = safeGetItem('gemach_cart');
+    cart = savedCart ? JSON.parse(savedCart) : [];
+} catch(e) {
+    cart = [];
+}
         let currentStep = 1;
         let currentCategory = 'הכל';
         let activeOrderCode = null;
@@ -2186,7 +2208,7 @@
             }
         }
 
-        function saveCart() { localStorage.setItem('gemach_cart', JSON.stringify(cart)); updateCartUI(); }
+       function saveCart() { safeSetItem('gemach_cart', JSON.stringify(cart)); updateCartUI(); }
         
         function updateCartUI() {
             const count = document.getElementById('cart-count');
@@ -2377,9 +2399,10 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('theme') === 'dark' ||
-               (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = safeGetItem('theme');
+            if (savedTheme === 'dark' ||
+               (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.body.classList.add('dark');
             }
             const isDark = document.body.classList.contains('dark');
