@@ -846,21 +846,22 @@ try {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function formatImageUrl(url) {
-            if (!url) return DEFAULT_IMG;
-            if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
-                let id = '';
-                try {
-                    if (url.includes('id=')) {
-                        id = url.split('id=')[1].split('&')[0];
-                    } else if (url.includes('/d/')) {
-                        id = url.split('/d/')[1].split('/')[0];
-                    }
-                } catch (e) { console.error("Error parsing Drive URL", e); }
-                if (id) return `https://lh3.googleusercontent.com/u/0/d/${id}=w800-rw`;
+    function formatImageUrl(url) {
+    if (!url) return DEFAULT_IMG;
+    if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
+        let id = '';
+        try {
+            if (url.includes('id=')) {
+                id = url.split('id=')[1].split('&')[0];
+            } else if (url.includes('/d/')) {
+                id = url.split('/d/')[1].split('/')[0];
             }
-            return url;
-        }
+        } catch (e) { console.error("Error parsing Drive URL", e); }
+        // שינוי הכתובת לכתובת ציבורית עוקפת חסימות וריבוי חשבונות
+        if (id) return `https://lh3.googleusercontent.com/d/${id}=w800-rw`;
+    }
+    return url;
+}
 
         async function init() {
             enableBasicCodeProtection();
@@ -1147,7 +1148,7 @@ try {
 
                 return `
                     <div role="button" tabindex="0" onclick="enterCategory('${catEscaped}')" onkeypress="if(event.key === 'Enter') enterCategory('${catEscaped}')" class="category-box" aria-label="קטגוריית ${cat}">
-                        <img src="${bgImage}" alt="${cat}">
+                       <img src="${bgImage}" alt="${cat}" referrerpolicy="no-referrer">
                         <h3>${cat}</h3>
                     </div>
                 `;
@@ -1376,7 +1377,7 @@ try {
                     <div class="item-card bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75' : ''}">
                         <div class="item-image-wrapper h-64 ${currentLayout === 'list' ? 'w-48 h-auto' : 'w-full'} overflow-hidden relative bg-gray-100 dark:bg-zinc-800">
                            ${sliderHTML}
-                         <img src="${gridImg}" loading="lazy" decoding="async" alt="${pNameSafe}" class="w-full h-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-105" onclick="openImage('${cardImg}')">
+                       <img src="${gridImg}" loading="lazy" decoding="async" alt="${pNameSafe}" class="w-full h-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-105" onclick="openImage('${cardImg}')" referrerpolicy="no-referrer">
                            <div class="absolute bottom-2 right-2 bg-white/90 dark:bg-zinc-800/95 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-navy dark:text-white shadow-sm">
                                ${p.קטגוריה}
                            </div>
