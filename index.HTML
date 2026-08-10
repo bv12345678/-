@@ -1,0 +1,2056 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>מערכת ניהול והזמנת מלאי</title>
+    <meta name="description" id="meta-desc" content="מערכת חכמה לניהול מלאי, קטלוג פריטים והזמנות אונליין בקלות.">
+    <!-- חסימה קשיחה של סריקת מנועי חיפוש להגנה ודיסקרטיות -->
+    <meta name="robots" content="noindex, nofollow">
+    
+    <link rel="preconnect" href="https://script.google.com" crossorigin>
+    <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+      
+    <!-- תגיות שיתוף מותאמות לווצאפ ורשתות חברתיות -->
+    <meta property="og:title" id="og-title" content="גמח אירועים נריה">
+    <meta property="og:description" id="og-desc" content="אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד .">
+    <meta property="og:image" id="og-img" content="https://bv12345678.github.io/-/preview.jpg">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="he_IL">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: 'var(--navy)',
+                        gold: 'var(--gold)'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+        
+        :root {
+            --gold: #C5A059;
+            --navy: #1A1C2C;
+            --bg-color: #fcfcfc;
+            --text-color: #1A1C2C;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --input-bg: #f9fafb;
+            --text-muted: #64748b;
+        }
+
+        body.dark {
+            --gold: #F1D27B;
+            --navy: #0b1f3a;
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+            --input-bg: #2c2c2c;
+            --text-muted: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        .text-slate-800 { color: var(--text-color); }
+        .bg-white { background-color: var(--card-bg); }
+        .border-gray-100 { border-color: var(--border-color); }
+        .bg-gray-50 { background-color: var(--input-bg); }
+        .text-gray-500 { color: var(--text-muted); }
+        .serif { font-family: 'Rubik', sans-serif; font-weight: 900; }
+        .gold-gradient { background: linear-gradient(135deg, #C5A059 0%, #F1D27B 50%, #C5A059 100%); }
+        .card-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); }
+        
+        .hero-section {
+            background: linear-gradient(to bottom, rgba(26, 28, 44, 0.4), rgba(26, 28, 44, 0.7)), url('preview.jpg');
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
+            background-attachment: scroll;
+        }
+
+        #current-greeting {
+            font-size: 2rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.5rem;
+            font-family: 'Rubik', sans-serif;
+            letter-spacing: 0.05em;
+        }
+        
+        .step-item {
+            color: var(--text-muted);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .step-item.step-active { color: var(--gold); }
+        
+        .step-item.step-completed {
+            color: var(--navy);
+            font-weight: 800;
+        }
+        
+        .step-item .step-progress-bar {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--gold);
+            width: 0%;
+            transition: width 0.5s ease-out;
+        }
+        
+        .step-item.step-active .step-progress-bar { width: 50%; }
+        .step-item.step-completed .step-progress-bar { width: 100%; }
+        
+        .loader {
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            border-top: 4px solid var(--gold);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 0.8s ease-in-out infinite;
+            box-shadow: 0 0 5px rgba(197, 160, 89, 0.5);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .full-page-loader {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(26, 28, 44, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        #toast { 
+            position: fixed; 
+            bottom: 20px; 
+            right: 20px; 
+            transform: translateY(150%); 
+            transition: transform 0.3s ease; 
+            z-index: 1000; 
+            background-color: var(--navy); 
+            color: white; 
+            padding: 1rem 1.5rem; 
+            border-radius: 1rem; 
+            border-right: 4px solid var(--gold); 
+        }
+        
+        #toast.show { transform: translateY(0); }
+        
+        #whatsapp-float { 
+            position: fixed; 
+            bottom: 20px; 
+            left: 20px; 
+            z-index: 999; 
+            background: #25D366; 
+            color: white; 
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2); 
+            animation: pulse 2s infinite; 
+        }
+        
+        @keyframes pulse { 
+            0% { transform: scale(1); } 
+            50% { transform: scale(1.1); } 
+            100% { transform: scale(1); } 
+        }
+        
+        @media print { 
+            .no-print { display: none !important; } 
+            body { background: white; } 
+            #print-area { display: block !important; } 
+        }
+        
+        details summary::-webkit-details-marker { display:none; }
+        
+        .map-container iframe { 
+            width: 100%; 
+            height: 100%; 
+            border: 0; 
+            filter: grayscale(20%) contrast(1.2) opacity(0.9); 
+            border-radius: 1.5rem; 
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .category-box {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.5rem;
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .category-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+        }
+        
+        .category-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(26, 28, 44, 0.45);
+            transition: background 0.2s;
+            z-index: 1;
+        }
+        
+        .category-box:hover::before { background: rgba(197, 160, 89, 0.35); }
+        
+        .category-box img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+            z-index: 0;
+        }
+        
+        .category-box h3 {
+            position: relative;
+            z-index: 2;
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            font-family: 'Rubik', sans-serif;
+        }
+        
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
+        
+        .pop-animation {
+            animation: pop 0.25s ease-out;
+            display: inline-block;
+        }
+
+        #inventory-grid.grid-view {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        #inventory-grid.list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        #inventory-grid.list-view .item-card {
+            flex-direction: row;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        #inventory-grid.list-view .item-card .item-image-wrapper {
+            width: 150px;
+            height: 150px;
+            flex-shrink: 0;
+            margin-left: 1.5rem;
+            margin-right: 0;
+        }
+        
+        #inventory-grid.list-view .item-card .item-content {
+            flex-grow: 1;
+            text-align: right;
+        }
+        
+        #inventory-grid.list-view .item-card .item-details { flex-grow: 1; }
+        
+        #inventory-grid.list-view .item-card .item-actions {
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-right: 1.5rem;
+        }
+
+        .item-card {
+            transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+        }
+        
+        .item-card:hover {
+            border-color: transparent;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transform: translateY(-4px);
+        }
+
+        button, a, .category-box, input, textarea {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button:active, a:active {
+            transform: scale(0.96) !important;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div id="full-page-loader" class="full-page-loader">
+        <div class="loader mb-4"></div>
+        טוען נתונים...
+    </div>    
+
+    <div id="toast" class="shadow-2xl flex items-center gap-3">
+        <i data-lucide="info" class="text-gold"></i>
+        <span id="toast-msg"></span>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" onclick="this.classList.add('hidden')" class="hidden fixed inset-0 bg-black/90 z-[300] flex items-center justify-center p-4 cursor-pointer backdrop-blur-sm no-print">
+        <img id="lightbox-img" src="" alt="תצוגה מוגדלת" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl border-2 border-gold object-contain transition-transform transform scale-95 duration-200" onclick="event.stopPropagation()">
+        <button onclick="document.getElementById('lightbox').classList.add('hidden')" class="absolute top-4 right-4 text-white/80 hover:text-white p-2 bg-white/10 rounded-full" aria-label="סגור תמונה"><i data-lucide="x"></i></button>
+        <p class="absolute bottom-10 text-white/70 text-sm">לחץ בכל מקום לסגירה</p>
+    </div>
+
+    <!-- Legal Documents Modal -->
+    <div id="legal-modal" class="fixed inset-0 bg-navy/80 backdrop-blur-md z-[250] hidden flex items-center justify-center p-4 no-print" onclick="closeLegalModal()">
+        <div class="bg-white rounded-[2rem] w-full max-w-3xl max-h-[80vh] overflow-hidden flex flex-col shadow-2xl" onclick="event.stopPropagation()">
+            <div class="p-6 bg-[#0b1f3a] text-[#f5d37a] flex justify-between items-center">
+                <h2 id="legal-modal-title" class="text-xl font-bold serif text-[#f5d37a]">---</h2>
+                <button onclick="closeLegalModal()" class="p-2 text-[#f5d37a] bg-white/10 rounded-full hover:bg-white/20 transition-colors" aria-label="סגור"><i data-lucide="x"></i></button>
+            </div>
+            <div id="legal-modal-content" class="flex-1 overflow-y-auto p-8 text-right text-slate-800 text-sm whitespace-pre-wrap leading-relaxed"></div>
+        </div>
+    </div>
+
+    <a href="#" target="_blank" id="whatsapp-float" class="no-print hidden" aria-label="צור קשר בוואטסאפ">
+        <i data-lucide="message-circle" class="w-8 h-8"></i>
+    </a>
+
+    <!-- תפריט עליון קבוע -->
+    <nav class="sticky top-0 z-50 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-b border-gray-100 dark:border-white/10 px-4 md:px-6 py-4 no-print shadow-sm transition-all">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-6">
+                <!-- לוגו מותג -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="showView('home')">
+                    <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center shadow-md">
+                        <i data-lucide="sparkles" class="text-navy w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <div id="nav-brand-title" class="text-lg md:text-xl font-bold serif leading-none text-navy dark:text-white">מערכת הזמנות</div>
+                        <p class="text-[9px] tracking-[0.15em] uppercase opacity-70 dark:text-white/60">Inventory Platform</p>
+                    </div>
+                </div>
+                
+                <!-- תפריט הניווט (כפתור ניהול המלאי הוסר) -->
+                <div class="hidden lg:flex items-center gap-6 border-r border-gray-100 dark:border-zinc-700 pr-6 mr-2">
+                    <button onclick="showView('home')" class="text-base md:text-[17px] font-extrabold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">דף הבית</button>
+                    <button onclick="showView('categories')" class="text-base md:text-[17px] font-extrabold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">קטגוריות</button>
+                    <button onclick="lookupOrder()" class="text-base md:text-[17px] font-extrabold text-navy hover:text-gold dark:text-white dark:hover:text-gold transition-colors">חיפוש/עריכת הזמנה</button>
+                </div>
+            </div>
+
+            <!-- מרכז: שורת חיפוש מהירה -->
+            <div class="flex-1 max-w-md mx-6 relative hidden md:block" id="header-search-container">
+                <label for="searchInput" class="sr-only">חפש בקטלוג...</label>
+                <input type="text" id="searchInput" oninput="handleSearch()" placeholder="חפש מוצרים וקטגוריות בקטלוג..."
+                    class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-gray-50 border border-gray-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-white text-sm outline-none focus:ring-2 focus:ring-gold focus:border-transparent transition-all text-slate-800">
+                <i data-lucide="search" class="absolute left-3 top-3 text-gray-400 w-4.5 h-4.5"></i>
+            </div>
+
+            <div class="flex items-center gap-2 md:gap-3">
+                <div id="layout-toggle-container" class="items-center gap-1 bg-gray-100 dark:bg-zinc-800 p-1 rounded-xl hidden sm:flex">
+                    <button onclick="setLayout('grid')" id="grid-view-btn" class="p-1.5 rounded-lg transition-colors bg-navy text-gold dark:bg-gold dark:text-navy" aria-label="תצוגת גריד">
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="setLayout('list')" id="list-view-btn" class="p-1.5 rounded-lg transition-colors text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700" aria-label="תצוגת רשימה">
+                        <i data-lucide="list" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- החלפת ערכת נושא -->
+                <button onclick="toggleDarkMode()" class="p-2 bg-gray-100 dark:bg-zinc-800 rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-all" aria-label="החלף למצב כהה/בהיר">
+                    <i data-lucide="moon" class="w-4.5 h-4.5 text-navy dark:text-white"></i>
+                </button>        
+
+                <!-- כפתור מעבר לעגלה -->
+                <button id="cart-btn-icon" onclick="showView('cart')" class="relative bg-white dark:bg-zinc-800 p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all" aria-label="עגלת קניות">
+                    <i data-lucide="shopping-cart" class="w-5 h-5 text-navy dark:text-white"></i>
+                    <span id="cart-count" class="absolute -top-1.5 -right-1.5 gold-gradient text-navy text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white dark:border-zinc-800 hidden">0</span>
+                </button>
+
+                <!-- המבורגר מובייל -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 bg-gray-100 dark:bg-zinc-800 rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors" aria-label="תפריט">
+                    <i data-lucide="menu" class="w-5 h-5 text-navy dark:text-white"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- תפריט מובייל (כפתור ניהול המלאי הוסר) -->
+    <div id="mobile-menu" class="hidden absolute top-[70px] left-0 right-0 bg-navy/95 backdrop-blur-xl border-t border-white/10 p-4 z-50 flex flex-col gap-4 md:hidden shadow-2xl">
+        <button onclick="showView('home'); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="home" class="text-gold w-5 h-5"></i>
+            <span class="font-bold">דף הבית</span>
+        </button>
+        <button onclick="showView('categories'); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="grid" class="text-gold w-5 h-5"></i>
+            <span class="font-bold">קטגוריות</span>
+        </button>
+        <button onclick="showView('cart'); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="shopping-bag" class="text-gold w-5 h-5"></i>
+            <span class="font-bold">סל הקניות והקופה</span>
+        </button>
+        <button onclick="lookupOrder(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="search" class="text-gold w-5 h-5"></i>
+            <span class="font-bold">חיפוש/עריכת הזמנה</span>
+        </button>
+        <button onclick="toggleDarkMode(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
+            <i data-lucide="moon" class="text-gold w-5 h-5"></i>
+            <span id="theme-text" class="font-bold">מצב כהה</span>
+        </button>
+    </div>
+
+    <!-- באנר כותרת (Hero Section) -->
+    <header class="hero-section min-h-[18vh] md:min-h-[25vh] flex flex-col relative text-white no-print justify-center items-center">
+        <div class="text-center px-4 z-10 max-w-4xl mx-auto w-full py-6 md:py-8">
+            <div class="space-y-2">
+                <h2 id="current-greeting" class="text-xl md:text-2xl font-light tracking-wide text-white/95"></h2> 
+                <h1 id="hero-title" class="text-3xl md:text-5xl font-bold mb-1 serif text-white">טוען...</h1>
+                <p id="hero-desc" class="text-sm md:text-base text-white/95 max-w-2xl mx-auto font-light leading-relaxed"></p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-8 md:py-16 no-print">
+
+        <!-- שורת חיפוש מובייל -->
+        <div class="relative w-full mb-8 md:hidden" id="mobile-search-container">
+            <label for="searchInputMobile" class="sr-only">חפש בקטלוג...</label>
+            <input type="text" id="searchInputMobile" oninput="handleSearchMobile()" placeholder="חפש מוצרים וקטגוריות בקטלוג..."
+                class="w-full pl-12 pr-6 py-3.5 rounded-2xl bg-white border border-gray-200 shadow-sm focus:ring-2 focus:ring-gold transition-all outline-none dark:bg-zinc-800 dark:border-zinc-700 dark:text-white">
+            <i data-lucide="search" class="absolute left-4 top-4 text-gray-400 w-5 h-5"></i>
+        </div>
+        
+        <!-- ==================== 1. דף הבית ==================== -->
+        <section id="view-home" class="space-y-20 animate-fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 text-right order-2 lg:order-1">
+                    <span class="text-xs font-bold uppercase tracking-widest text-gold border-b-2 border-gold/40 pb-2">קצת עלינו</span>
+                    <h2 class="text-3xl md:text-5xl font-extrabold serif text-navy dark:text-gold" id="home-about-title">ברוכים הבאים</h2>
+                    <p class="text-gray-600 dark:text-gray-300 text-base md:text-lg leading-relaxed font-light" id="home-about-desc">
+                        אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ.
+                    </p>
+                    <div class="pt-4 flex flex-wrap gap-4 justify-start">
+                        <button onclick="showView('categories')" class="px-8 py-4 gold-gradient text-navy font-bold rounded-2xl shadow-lg hover:scale-105 transition-all text-sm md:text-base">
+                            לצפייה בקטלוג הציוד והזמנה ⇠
+                        </button>
+                    </div>
+                </div>
+                <div class="box h-80 w-full overflow-hidden rounded-[2rem] shadow-2xl relative order-1 lg:order-2">
+                    <div class="absolute inset-0 gold-gradient transform rotate-3 scale-102 opacity-25 blur"></div>
+                    <img id="home-about-img" src="preview.jpg" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;100&quot; height=&quot;100&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;%23cccccc&quot; stroke-width=&quot;1&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/></svg>'" alt="תמונת המותג" class="relative z-10 w-full h-full object-cover rounded-[2rem]">
+                </div>
+            </div>
+
+            <div class="bg-gray-50/50 dark:bg-zinc-800/10 rounded-[3rem] p-8 md:p-16 border border-gray-100/50 dark:border-zinc-800/40 text-center space-y-12">
+                <div class="max-w-2xl mx-auto space-y-2">
+                    <h3 class="text-2xl md:text-3xl font-bold serif text-navy dark:text-white">איך מתבצע תהליך השריון וההזמנה?</h3>
+                    <p class="text-sm text-gray-400">חנות-קטלוג חכמה עם שליחה ישירה לוואטסאפ ללא עמלות תיווך</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white dark:bg-zinc-900 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow text-center space-y-4 border border-gray-100 dark:border-zinc-800">
+                        <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center font-black text-navy mx-auto">01</div>
+                        <h4 class="font-bold text-lg text-navy dark:text-white">בוחרים מוצרים</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">נכנסים לקטגוריות, בוחרים את הווריאציה המושלמת עבורכם ומוסיפים לעגלת הקניות.</p>
+                    </div>
+                    <div class="bg-white dark:bg-zinc-900 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow text-center space-y-4 border border-gray-100 dark:border-zinc-800">
+                        <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center font-black text-navy mx-auto">02</div>
+                        <h4 class="font-bold text-lg text-navy dark:text-white">מתאמים תאריכים</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">בעגלת הקניות בוחרים את תאריכי האיסוף וההחזרה לצורך בדיקת זמינות מלאי מלאה.</p>
+                    </div>
+                    <div class="bg-white dark:bg-zinc-900 rounded-[2rem] p-8 shadow-sm hover:shadow-md transition-shadow text-center space-y-4 border border-gray-100 dark:border-zinc-800">
+                        <div class="w-12 h-12 rounded-full gold-gradient flex items-center justify-center font-black text-navy mx-auto">03</div>
+                        <h4 class="font-bold text-lg text-navy dark:text-white">מאשרים בוואטסאפ</h4>
+                        <p class="text-xs text-gray-500 leading-relaxed">שולחים את סיכום ההזמנה וסך התשלום המחושב לוואטסאפ של המנהל ומבצעים תשלום ידני.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 2. דף קטגוריות ==================== -->
+        <section id="view-categories" class="space-y-8 hidden">
+            <div class="text-center md:text-right flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold serif text-navy dark:text-white">קטגוריות הציוד והמוצרים</h2>
+                    <p class="text-sm text-gray-500 mt-1">אנא בחר קטגוריה כדי לצפות במוצרים המשויכים אליה</p>
+                </div>
+                <button onclick="showView('home')" class="text-xs font-bold text-gray-400 hover:text-navy dark:hover:text-white transition-colors flex items-center gap-1">⇠ חזור לדף הבית</button>
+            </div>
+            <div id="home-categories-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- ==================== 3. דף המוצרים והקטלוג ==================== -->
+        <section id="view-products" class="space-y-8 hidden">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-gray-100 dark:border-white/5 pb-4">
+                <div class="flex items-center gap-4">
+                    <button onclick="showView('categories')" class="bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 p-3 rounded-full transition-all flex items-center justify-center gap-2 text-xs font-bold px-4 text-navy dark:text-white shadow-sm">
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i> חזור לקטגוריות
+                    </button>
+                    <div>
+                        <h2 class="text-2xl md:text-3xl font-bold serif text-navy dark:text-white" id="current-category-title">הקטלוג שלנו</h2>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 no-scrollbar scroll-smooth max-w-full" id="category-filters"></div>
+            </div>
+
+            <!-- גריד מוצרים -->
+            <div id="inventory-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-4">
+                <div class="col-span-full text-center py-20"><div class="loader mx-auto mb-4"></div>טוען פריטים...</div>
+            </div>
+            
+            <div id="load-more-container" class="flex justify-center mt-8 mb-12"></div>
+        </section>
+
+        <!-- ==================== 4. עגלה וקופה ==================== -->
+        <section id="view-cart" class="space-y-8 hidden animate-fade-in">
+            <div class="text-center md:text-right border-b border-gray-100 dark:border-white/5 pb-4">
+                <h2 class="text-2xl md:text-4xl font-bold serif text-navy dark:text-white">קופה וסיכום הזמנה</h2>
+                <p class="text-sm text-gray-500 mt-1">אנא עברו על הפריטים, קבעו תאריכים ואשרו את ההזמנה</p>
+            </div>
+            
+            <div id="cart-main-grid" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+                <div class="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow p-6 md:p-10 border border-gray-100 dark:border-zinc-800 space-y-8">
+                    
+                    <div id="full-cart-stepper" class="flex border-b dark:border-zinc-800 text-center text-xs font-bold uppercase tracking-wider pb-6">
+                        <div id="full-step-1-header" onclick="goToStep(1)" class="flex-1 py-3 step-item step-active transition-all relative cursor-pointer">
+                            <span>01. סל פריטים</span>
+                            <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
+                        </div>
+                        <div id="full-step-2-header" onclick="goToStep(2)" class="flex-1 py-3 step-item transition-all relative cursor-pointer">
+                            <span>02. תזמון ופרטי לקוח</span>
+                            <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
+                        </div>
+                        <div id="full-step-3-header" onclick="goToStep(3)" class="flex-1 py-3 step-item transition-all relative cursor-pointer">
+                            <span>03. אישור ושליחה</span>
+                            <div class="step-progress-bar w-0 absolute bottom-0 right-0 h-1 bg-gold transition-all duration-500"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="full-cart-content" class="min-h-[250px]"></div>
+                </div>
+
+                <!-- סיכום זמני צדדי -->
+                <div class="bg-gray-50 dark:bg-zinc-900/40 rounded-[2rem] p-6 md:p-8 space-y-6 border border-gray-100 dark:border-zinc-800">
+                    <h3 class="font-bold text-lg text-navy dark:text-white border-b pb-3 border-gray-200 dark:border-zinc-800">סיכום זמני בקופה</h3>
+                    
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">סה"כ פריטים שונים:</span>
+                            <span id="full-summary-count" class="font-bold text-navy dark:text-white">0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-400">טווח תאריכים:</span>
+                            <span id="full-summary-dates" class="font-bold text-navy dark:text-white">טרם נבחרו</span>
+                        </div>
+                        <div id="full-active-order-label" class="hidden text-gold font-bold text-xs bg-gold/10 p-2 rounded-xl text-center border border-gold/20">
+                            עריכת הזמנה פעילה (קוד: <span id="full-active-code">---</span>)
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4 border-t border-gray-200 dark:border-zinc-800 space-y-3">
+                        <div id="full-cancel-order-area" class="hidden">
+                            <button onclick="cancelCurrentOrder()" class="w-full py-3 text-red-500 text-xs font-bold border border-red-100 dark:border-red-900/35 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors">ביטול ומחיקת ההזמנה מהמערכת</button>
+                        </div>
+                        <div class="flex gap-3">
+                            <button id="full-prevBtn" onclick="prevStep()" class="hidden flex-1 py-4 rounded-2xl border border-gray-200 dark:border-zinc-700 font-bold hover:bg-gray-50 dark:hover:bg-zinc-800 text-slate-800 dark:text-white transition-all text-xs md:text-sm">חזור</button>
+                            <button id="full-nextBtn" onclick="nextStep()" class="flex-[2] gold-gradient py-4 rounded-2xl font-bold text-navy shadow-xl hover:scale-[1.02] active:scale-95 transition-all text-xs md:text-sm">המשך לשלב הבא</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cart-success-container" class="hidden bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow p-6 md:p-10 border border-gray-100 dark:border-zinc-800 max-w-4xl mx-auto"></div>
+        </section>
+
+        <!-- בלוק המיקום והניווט -->
+        <div id="location-block" class="bg-white dark:bg-zinc-900 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 shadow-xl border border-gray-100 dark:border-zinc-800 flex flex-col md:flex-row gap-8 items-center justify-between mt-20 hidden">
+            <div class="w-full md:w-1/2 space-y-6">
+                <div>
+                    <h2 id="location-title" class="text-2xl font-bold serif text-navy dark:text-white mb-2">מיקום ואיסוף</h2>
+                    <p id="location-desc" class="text-gray-500 dark:text-gray-400 text-sm md:text-base">האיסוף וההחזרה מתבצעים בתיאום מראש בלבד בשעות הפעילות.</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 w-full">
+                    <a id="waze-btn" href="#" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 bg-[#33CCFF] hover:bg-[#2cb5e3] text-white py-3.5 px-4 rounded-xl font-bold transition-transform hover:scale-105 shadow-md text-xs sm:text-sm hidden">
+                        <i data-lucide="navigation" class="w-4 h-4"></i>
+                        נווט עם Waze
+                    </a>
+                    <a id="gmaps-btn" href="#" target="_blank" rel="noopener noreferrer" class="flex-1 flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 px-4 rounded-xl font-bold transition-transform hover:scale-105 shadow-md text-xs sm:text-sm hidden">
+                        <i data-lucide="map" class="w-4 h-4"></i>
+                        נווט עם Google Maps
+                    </a>
+                </div>
+            </div>
+            <div class="w-full md:w-1/2 h-56 md:h-80 bg-gray-200 dark:bg-zinc-800 rounded-[1.5rem] map-container shadow-inner overflow-hidden relative">
+                <iframe id="map-iframe" title="מפת הגעה" src="" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+                <div class="absolute inset-0 pointer-events-none border-[6px] border-white/50 dark:border-zinc-900/50 rounded-[1.5rem]"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- עימוד אישור הזמנה להדפסה -->
+    <div id="print-area" class="hidden text-right p-6 bg-white text-slate-900 max-w-2xl mx-auto border border-gray-200 rounded-xl">
+        <div class="border-b-4 border-navy pb-3 mb-6">
+            <h1 id="print-brand-title" class="text-3xl font-extrabold serif text-navy">אישור הזמנה</h1>
+            <p id="print-order-id" class="text-lg font-bold mt-1 text-gold"></p>
+        </div>
+        <div id="print-user-info" class="mb-6 space-y-2 text-base border-b pb-4 border-gray-100"></div>
+        <table class="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden mb-6">
+            <thead>
+                <tr class="bg-[#1A1C2C] text-white text-sm">
+                    <th class="p-3 border border-gray-200 text-right font-bold">פריט</th>
+                    <th class="p-3 border border-gray-200 text-center font-bold w-24">כמות</th>
+                </tr>
+            </thead>
+            <tbody id="print-items-list" class="text-sm"></tbody>
+        </table>
+        <p id="print-consent-timestamp" class="text-[10px] text-gray-400 mt-6 font-mono border-t pt-4 border-gray-100"></p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-navy text-white/80 py-12 border-t border-white/10 mt-16 no-print">
+        <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-right">
+            <div class="space-y-3">
+                <h4 class="font-bold text-lg text-gold serif italic" id="footer-brand-title">---</h4>
+                <p class="text-xs text-white/60 leading-relaxed" id="footer-brand-desc">---</p>
+                <p class="text-xs text-white/60 font-mono" id="footer-business-id">---</p>
+            </div>
+            <div class="space-y-3">
+                <h4 class="font-bold text-sm text-gold uppercase tracking-wider">פרטי התקשרות ונגישות</h4>
+                <p class="text-xs flex items-center gap-2" id="footer-address-p"><i data-lucide="map-pin" class="w-4 h-4 text-gold"></i> <span id="footer-address">---</span></p>
+                <p class="text-xs flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-gold"></i> <span id="footer-phone">---</span></p>
+                <p class="text-xs flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4 text-gold"></i> <span id="footer-email">---</span></p>
+            </div>
+            <div class="space-y-3">
+                <h4 class="font-bold text-sm text-gold uppercase tracking-wider">מידע משפטי ותנאים</h4>
+                <ul class="space-y-2 text-xs">
+                    <li><button onclick="openLegalModal('תקנון')" class="hover:text-gold transition-colors text-right outline-none">תנאי שימוש ותקנון האתר</button></li>
+                    <li><button onclick="openLegalModal('מדיניות פרטיות')" class="hover:text-gold transition-colors text-right outline-none">מדיניות פרטיות</button></li>
+                    <li><button onclick="openLegalModal('הצהרת נגישות')" class="hover:text-gold transition-colors text-right outline-none">הצהרת נגישות</button></li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 mt-8 pt-8 border-t border-white/5 text-center text-[10px] text-white/40">
+            <p>© 2026 כל הזכויות שמורות. המערכת מופעלת על ידי בעלי האתר.</p>
+        </div>
+    </footer>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4f1QrovCOzIo8v3nhIfvhnjKGdh8Wh0vK4RZgPUkaPewzG2HTF8Wudh4GqUu0P79q/exec';
+        const DEFAULT_IMG = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="%23cccccc" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+      
+        let inventory = [];
+        let groupedProducts = [];
+        let productState = {};
+        let aboutConfig = {};
+
+        function safeGetItem(key) {
+            try { return localStorage.getItem(key); } catch (e) { return null; }
+        }
+
+        function safeSetItem(key, value) {
+            try { localStorage.setItem(key, value); } catch (e) {}
+        }
+
+        let cart = [];
+        try {
+            const savedCart = safeGetItem('gemach_cart');
+            cart = savedCart ? JSON.parse(savedCart) : [];
+        } catch(e) {
+            cart = [];
+        }
+
+        let currentStep = 1;
+        let currentCategory = 'הכל';
+        let activeOrderCode = null;
+        let pendingFormData = {}; 
+
+        let displayedItems = []; 
+        let itemsToShow = 12;    
+        const ITEMS_BATCH = 12;  
+        let currentLayout = localStorage.getItem('inventoryLayout') || 'grid';
+        let currentView = 'home';
+
+        function enableBasicCodeProtection() {
+            document.addEventListener('contextmenu', event => event.preventDefault());
+            document.addEventListener('keydown', event => {
+                if (
+                    event.key === 'F12' || 
+                    (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'i' || event.key === 'C' || event.key === 'c' || event.key === 'J' || event.key === 'j')) ||
+                    (event.ctrlKey && (event.key === 'U' || event.key === 'u'))
+                ) {
+                    event.preventDefault();
+                    showToast('העתקת קוד חסומה במערכת זו.');
+                }
+            });
+        }
+
+        function getDisplayName(pName, selections) {
+            if (!selections) return pName;
+            const filtered = Object.entries(selections)
+                .filter(([k, v]) => v !== undefined && v !== null && v !== '')
+                .map(([k, v]) => [k.trim(), v.toString().trim()]);
+            
+            filtered.sort((a, b) => a[0].localeCompare(b[0]));
+            
+            const attrStr = filtered.map(([k, v]) => `${k}: ${v}`).join(', ');
+            return attrStr ? `${pName} (${attrStr})` : pName;
+        }
+
+        function getDisplayNameForVariation(vRow) {
+            if (!vRow) return '';
+            const pName = vRow.שם_פריט;
+            const selections = {};
+            Object.keys(vRow).forEach(key => {
+                if (key.startsWith('וריאציה_') && vRow[key]) {
+                    selections[key.replace('וריאציה_', '').trim()] = vRow[key];
+                }
+            });
+            return getDisplayName(pName, selections);
+        }
+
+        function generateSecureOrderCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+
+        function showView(view) {
+            currentView = view;
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-categories').classList.add('hidden');
+            document.getElementById('view-products').classList.add('hidden');
+            document.getElementById('view-cart').classList.add('hidden');
+            
+            const headerSearch = document.getElementById('header-search-container');
+            const layoutToggle = document.getElementById('layout-toggle-container');
+            const heroSection = document.querySelector('.hero-section');
+
+            if (view === 'home') {
+                document.getElementById('view-home').classList.remove('hidden');
+                headerSearch.classList.add('invisible');
+                layoutToggle.classList.add('invisible');
+                if (heroSection) heroSection.classList.remove('hidden');
+            } else if (view === 'categories') {
+                document.getElementById('view-categories').classList.remove('hidden');
+                headerSearch.classList.add('invisible');
+                layoutToggle.classList.add('invisible');
+                if (heroSection) heroSection.classList.add('hidden');
+                renderHomeCategories();
+            } else if (view === 'products') {
+                document.getElementById('view-products').classList.remove('hidden');
+                headerSearch.classList.remove('invisible');
+                layoutToggle.classList.remove('invisible');
+                if (heroSection) heroSection.classList.add('hidden');
+            } else if (view === 'cart') {
+                document.getElementById('view-cart').classList.remove('hidden');
+                headerSearch.classList.add('invisible');
+                layoutToggle.classList.add('invisible');
+                if (heroSection) heroSection.classList.add('hidden');
+                
+                document.getElementById('cart-main-grid').classList.remove('hidden');
+                document.getElementById('cart-success-container').classList.add('hidden');
+                
+                goToStep(1);
+                updateCartSummary();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function formatImageUrl(url) {
+            if (!url) return DEFAULT_IMG;
+            if (url.includes('drive.google.com') || url.includes('docs.google.com')) {
+                let id = '';
+                try {
+                    if (url.includes('id=')) {
+                        id = url.split('id=')[1].split('&')[0];
+                    } else if (url.includes('/d/')) {
+                        id = url.split('/d/')[1].split('/')[0];
+                    }
+                } catch (e) { console.error("Error parsing Drive URL", e); }
+                if (id) return `https://lh3.googleusercontent.com/d/${id}=w800-rw`;
+            }
+            return url;
+        }
+
+        async function init() {
+            enableBasicCodeProtection();
+            await fetchInventory();
+        }
+
+        async function fetchInventory(pDate = '', rDate = '', showLoader = true) {
+            const fullPageLoader = document.getElementById('full-page-loader');
+            if (showLoader) {
+                fullPageLoader.classList.remove('hidden');
+            }
+
+            try {
+                let url = SCRIPT_URL;
+                if (pDate && rDate) {
+                    url += `?pDate=${encodeURIComponent(pDate)}&rDate=${encodeURIComponent(rDate)}`;
+                }
+                
+                const res = await fetch(url);
+                const data = await res.json();
+                
+                const rawInventory = data.Inventory || data['מלאי'] || data.מלאי || [];
+                inventory = rawInventory.map(i => ({
+                    ...i,
+                    status: (i['תיאור_אפשרי'] && i['תיאור_אפשרי'].trim().toLowerCase() === 'hidden') ? 'hidden' : 'active',
+                    מלאי: parseInt(i.מלאי || i['מלאי'] || 0),
+                    available_stock: i.available_stock !== undefined ? parseInt(i.available_stock) : parseInt(i.מלאי || i['מלאי'] || 0)
+                }));
+
+                aboutConfig = data.About || data['אודות'] || data.אודות || {};
+                
+                processInventory();
+                initProductStates();
+                applyConfig();
+                
+                if (currentView === 'products') {
+                    filterByCategory(currentCategory);
+                }
+                
+                updateCartUI();
+                updateCartSummary();
+                
+                try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
+            } catch (e) { 
+                console.error(e);
+                showToast('שגיאה בטעינת הנתונים מהשרת'); 
+            } finally {
+                fullPageLoader.classList.add('hidden');
+            }
+        }
+
+        function processInventory() {
+            const groups = {};
+            inventory.forEach(item => {
+                if (item.status === 'hidden') return;
+                const name = item.שם_פריט;
+                if (!groups[name]) {
+                    groups[name] = {
+                        שם_פריט: name,
+                        קטגוריה: item.קטגוריה || 'כללי',
+                        variations: [],
+                        images: [],
+                        attributes: {},
+                        status: item.status
+                    };
+                }
+                groups[name].variations.push(item);
+                
+                if (item.תמונה) {
+                    const imgUrl = formatImageUrl(item.תמונה);
+                    if (!groups[name].images.includes(imgUrl)) {
+                        groups[name].images.push(imgUrl);
+                    }
+                }
+
+                Object.keys(item).forEach(key => {
+                    if (key.startsWith('וריאציה_') && item[key]) {
+                        const attrName = key.replace('וריאציה_', '').trim();
+                        if (!groups[name].attributes[attrName]) {
+                            groups[name].attributes[attrName] = new Set();
+                        }
+                        groups[name].attributes[attrName].add(item[key].toString().trim());
+                    }
+                });
+            });
+
+            groupedProducts = Object.values(groups).map(g => {
+                const cleanAttrs = {};
+                Object.keys(g.attributes).forEach(k => {
+                    cleanAttrs[k] = Array.from(g.attributes[k]);
+                });
+                return {
+                    ...g,
+                    attributes: cleanAttrs,
+                    images: g.images.length > 0 ? g.images : [DEFAULT_IMG]
+                };
+            });
+        }
+
+        function initProductStates() {
+            groupedProducts.forEach(p => {
+                if (!productState[p.שם_פריט]) {
+                    const defaultSelections = {};
+                    Object.keys(p.attributes).forEach(attr => {
+                        defaultSelections[attr] = p.attributes[attr][0] || '';
+                    });
+                    productState[p.שם_פריט] = {
+                        selectedAttributes: defaultSelections,
+                        currentImageIndex: 0
+                    };
+                }
+            });
+        }
+
+        function getMatchingVariation(pName) {
+            const p = groupedProducts.find(x => x.שם_פריט === pName);
+            if (!p) return null;
+            const selections = productState[pName]?.selectedAttributes || {};
+            
+            let match = p.variations.find(v => {
+                return Object.entries(selections).every(([attrName, val]) => {
+                    const key = 'וריאציה_' + attrName;
+                    return String(v[key] || '').trim() === String(val).trim();
+                });
+            });
+
+            if (!match && p.variations.length > 0) {
+                match = p.variations[0];
+            }
+            return match;
+        }
+
+        function getCardImage(pName) {
+            const p = groupedProducts.find(x => x.שם_פריט === pName);
+            if (!p) return DEFAULT_IMG;
+            
+            const state = productState[pName];
+            const idx = state ? state.currentImageIndex : 0;
+            if (p.images && p.images[idx]) {
+                return p.images[idx];
+            }
+            return DEFAULT_IMG;
+        }
+
+        function applyConfig() {
+            if (!aboutConfig) return;
+            
+            const name = aboutConfig['שם המקום'] || 'מערכת ניהול מלאי';
+            const desc = aboutConfig['תיאור'] || 'הזמנת פריטים אונליין בקלות';
+            const phone = aboutConfig['טלפון'] || '';
+            const whatsapp = aboutConfig['וואטסאפ'] || '';
+            const location = aboutConfig['מיקום'] || '';
+            const waze = aboutConfig['קישור וויז'] || '';
+            const bizId = aboutConfig['ח.פ / ע.מ'] || '';
+
+            const heroTitle = aboutConfig['כותרת הירו'] || name;
+            const heroDesc = aboutConfig['תיאור הירו'] || desc;
+            const bgImg = aboutConfig['תמונת רקע הירו'] || aboutConfig['תמונת רקע'] || '';
+
+            document.title = `${name} | הזמנה אונליין`;
+            document.getElementById('nav-brand-title').innerText = name;
+            document.getElementById('hero-title').innerText = heroTitle;
+            document.getElementById('hero-desc').innerText = heroDesc;
+            document.getElementById('print-brand-title').innerText = `אישור הזמנה - ${name}`;
+
+            const metaDesc = document.getElementById('meta-desc') || document.querySelector('meta[name="description"]');
+            if (metaDesc) metaDesc.setAttribute('content', desc);
+
+            const ogTitle = document.getElementById('og-title') || document.querySelector('meta[property="og:title"]');
+            if (ogTitle) ogTitle.setAttribute('content', heroTitle);
+
+            const ogDesc = document.getElementById('og-desc') || document.querySelector('meta[property="og:description"]');
+            if (ogDesc) ogDesc.setAttribute('content', heroDesc);
+
+            const ogImg = document.getElementById('og-img') || document.querySelector('meta[property="og:image"]');
+            if (ogImg && bgImg) ogImg.setAttribute('content', formatImageUrl(bgImg));
+
+            const aboutTitle = aboutConfig['כותרת אודות'] || 'ברוכים הבאים';
+            const aboutDesc = aboutConfig['תיאור אודות'] || aboutConfig['אודות'] || 'אצלנו תמצאו פתרון קטלוג חכם וקל לניהול, השאלה ושריון ציוד ומכירות אונליין מהירות ישירות לוואטסאפ.';
+            const aboutImg = aboutConfig['תמונת אודות'] || '';
+
+            document.getElementById('home-about-title').innerText = aboutTitle;
+            document.getElementById('home-about-desc').innerText = aboutDesc;
+            
+            if (aboutImg) {
+                document.getElementById('home-about-img').src = formatImageUrl(aboutImg);
+            } else {
+                document.getElementById('home-about-img').src = 'preview.jpg';
+            }
+
+            if (bgImg) {
+                document.querySelector('.hero-section').style.backgroundImage = `linear-gradient(to bottom, rgba(26, 28, 44, 0.3), rgba(26, 28, 44, 0.7)), url('${formatImageUrl(bgImg)}')`;
+            }
+
+            const waFloat = document.getElementById('whatsapp-float');
+            if (whatsapp && waFloat) {
+                const cleanPhone = whatsapp.replace(/\D/g, '');
+                const formattedPhone = cleanPhone.startsWith('0') ? '972' + cleanPhone.substring(1) : cleanPhone;
+                waFloat.href = `https://wa.me/${formattedPhone}`;
+                waFloat.classList.remove('hidden');
+            }
+
+            if (location || waze) {
+                document.getElementById('location-block').classList.remove('hidden');
+                document.getElementById('location-title').innerText = `מיקום ואיסוף - ${name}`;
+                document.getElementById('location-desc').innerText = location || 'האיסוף וההחזרה מתבצעים בתיאום מראש בלבד.';
+                
+                const wazeBtn = document.getElementById('waze-btn');
+                if (waze && waze.trim() !== '') {
+                    let wazeUrl = waze.trim();
+                    if (!wazeUrl.startsWith('http://') && !wazeUrl.startsWith('https://') && !wazeUrl.startsWith('waze://')) {
+                        wazeUrl = `https://waze.com/ul?q=${encodeURIComponent(wazeUrl)}&navigate=yes`;
+                    }
+                    wazeBtn.href = wazeUrl;
+                    wazeBtn.classList.remove('hidden');
+                } else if (location && location.trim() !== '') {
+                    wazeBtn.href = `https://waze.com/ul?q=${encodeURIComponent(location.trim())}&navigate=yes`;
+                    wazeBtn.classList.remove('hidden');
+                } else {
+                    wazeBtn.classList.add('hidden');
+                }
+
+                const gmapsBtn = document.getElementById('gmaps-btn');
+                if (location && location.trim() !== '') {
+                    gmapsBtn.href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`;
+                    gmapsBtn.classList.remove('hidden');
+                } else {
+                    gmapsBtn.classList.add('hidden');
+                }
+                
+                const mapIframe = document.getElementById('map-iframe');
+                if (location && location.trim() !== '') {
+                    mapIframe.src = `https://maps.google.com/maps?q=${encodeURIComponent(location)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+                    mapIframe.parentElement.classList.remove('hidden');
+                } else {
+                    mapIframe.parentElement.classList.add('hidden');
+                }
+            } else {
+                document.getElementById('location-block').classList.add('hidden');
+            }
+
+            document.getElementById('footer-brand-title').innerText = name;
+            document.getElementById('footer-brand-desc').innerText = desc;
+            document.getElementById('footer-business-id').innerText = bizId ? `ח.פ / ע.מ: ${bizId}` : '';
+            document.getElementById('footer-address').innerText = location || '---';
+            document.getElementById('footer-phone').innerText = phone || '---';
+            document.getElementById('footer-email').innerText = aboutConfig['אימייל מנהל'] || '---';
+            
+            if (!location) {
+                document.getElementById('footer-address-p').classList.add('hidden');
+            } else {
+                document.getElementById('footer-address-p').classList.remove('hidden');
+            }
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        function renderHomeCategories() {
+            const homeContainer = document.getElementById('home-categories-container');
+            const categories = [...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
+            
+            const repAllItem = groupedProducts.find(i => i.images[0] !== DEFAULT_IMG);
+            const allProductsBg = repAllItem ? repAllItem.images[0] : DEFAULT_IMG;
+
+            let html = `
+                <div role="button" tabindex="0" onclick="enterCategory('הכל')" onkeypress="if(event.key === 'Enter') enterCategory('הכל')" class="category-box" aria-label="כל המוצרים">
+                    <img src="${allProductsBg}" alt="כל המוצרים">
+                    <h3>כל המוצרים</h3>
+                </div>
+            `;
+
+            html += categories.map(cat => {
+                const repItem = groupedProducts.find(i => i.קטגוריה === cat && i.images[0] !== DEFAULT_IMG);
+                const bgImage = repItem ? repItem.images[0] : DEFAULT_IMG;
+                const catEscaped = cat.replace(/'/g, "\\'");
+
+                return `
+                    <div role="button" tabindex="0" onclick="enterCategory('${catEscaped}')" onkeypress="if(event.key === 'Enter') enterCategory('${catEscaped}')" class="category-box" aria-label="קטגוריית ${cat}">
+                       <img src="${bgImage}" alt="${cat}" referrerpolicy="no-referrer">
+                        <h3>${cat}</h3>
+                    </div>
+                `;
+            }).join('');
+
+            homeContainer.innerHTML = html;
+        }
+
+        function enterCategory(cat) {
+            filterByCategory(cat);
+            showView('products');
+        }
+
+        function backToMain() {
+            showView('home');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchInputMobile').value = '';
+        }
+
+        function renderCategories() {
+            const categories = ['הכל', ...new Set(groupedProducts.map(i => i.קטגוריה).filter(Boolean))];
+            const container = document.getElementById('category-filters');
+            
+            container.innerHTML = categories.map(cat => {
+                const isActive = currentCategory === cat;
+                return `
+                    <button onclick="filterByCategory('${cat.replace(/'/g, "\\'")}')" 
+                        class="px-5 py-2 rounded-full text-xs font-bold border transition-all whitespace-nowrap ${isActive 
+                            ? 'bg-navy text-gold border-navy shadow-md scale-105' 
+                            : 'bg-white dark:bg-zinc-800 text-gray-500 border-gray-200 dark:border-zinc-700 hover:border-gold hover:text-navy dark:hover:text-white'}">
+                        ${cat}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function filterByCategory(cat) {
+            const sanitizedCat = String(cat).trim();
+            currentCategory = sanitizedCat;
+            document.getElementById('current-category-title').innerText = sanitizedCat;
+            renderCategories();
+            
+            if (sanitizedCat === 'הכל' || sanitizedCat === 'הכול' || sanitizedCat === '') {
+                renderGrid(groupedProducts);
+            } else {
+                const filtered = groupedProducts.filter(i => String(i.קטגוריה).trim() === sanitizedCat);
+                renderGrid(filtered);
+            }
+        }
+
+        function slideImage(pName, direction, event) {
+            if (event) event.stopPropagation();
+            const p = groupedProducts.find(x => x.שם_פריט === pName);
+            if (!p) return;
+            const state = productState[pName];
+            if (!state) return;
+            
+            let newIdx = state.currentImageIndex + direction;
+            if (newIdx < 0) newIdx = p.images.length - 1;
+            if (newIdx >= p.images.length) newIdx = 0;
+            
+            state.currentImageIndex = newIdx;
+            renderGrid(displayedItems);
+        }
+
+        function selectAttribute(pName, attrName, value) {
+            const state = productState[pName];
+            if (!state) return;
+            
+            state.selectedAttributes[attrName] = value;
+            
+            const match = getMatchingVariation(pName);
+            if (match && match.תמונה) {
+                const p = groupedProducts.find(x => x.שם_פריט === pName);
+                const imgUrl = formatImageUrl(match.תמונה);
+                const idx = p.images.indexOf(imgUrl);
+                if (idx !== -1) {
+                    state.currentImageIndex = idx;
+                }
+            }
+            renderGrid(displayedItems);
+        }
+
+        function setLayout(layout) {
+            currentLayout = layout;
+            localStorage.setItem('inventoryLayout', layout);
+
+            const gridContainer = document.getElementById('inventory-grid');
+            const gridBtn = document.getElementById('grid-view-btn');
+            const listBtn = document.getElementById('list-view-btn');
+
+            if (layout === 'grid') {
+                gridContainer.classList.remove('list-view');
+                gridContainer.classList.add('grid-view');
+                gridBtn.className = "p-1.5 rounded-lg transition-colors bg-navy text-gold dark:bg-gold dark:text-navy";
+                listBtn.className = "p-1.5 rounded-lg transition-colors text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700";
+            } else {
+                gridContainer.classList.remove('grid-view');
+                gridContainer.classList.add('list-view');
+                listBtn.className = "p-1.5 rounded-lg transition-colors bg-navy text-gold dark:bg-gold dark:text-navy";
+                gridBtn.className = "p-1.5 rounded-lg transition-colors text-gray-400 hover:bg-gray-200 dark:hover:bg-zinc-700";
+            }
+            renderGrid(displayedItems);
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
+        }
+
+        function escapeHtmlParam(str) {
+            if (!str) return '';
+            return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+        }
+
+        function getCartItemImage(item) {
+            if (item.תמונה) return formatImageUrl(item.תמונה);
+            const p = groupedProducts.find(x => x.שם_פריט === item.parentName || x.שם_פריט === item.שם_פריט);
+            if (p && p.images && p.images[0]) return p.images[0];
+            return DEFAULT_IMG;
+        }
+
+        function renderGrid(items = null, isAppend = false) {
+            const grid = document.getElementById('inventory-grid');
+            const hasDates = pendingFormData.pDate && pendingFormData.rDate;
+            
+            if (items) {
+                displayedItems = items;
+                if (!isAppend) {
+                    itemsToShow = ITEMS_BATCH;
+                }
+            } else if (!isAppend) {
+                displayedItems = groupedProducts;
+                itemsToShow = ITEMS_BATCH;
+            }
+
+            const itemsToRender = displayedItems.slice(0, itemsToShow);
+
+            if (itemsToRender.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-400 font-bold">לא נמצאו פריטים תואמים</div>';
+                document.getElementById('load-more-container').innerHTML = '';
+                return;
+            }
+
+            const html = itemsToRender.map(p => {
+                const pName = p.שם_פריט;
+                
+                if (!productState[pName]) {
+                    productState[pName] = { selectedAttributes: {}, currentImageIndex: 0 };
+                    if (p.attributes) {
+                        Object.keys(p.attributes).forEach(attr => {
+                            productState[pName].selectedAttributes[attr] = p.attributes[attr][0] || '';
+                        });
+                    }
+                }
+
+                const state = productState[pName];
+                const match = getMatchingVariation(pName);
+                
+                let displayStock = match ? (match.available_stock !== undefined ? match.available_stock : match.מלאי) : 0;
+                const isOutOfStock = displayStock <= 0;
+                const cardImg = getCardImage(pName);
+                const gridImg = cardImg.includes('=w800-rw') ? cardImg.replace('=w800-rw', '=w400-rw') : cardImg;
+                const pNameSafe = pName.replace(/"/g, '&quot;');
+                const pNameEscaped = escapeHtmlParam(pName);
+                
+                const showSlider = p.images.length > 1;
+                const sliderHTML = showSlider ? `
+                    <button onclick="slideImage('${pNameEscaped}', -1, event)" class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-zinc-800/80 hover:bg-white text-navy dark:text-white p-1.5 rounded-full shadow z-10 transition-all" aria-label="תמונה קודמת">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                    </button>
+                    <button onclick="slideImage('${pNameEscaped}', 1, event)" class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-zinc-800/80 hover:bg-white text-navy dark:text-white p-1.5 rounded-full shadow z-10 transition-all" aria-label="תמונה הבאה">
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                ` : '';
+
+                let selectorsHTML = '';
+                Object.keys(p.attributes).forEach(attrName => {
+                    const options = p.attributes[attrName];
+                    if (options.length > 0) {
+                        const currentSelected = state.selectedAttributes[attrName] || '';
+                        const attrNameEscaped = escapeHtmlParam(attrName);
+                        selectorsHTML += `
+                            <div class="mb-3 text-right">
+                                <label class="block text-[11px] text-gray-400 font-bold mb-1">${attrName}:</label>
+                                <div class="flex flex-wrap gap-1">
+                                    ${options.map(opt => {
+                                        const isSelected = opt === currentSelected;
+                                        const optEscaped = escapeHtmlParam(opt);
+                                        return `
+                                            <button onclick="selectAttribute('${pNameEscaped}', '${attrNameEscaped}', '${optEscaped}')" 
+                                                class="px-2.5 py-1 rounded-xl text-xs font-semibold border transition-all ${isSelected 
+                                                    ? 'bg-gold text-navy border-gold shadow-sm font-bold scale-105' 
+                                                    : 'bg-gray-50 dark:bg-zinc-800 text-gray-500 border-gray-200 dark:border-zinc-700 hover:border-gray-300'}">
+                                                ${opt}
+                                            </button>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+
+                const activeVarDisplayName = getDisplayNameForVariation(match || p.variations[0]);
+                const cartItem = cart.find(c => c.displayName === activeVarDisplayName);
+                const inCart = cartItem ? cartItem.qty : 0;
+                const qtySpanId = `qty-${pName.replace(/[^a-zA-Z0-9א-ת]/g, '-')}`;
+
+                const actionAreaHTML = `
+                    <div class="flex items-center justify-between w-full">
+                        <div class="flex items-center gap-2 bg-gray-50 dark:bg-zinc-800 p-1 rounded-xl border border-gray-200/50 dark:border-zinc-700 shadow-sm">
+                            <button onclick="removeProductFromCart('${pNameEscaped}')" class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white font-bold" aria-label="הפחת כמות">-</button>
+                            <span class="w-6 text-center font-bold text-slate-800 dark:text-white text-sm" id="${qtySpanId}">${inCart}</span>
+                            <button onclick="addProductToCart('${pNameEscaped}')" ${isOutOfStock ? 'disabled' : ''} class="w-8 h-8 flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 rounded text-slate-800 dark:text-white font-bold ${isOutOfStock ? 'cursor-not-allowed text-gray-400' : ''}" aria-label="הוסף כמות">+</button>
+                        </div>
+                        <button onclick="showView('cart')" class="text-gold p-2 hover:bg-gold/10 rounded-full transition-colors" aria-label="צפה בעגלה">
+                            <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                `;
+
+                return `
+                    <div class="item-card bg-white dark:bg-zinc-900 rounded-[2rem] card-shadow overflow-hidden group border border-transparent hover:border-gold/20 flex ${currentLayout === 'list' ? 'flex-row' : 'flex-col'} h-full ${isOutOfStock ? 'opacity-75' : ''}">
+                        <div class="item-image-wrapper h-64 ${currentLayout === 'list' ? 'w-48 h-auto' : 'w-full'} overflow-hidden relative bg-gray-100 dark:bg-zinc-800">
+                           ${sliderHTML}
+                           <img src="${gridImg}" loading="lazy" decoding="async" alt="${pNameSafe}" class="w-full h-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-105" onclick="openImage('${cardImg}')" referrerpolicy="no-referrer">
+                           <div class="absolute bottom-2 right-2 bg-white/90 dark:bg-zinc-800/95 backdrop-blur-sm px-2 py-1 rounded-lg text-[10px] font-bold text-navy dark:text-white shadow-sm">
+                               ${p.קטגוריה}
+                           </div>
+                           ${isOutOfStock ? `<div class="absolute inset-0 bg-navy/30 flex items-center justify-center"><span class="bg-red-500 text-white px-3 py-1 rounded-lg font-bold text-xs shadow-lg transform -rotate-6">אזל מהמלאי</span></div>` : ''}
+                        </div>
+                        <div class="item-content p-6 flex flex-col flex-1">
+                            <div class="item-details flex-1">
+                                <h3 class="font-bold text-lg text-navy dark:text-white mb-1 text-right">${pName}</h3>
+                                <p class="text-xs text-right ${hasDates ? 'text-gold font-bold' : 'text-gray-500'} mb-3">
+                                    ${hasDates ? `פנוי לתאריך הנבחר: ${displayStock}` : `במלאי כולל: ${displayStock}`}
+                                </p>
+                               ${selectorsHTML}
+                            </div>
+                            <div class="item-actions mt-4">
+                               ${actionAreaHTML}
+                            </div>
+                        </div>
+                    </div>`;
+            }).join('');
+            
+            grid.innerHTML = html;
+
+            const loadMoreContainer = document.getElementById('load-more-container');
+            if (itemsToShow < displayedItems.length) {
+                loadMoreContainer.innerHTML = `
+                    <button onclick="loadMoreProducts()" class="px-8 py-3.5 bg-navy text-gold dark:bg-zinc-800 hover:bg-gold hover:text-navy dark:hover:bg-gold dark:hover:text-navy font-bold rounded-2xl shadow-lg transition-all text-sm flex items-center gap-2">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        טען מוצרים נוספים (${displayedItems.length - itemsToShow} נותרו)
+                    </button>
+                `;
+            } else {
+                loadMoreContainer.innerHTML = '';
+            }
+
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
+        }
+
+        function loadMoreProducts() {
+            itemsToShow += ITEMS_BATCH;
+            renderGrid(null, true);
+        }
+
+        function addProductToCart(pName) {
+            const match = getMatchingVariation(pName);
+            if (!match) return;
+
+            const selections = productState[pName]?.selectedAttributes || {};
+            const displayName = getDisplayName(pName, selections);
+
+            updateQtyWithVariation(match, displayName, 1);
+        }
+
+        function removeProductFromCart(pName) {
+            const match = getMatchingVariation(pName);
+            if (!match) return;
+
+            const selections = productState[pName]?.selectedAttributes || {};
+            const displayName = getDisplayName(pName, selections);
+
+            updateQtyWithVariation(match, displayName, -1);
+        }
+
+        function updateQtyWithVariation(variationRow, displayName, delta) {
+            const pName = variationRow.שם_פריט;
+            let limit = variationRow.available_stock !== undefined ? variationRow.available_stock : variationRow.מלאי;
+
+            let cartItem = cart.find(c => c.displayName === displayName);
+            const currentQtyInCart = cartItem ? cartItem.qty : 0;
+            let newQty = currentQtyInCart;
+
+            if (!cartItem && delta > 0) {
+                if (currentQtyInCart + 1 > limit) {
+                    return showToast(`אין מלאי פנוי. נותרו רק ${limit} יחידות זמינות.`);
+                }
+                newQty = 1;
+                cart.push({
+                    ...variationRow,
+                    displayName: displayName,
+                    parentName: pName,
+                    qty: 1
+                });
+            } else if (cartItem) {
+                const calculatedQty = cartItem.qty + delta;
+                if (delta > 0 && currentQtyInCart + 1 > limit) {
+                    return showToast(`אין מלאי פנוי. נותרו רק ${limit} יחידות זמינות.`);
+                }
+                if (calculatedQty <= 0) {
+                    newQty = 0;
+                    cart = cart.filter(c => c.displayName !== displayName);
+                } else {
+                    newQty = calculatedQty;
+                    cartItem.qty = newQty;
+                }
+            }
+
+            saveCart();
+            
+            const qtySpanId = `qty-${pName.replace(/\s+/g, '-')}`;
+            const qtyElement = document.getElementById(qtySpanId);
+            if (qtyElement) {
+                qtyElement.innerText = newQty;
+            }
+            
+            if (currentView === 'cart') {
+                if (currentStep === 1) renderCartStep1(document.getElementById('full-cart-content'));
+                updateCartSummary();
+            }
+            updateCartUI();
+        }
+
+        function changeCartItemQty(displayName, delta) {
+            const item = cart.find(c => c.displayName === displayName);
+            if (!item) return;
+            
+            const pName = item.parentName || item.שם_פריט;
+            const match = getMatchingVariation(pName);
+            const variationToUse = match || item;
+
+            updateQtyWithVariation(variationToUse, displayName, delta);
+        }
+
+        function syncCartDates() {
+            const pDateEl = document.getElementById('p-date');
+            const rDateEl = document.getElementById('r-date');
+            const uNameEl = document.getElementById('u-name');
+            const uPhoneEl = document.getElementById('u-phone');
+            const uNotesEl = document.getElementById('u-notes');
+
+            if (pDateEl) pendingFormData.pDate = pDateEl.value;
+            if (rDateEl) pendingFormData.rDate = rDateEl.value;
+            if (uNameEl) pendingFormData.name = uNameEl.value;
+            if (uPhoneEl) pendingFormData.phone = uPhoneEl.value;
+            if (uNotesEl) pendingFormData.notes = uNotesEl.value;
+
+            updateCartSummary();
+        }
+
+        function openImage(url) {
+            const box = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = url;
+            box.classList.remove('hidden');
+            requestAnimationFrame(() => img.classList.replace('scale-95', 'scale-100'));
+        }
+
+        function goToStep(s) {
+            if (s > currentStep) {
+                if (currentStep === 1 && cart.length === 0) return showToast('העגלה ריקה');
+                if (currentStep === 2) {
+                    const pDate = document.getElementById('p-date').value;
+                    const rDate = document.getElementById('r-date').value;
+                    const uName = document.getElementById('u-name').value;
+                    const uPhone = document.getElementById('u-phone').value;
+                    if (!pDate || !rDate || !uName || !uPhone) return showToast('נא למלא את כל הפרטים');
+                    
+                    if (new Date(rDate) < new Date(pDate)) {
+                        return showToast('תאריך החזרה לא יכול להיות מוקדם מתאריך לקיחה');
+                    }
+
+                    for (let c of cart) {
+                        let limit = c.available_stock !== undefined ? c.available_stock : c.מלאי;
+                        if (c.qty > limit) return showToast(`המלאי של ${c.displayName} השתנה או אזל.`);
+                    }
+                    pendingFormData = { name: uName, phone: uPhone, pDate, rDate, notes: document.getElementById('u-notes').value };
+                }
+                if (currentStep === 3 && !document.getElementById('terms-checkbox')?.checked) return showToast('חובה לאשר את תנאי ההזמנה');
+            }
+            
+            currentStep = s;
+            
+            document.querySelectorAll('#full-cart-stepper .step-item').forEach(el => {
+                el.classList.remove('step-active', 'step-completed');
+                const progressBar = el.querySelector('.step-progress-bar');
+                if (progressBar) progressBar.style.width = '0%';
+            });
+
+            for (let i = 1; i < s; i++) {
+                const completedStep = document.getElementById(`full-step-${i}-header`);
+                if (completedStep) {
+                    completedStep.classList.add('step-completed');
+                    const progressBar = completedStep.querySelector('.step-progress-bar');
+                    if (progressBar) progressBar.style.width = '100%';
+                }
+            }
+
+            const activeStep = document.getElementById(`full-step-${s}-header`);
+            if (activeStep) {
+                activeStep.classList.add('step-active');
+                const progressBar = activeStep.querySelector('.step-progress-bar');
+                if (progressBar) progressBar.style.width = '50%';
+            }
+            
+            document.getElementById('full-prevBtn').classList.toggle('hidden', s === 1);
+            
+            const nextBtn = document.getElementById('full-nextBtn');
+            if (s === 3) {
+                nextBtn.innerText = "אישור ושלח הזמנה ⇠";
+            } else {
+                nextBtn.innerText = "המשך לשלב הבא";
+            }
+
+            const cont = document.getElementById('full-cart-content');
+            if (s === 1) renderCartStep1(cont);
+            else if (s === 2) renderCartStep2(cont);
+            else renderCartStep3(cont);
+            
+            updateCartSummary();
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
+        }
+
+        function renderCartStep1(cont) {
+            if (cart.length === 0) {
+                cont.innerHTML = `
+                    <div class="text-center py-16 space-y-4">
+                        <div class="w-16 h-16 bg-gray-100 dark:bg-zinc-800 rounded-full flex items-center justify-center mx-auto text-gray-400">
+                            <i data-lucide="shopping-cart" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="font-bold text-lg text-slate-400">סל הקניות שלך ריק כרגע</h4>
+                        <button onclick="showView('products')" class="px-6 py-2.5 gold-gradient font-bold text-navy text-xs rounded-xl shadow">חזור לקטלוג</button>
+                    </div>`;
+                return;
+            }
+
+            cont.innerHTML = `
+                <div class="space-y-4">
+                    <h4 class="font-bold serif text-lg text-navy dark:text-white text-right">רשימת הפריטים בקופה</h4>
+                    <div class="grid grid-cols-1 gap-4 max-h-[50vh] overflow-y-auto pr-2 no-scrollbar">
+                        ${cart.map(item => {
+                            const dispNameEscaped = escapeHtmlParam(item.displayName);
+                            const imgUrl = getCartItemImage(item);
+                            return `
+                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gray-50 dark:bg-zinc-800 p-4 rounded-2xl border border-gray-100 dark:border-zinc-700 shadow-sm text-slate-800 dark:text-white">
+                            <div class="flex items-center gap-3 text-right w-full sm:w-auto">
+                                <img src="${imgUrl}" alt="${item.displayName}" class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl object-cover shadow-sm border border-gray-200 dark:border-zinc-700 flex-shrink-0">
+                                <div class="min-w-0 flex-1">
+                                    <div class="text-xs sm:text-sm font-bold text-navy dark:text-white leading-tight break-words">${item.displayName}</div>
+                                    <div class="text-[10px] text-gray-400 mt-1">${item.קטגוריה || ''}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-gray-200/50 dark:border-zinc-700/50">
+                                <div class="flex items-center gap-2 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-xl p-1 shadow-sm">
+                                    <button onclick="changeCartItemQty('${dispNameEscaped}', -1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg text-slate-800 dark:text-white font-bold" aria-label="הפחת כמות">-</button>
+                                    <span class="w-6 text-center text-xs font-bold">${item.qty}</span>
+                                    <button onclick="changeCartItemQty('${dispNameEscaped}', 1)" class="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg text-slate-800 dark:text-white font-bold" aria-label="הוסף כמות">+</button>
+                                </div>
+                                <button onclick="changeCartItemQty('${dispNameEscaped}', -${item.qty})" class="text-red-400 hover:text-red-600 transition-colors p-2 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl flex-shrink-0" aria-label="הסר פריט">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>`;
+                        }).join('')}
+                    </div>
+                </div>`;
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
+        }
+
+        function setNextShabbat() {
+            const today = new Date();
+            const friday = new Date(today);
+            friday.setDate(today.getDate() + (5 - today.getDay() + 7) % 7);
+            if(today.getDay() >= 5) friday.setDate(friday.getDate() + 7);
+
+            const sunday = new Date(friday);
+            sunday.setDate(friday.getDate() + 2);
+
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+
+            const pDateEl = document.getElementById('p-date');
+            const rDateEl = document.getElementById('r-date');
+            if (pDateEl) pDateEl.value = formatDate(friday);
+            if (rDateEl) rDateEl.value = formatDate(sunday);
+
+            syncCartDates();
+            showToast('תאריכים עודכנו בהצלחה');
+        }
+
+        function renderCartStep2(cont) {
+            const defaultP = pendingFormData.pDate || '';
+            const defaultR = pendingFormData.rDate || '';
+            const today = new Date().toISOString().split('T')[0];
+
+            cont.innerHTML = `
+                <div class="space-y-6 text-right">
+                    <h4 class="font-bold serif text-lg text-navy dark:text-white">פרטי הזמנה ותאריכים</h4>
+                    
+                    <button onclick="setNextShabbat()" class="w-full py-3.5 bg-navy/5 text-navy dark:bg-white/5 dark:text-gold border border-navy/10 dark:border-white/10 rounded-2xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-navy hover:text-white dark:hover:bg-zinc-800 transition-all group">
+                        <i data-lucide="calendar-check" class="text-gold"></i>
+                        בחירה אוטומטית לסוף השבוע הקרוב
+                    </button>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="text" id="u-name" oninput="syncCartDates()" placeholder="שם מלא" value="${pendingFormData.name || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                        <input type="tel" id="u-phone" oninput="syncCartDates()" placeholder="מספר טלפון" value="${pendingFormData.phone || ''}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך התחלה / לקיחה</label>
+                            <input type="date" id="p-date" oninput="syncCartDates()" min="${today}" value="${defaultP}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                        </div>
+                        <div>
+                            <label class="text-[10px] text-gray-400 block mb-1 mr-1">תאריך סיום / החזרה</label>
+                            <input type="date" id="r-date" oninput="syncCartDates()" min="${today}" value="${defaultR}" class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl border-none text-sm focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">
+                        </div>
+                    </div>
+                    <textarea id="u-notes" oninput="syncCartDates()" placeholder="הערות מיוחדות להזמנה..." class="w-full p-4 bg-gray-50 dark:bg-zinc-800 rounded-2xl h-24 border-none focus:ring-2 focus:ring-gold transition-all text-slate-800 dark:text-white text-right">${pendingFormData.notes || ''}</textarea>
+                </div>`;
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
+        }
+
+        function renderCartStep3(cont) {
+            cont.innerHTML = `
+                <div class="space-y-6 text-right">
+                    <div class="gold-gradient text-navy p-6 rounded-[2rem] shadow-xl border border-gold/50">
+                        <p class="text-[10px] opacity-80 uppercase tracking-widest mb-1 text-navy/70">סיכום הזמנה עבור</p>
+                        <p class="font-bold text-2xl italic text-navy">${pendingFormData.name}</p>
+                        <p class="text-sm mt-1 text-navy/80">${pendingFormData.pDate} ⇠ ${pendingFormData.rDate}</p>
+                    </div>
+
+                    <div class="bg-gray-50 dark:bg-zinc-800 p-6 rounded-[2rem] space-y-3 text-sm border border-gray-100 dark:border-zinc-700 text-slate-800 dark:text-white max-h-[30vh] overflow-y-auto pr-2 no-scrollbar">
+                        ${cart.map(c => {
+                            const imgUrl = getCartItemImage(c);
+                            return `
+                                <div class="flex justify-between items-center gap-4 py-2 border-b border-gray-100 dark:border-zinc-700 last:border-b-0">
+                                    <div class="flex items-center gap-3">
+                                        <img src="${imgUrl}" alt="${c.displayName}" class="w-10 h-10 rounded-lg object-cover shadow-sm">
+                                        <span class="text-gray-600 dark:text-gray-300 font-medium">${c.displayName}</span>
+                                    </div>
+                                    <span class="font-bold text-navy dark:text-gold">${c.qty} יח'</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <details class="bg-gray-100 dark:bg-zinc-800 rounded-2xl p-4 transition-all">
+                            <summary class="font-bold text-xs cursor-pointer flex justify-between items-center text-navy dark:text-white">מדיניות ותנאי המקום <i data-lucide="chevron-down" class="w-4 h-4"></i></summary>
+                            <div class="text-[11px] mt-3 space-y-2 text-gray-600 dark:text-gray-300 leading-relaxed border-t border-gray-200 dark:border-zinc-700 pt-3 text-right">
+                                <p>• באחריות המזמין להחזיר את הפריטים כשהם שלמים, נקיים ותקינים.</p>
+                                <p>• יש להחזיר את הציוד בזמן המוסכם על מנת למנוע פגיעה בהזמנות הבאות.</p>
+                                <p>• במקרה של אובדן, קלקול או נזק משמעותי, המזמין ישפה את בעלי האתר בגובה עלות התיקון/רכישה.</p>
+                            </div>
+                        </details>
+                        <label class="flex items-center gap-3 p-3 bg-gold/5 rounded-2xl border border-gold/10 cursor-pointer">
+                            <input type="checkbox" id="terms-checkbox" class="w-5 h-5 text-gold rounded focus:ring-gold"> 
+                            <span class="text-xs font-bold text-navy/80 dark:text-white/80 text-right">קראתי ואני מאשר את תנאי ומדיניות ההזמנה</span>
+                        </label>
+                    </div>
+                </div>`;
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
+        }
+
+        async function sendOrder() {
+            if (!document.getElementById('terms-checkbox').checked) return showToast('חובה לקרוא ולאשר את התנאים');
+            const nextBtn = document.getElementById('full-nextBtn');
+            const originalText = nextBtn.innerText;
+            nextBtn.disabled = true;
+            nextBtn.innerHTML = '<div class="loader w-5 h-5 mx-auto"></div>';
+
+            const code = activeOrderCode || generateSecureOrderCode();
+            const payload = {
+                action: activeOrderCode ? "updateOrder" : "addOrder",
+                orderCode: code,
+                שם_לקוח: pendingFormData.name,
+                טלפון: pendingFormData.phone,
+                תאריך_לקיחה: pendingFormData.pDate,
+                תאריך_החזרה: pendingFormData.rDate,
+                פריטים: cart.map(c => `${c.qty}x ${c.displayName}`).join(', '),
+                raw_cart: JSON.stringify(cart),
+                הערות: pendingFormData.notes
+            };
+
+            try {
+                await fetch(SCRIPT_URL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    body: JSON.stringify(payload) 
+                });
+                
+                document.getElementById('mini-summary')?.classList.add('hidden');
+                
+                populatePrintArea(code);
+                renderSuccessState(code);
+                activeOrderCode = code;
+                localStorage.removeItem('gemach_cart');
+                cart = [];
+                
+                const savedFormData = { ...pendingFormData };
+                pendingFormData = {};
+                updateCartUI();
+                
+                await fetchInventory('', '', false);
+            } catch (e) { 
+                console.error("Error sending order:", e);
+                showToast('שגיאה בשליחת ההזמנה'); 
+                nextBtn.disabled = false; 
+                nextBtn.innerText = originalText; 
+            }
+        }
+
+        function renderSuccessState(code) {
+            document.getElementById('cart-main-grid').classList.add('hidden');
+            const successContainer = document.getElementById('cart-success-container');
+            successContainer.classList.remove('hidden');
+            
+            successContainer.innerHTML = `
+                <div class="text-center space-y-8 py-10 text-slate-800 dark:text-white">
+                    <div class="w-20 h-20 bg-green-100 dark:bg-green-950/40 text-green-600 rounded-full flex items-center justify-center mx-auto shadow-sm animate-bounce">
+                        <i data-lucide="check-circle-2" class="w-12 h-12"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-3xl font-bold serif italic text-navy dark:text-gold">ההזמנה התקבלה בהצלחה!</h3>
+                        <p class="text-gray-500 dark:text-gray-400 mt-2">קיבלנו את פרטי ההזמנה שלך במערכת והיא נשמרה בשרת.</p>
+                    </div>
+                    <div class="gold-gradient text-navy p-8 rounded-[2.5rem] shadow-2xl border-b-4 border-gold">
+                        <p class="text-sm opacity-80 uppercase tracking-widest mb-2 text-navy/70">קוד ההזמנה המאובטח:</p>
+                        <p class="text-5xl font-black tracking-widest text-navy">${code}</p>
+                        <p class="text-sm mt-4 opacity-80 leading-relaxed border-t border-navy/10 pt-4 text-navy/80">
+                            נא לשמור את הקוד לחיפוש, עדכון או ביטול ההזמנה בעתיד.
+                        </p>
+                    </div>
+                    <div class="flex justify-center pt-4">
+                        <button onclick="preparePrint()" class="w-full md:w-1/2 py-5 gold-gradient text-navy rounded-2xl font-bold shadow-lg flex items-center justify-center gap-3 hover:scale-[1.02] transition-all">
+                            <i data-lucide="printer" class="w-5 h-5"></i> הדפסת אישור
+                        </button>
+                    </div>
+                    <button onclick="location.reload()" class="w-full py-4 text-gray-400 font-bold text-sm hover:text-navy dark:hover:text-white transition-colors">חזרה לדף הבית ⇠</button>
+                </div>`;
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
+        }
+
+        function nextStep() { if (currentStep < 3) goToStep(currentStep + 1); else sendOrder(); }
+        function prevStep() { goToStep(currentStep - 1); }
+
+        async function lookupOrder() {
+            let code = prompt('נא להזין קוד הזמנה (6 תווים):');
+            if (!code) return;
+            code = code.trim().toUpperCase(); 
+
+            const fullPageLoader = document.getElementById('full-page-loader');
+            fullPageLoader.classList.remove('hidden');
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: "getCustomerOrder", orderCode: code })
+                });
+                
+                const resData = await response.json();
+                const order = resData.order || resData['הזמנה'] || resData.הזמנה;
+                
+                if (resData.status !== "success" || !order) {
+                    fullPageLoader.classList.add('hidden');
+                    return showToast('הזמנה לא נמצאה במערכת. אנא ודא שהקוד נכון.');
+                }
+                
+                const customerName = order.שם_לקוח || order['שם_לקוח'] || 'אורח';
+                fullPageLoader.classList.add('hidden');
+                
+                if (confirm(`נמצאה הזמנה על שם ${customerName}. האם ברצונך לערוך אותה?`)) {
+                    activeOrderCode = code;
+                    try {
+                        cart = JSON.parse(order.raw_cart || '[]');
+                    } catch(e) {
+                        cart = [];
+                        showToast('שגיאה בטעינת פריטי ההזמנה');
+                    }
+
+                    let pDate = order.תאריך_לקיחה || order['תאריך_לקיחה'];
+                    let rDate = order.תאריך_החזרה || order['תאריך_החזרה'];
+
+                    if (pDate && pDate.includes('T')) pDate = pDate.split('T')[0];
+                    if (rDate && rDate.includes('T')) rDate = rDate.split('T')[0];
+
+                    pendingFormData = { 
+                        name: customerName, 
+                        phone: order.טלפון || order['טלפון'], 
+                        pDate: pDate, 
+                        rDate: rDate, 
+                        notes: order.הערות || order['הערות']
+                    };
+                    
+                    populatePrintArea(code);
+                    saveCart(); 
+                    updateCartUI(); 
+                    showView('cart');
+                    document.getElementById('full-cancel-order-area')?.classList.remove('hidden');
+                }
+            } catch (e) {
+                console.error(e);
+                fullPageLoader.classList.add('hidden');
+                showToast('שגיאה באיתור ההזמנה');
+            }
+        }
+
+        async function cancelCurrentOrder() {
+            if (!activeOrderCode || !confirm('לבטל ולמחוק את ההזמנה לצמיתות? לא ניתן יהיה לשחזר אותה.')) return;
+            try {
+                await fetch(SCRIPT_URL, { 
+                    method: 'POST', 
+                    body: JSON.stringify({ action: "deleteOrder", orderCode: activeOrderCode }) 
+                });
+                localStorage.removeItem('gemach_cart');
+                activeOrderCode = null;
+                cart = [];
+                showToast('ההזמנה בבוטלה ונמחקה בהצלחה');
+                setTimeout(() => location.reload(), 1500);
+            } catch (e) {
+                showToast('שגיאה בביטול ההזמנה');
+            }
+        }
+
+        function populatePrintArea(code) {
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('he-IL') + ' ' + now.toLocaleTimeString('he-IL');
+            
+            document.getElementById('print-order-id').innerText = 'קוד הזמנה: ' + code;
+            document.getElementById('print-user-info').innerHTML = `
+                <p><b>שם הלקוח:</b> ${pendingFormData.name}</p>
+                <p><b>טלפון:</b> ${pendingFormData.phone}</p>
+                <p><b>תקופה:</b> מ-${pendingFormData.pDate} עד ${pendingFormData.rDate}</p>
+                <p><b>הערות:</b> ${pendingFormData.notes || 'אין'}</p>
+            `;
+            document.getElementById('print-items-list').innerHTML = cart.map(c => `
+                <tr>
+                    <td class="p-3 border border-gray-200 font-bold text-right">${c.displayName}</td>
+                    <td class="p-3 border border-gray-200 text-center font-bold">${c.qty}</td>
+                </tr>
+            `).join('');
+
+            document.getElementById('print-consent-timestamp').innerText = `אושר דיגיטלית: הלקוח אישר את תקנון האתר ומדיניות הפרטיות | תאריך אישור: ${formattedDate} | מזהה הזמנה: ${code}`;
+        }
+
+        function preparePrint() { window.print(); }
+
+        function saveCart() { safeSetItem('gemach_cart', JSON.stringify(cart)); updateCartUI(); }
+        
+        function updateCartUI() {
+            const count = document.getElementById('cart-count');
+            const total = cart.reduce((a, c) => a + c.qty, 0);
+            count.innerText = total; count.classList.toggle('hidden', total === 0);
+        }
+
+        function handleSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const term = searchInput.value.trim().toLowerCase();
+            
+            searchInput.classList.remove('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
+            searchInput.placeholder = "חפש מוצרים וקטגוריות בקטלוג...";
+
+            if (term.length === 0) {
+                backToMain();
+                return;
+            }
+
+            if (currentView !== 'products') {
+                showView('products');
+            }
+
+            const filtered = groupedProducts.filter(p => 
+                p.שם_פריט.toLowerCase().includes(term) || 
+                p.קטגוריה.toLowerCase().includes(term)
+            );
+
+            if (filtered.length === 0) {
+                searchInput.classList.add('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
+                searchInput.placeholder = "לא נמצאו תוצאות חיפוש!";
+                const grid = document.getElementById('inventory-grid');
+                grid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-400 font-bold">לא נמצאו פריטים תואמים לחיפוש שלך בתיבת החיפוש</div>';
+            } else {
+                renderGrid(filtered);
+            }
+        }
+
+        function handleSearchMobile() {
+            const mobileInput = document.getElementById('searchInputMobile');
+            const term = mobileInput.value.trim().toLowerCase();
+            
+            mobileInput.classList.remove('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
+            mobileInput.placeholder = "חפש מוצרים וקטגוריות בקטלוג...";
+
+            if (term.length === 0) {
+                backToMain();
+                return;
+            }
+
+            if (currentView !== 'products') {
+                showView('products');
+            }
+
+            const filtered = groupedProducts.filter(p => 
+                p.שם_פריט.toLowerCase().includes(term) || 
+                p.קטגוריה.toLowerCase().includes(term)
+            );
+
+            if (filtered.length === 0) {
+                mobileInput.classList.add('border-red-400', 'focus:ring-red-400', 'bg-red-50/20');
+                mobileInput.placeholder = "לא נמצאו תוצאות חיפוש!";
+                const grid = document.getElementById('inventory-grid');
+                grid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-400 font-bold">לא נמצאו פריטים תואמים לחיפוש שלך</div>';
+            } else {
+                renderGrid(filtered);
+            }
+        }
+
+        function showToast(m) {
+            const t = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = m;
+            t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        function updateCartSummary() {
+            const summaryCount = document.getElementById('full-summary-count');
+            const summaryDates = document.getElementById('full-summary-dates');
+            const activeOrderLabel = document.getElementById('full-active-order-label');
+            const activeCodeSpan = document.getElementById('full-active-code');
+
+            const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+            if (summaryCount) summaryCount.innerText = totalItems;
+
+            const pDate = pendingFormData.pDate;
+            const rDate = pendingFormData.rDate;
+
+            if (pDate && rDate) {
+                if (summaryDates) summaryDates.innerText = `מ-${pDate} עד ${rDate}`;
+            } else {
+                if (summaryDates) summaryDates.innerText = 'תאריכים לא נבחרו';
+            }
+
+            if (activeOrderCode) {
+                if (activeOrderLabel) activeOrderLabel.classList.remove('hidden');
+                if (activeCodeSpan) activeCodeSpan.innerText = activeOrderCode;
+                document.getElementById('full-cancel-order-area')?.classList.remove('hidden');
+            } else {
+                if (activeOrderLabel) activeOrderLabel.classList.add('hidden');
+                document.getElementById('full-cancel-order-area')?.classList.add('hidden');
+            }
+        }
+
+        function openLegalModal(type) {
+            const titleEl = document.getElementById('legal-modal-title');
+            const contentEl = document.getElementById('legal-modal-content');
+            
+            let content = aboutConfig[type] || '';
+            if (!content.trim()) {
+                if (type === 'תקנון') {
+                    content = `תקנון ותנאי שימוש באתר\n\n1. כללי\nברוכים הבאים למערכת ההזמנות המקוונת. עצם הגלישה באתר או ביצוע הזמנה מהווים הסכמה מלאה ובלתי מסויגת לתנאים המפורטים להלן.\n\n2. אופן ההזמנה ואישור השירות\n- כל הזמנה המבוצעת באתר מהווה בקשת שריון זמנית בלבד.\n- השריון הופך לסופי ומחייב רק לאחר קבלת אישור מפורש מנציג הנהלת המקום.\n\n3. שמירה על הציוד ואחריות המשתמש\n- המזמין אחראי באופן מלא על שלמות הציוד מרגע קבלתו ועד להחזרתו המלאה.\n- יש להחזיר את הציוד כשהוא שלם, נקי ותקין בדיוק במועד ובשעות שסוכמו.\n- במקרה של אובדן, קלקול או נזק משמעותי, המזמין ישפה את בעלי האתר בגובה עלות התיקון או רכישתו של מוצר חדש זהה.\n\n4. סמכות שיפוט והוראות כלליות\nעל הסכם זה יחולו חוקי מדינת ישראל בלבד.`;
+                } else if (type === 'מדיניות פרטיות') {
+                    content = `מדיניות שמירה על פרטיות\n\n1. איסוף המידע\nאנו אוספים מידע הנמסר על ידך באופן וולונטרי בלבד בעת מילוי טופס ההזמנה (שם מלא, טלפון, תאריכים והערות).\n\n2. שימוש במידע\nהמידע שנאסף משמש לצורך תיאום, משלוח ואספקת הציוד שהוזמן.\n\n3. אי-העברה לצדדים שלישיים\nבשום מקרה לא נמכור, נשכיר או נעביר את פרטיך האישיים לגורמים מסחריים מחוץ לצרכי תפעול הזמנתך.`;
+                } else if (type === 'הצהרת נגישות') {
+                    content = `הצהרת נגישות ומתן שירות חלופי\n\nאתר זה פטור מחובת נגישות טכנולוגית מלאה בהתאם לתקנות שוויון זכויות לאנשים עם מוגבלות.\n\nעם זאת, אנו מחויבים להעניק שירות שוויוני ומכבד לכולם. במידה ונתקלת בקושי טכני בגלישה, בצפייה במוצרים או בביצוע הזמנה דיגיטלית - אנו מעניקים סיוע ומענה אנושי מלא לביצוע הזמנות טלפוניות או בוואטסאפ בפרטי הקשר המופיעים בתחתית האתר.`;
+                }
+            }
+            
+            titleEl.innerText = type;
+            contentEl.innerText = content;
+            document.getElementById('legal-modal').classList.remove('hidden');
+        }
+        
+        function closeLegalModal() {
+            document.getElementById('legal-modal').classList.add('hidden');
+        }
+
+        function updateGreetingAndDateTime() {
+            const hr = new Date().getHours();
+            let gr = "יום נעים";
+            if (hr >= 5 && hr < 12) gr = "בוקר טוב";
+            else if (hr >= 12 && hr < 17) gr = "צהריים טובים";
+            else if (hr >= 17 && hr < 21) gr = "אחר הצהריים נעימים";
+            else gr = "ערב טוב";
+            
+            const greetEl = document.getElementById('current-greeting');
+            if (greetEl) greetEl.innerText = gr + " 🌟";
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            init();
+            setLayout(currentLayout);
+            updateGreetingAndDateTime();
+            setInterval(updateGreetingAndDateTime, 60000);
+        });
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const isDarkMode = document.body.classList.contains('dark');
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+            
+            document.querySelectorAll('[data-lucide="moon"], [data-lucide="sun"]').forEach(icon => {
+                icon.setAttribute('data-lucide', isDarkMode ? 'sun' : 'moon');
+            });
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
+
+            const themeText = document.getElementById('theme-text');
+            if (themeText) {
+                themeText.innerText = isDarkMode ? 'מצב בהיר' : 'מצב כהה';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = safeGetItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.body.classList.add('dark');
+            }
+            const isDark = document.body.classList.contains('dark');
+            document.querySelectorAll('[data-lucide="moon"], [data-lucide="sun"]').forEach(icon => {
+                icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+            });
+            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
+
+            const themeText = document.getElementById('theme-text');
+            if (themeText) {
+                themeText.innerText = isDark ? 'מצב בהיר' : 'מצב כהה';
+            }
+        });  
+    </script>
+</body>
+</html>
