@@ -30,13 +30,13 @@
     <style>
         body {
             font-family: 'Rubik', sans-serif;
-            background-color: #0b1f3a;
-            color: #e0e0e0;
+            background-color: #f1f5f9;
+            color: #1e293b;
         }
         .serif { font-family: 'Rubik', sans-serif; font-weight: 900; }
         .gold-gradient { background: linear-gradient(135deg, #C5A059 0%, #F1D27B 50%, #C5A059 100%); }
         .loader {
-            border: 4px solid rgba(255, 255, 255, 0.2);
+            border: 4px solid rgba(0, 0, 0, 0.1);
             border-top: 4px solid #C5A059;
             border-radius: 50%;
             width: 30px;
@@ -44,7 +44,7 @@
             animation: spin 0.8s ease-in-out infinite;
         }
         @keyframes spin {
-            0% { transform: rotate(0deg); }
+            0 { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
         #toast { 
@@ -64,14 +64,14 @@
         .full-page-loader {
             position: fixed;
             inset: 0;
-            background-color: rgba(26, 28, 44, 0.8);
+            background-color: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(5px);
             z-index: 1000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #1A1C2C;
             font-size: 1.2rem;
             font-weight: bold;
         }
@@ -91,17 +91,17 @@
 
     <!-- 1. מסך התחברות (Login Screen) -->
     <div id="login-screen" class="min-h-screen flex items-center justify-center p-4">
-        <div class="bg-[#1e1e1e] border border-zinc-800 rounded-[2rem] w-full max-w-md p-8 shadow-2xl text-center space-y-6">
+        <div class="bg-white border border-slate-200 rounded-[2rem] w-full max-w-md p-8 shadow-2xl text-center space-y-6">
             <div class="w-16 h-16 gold-gradient rounded-2xl flex items-center justify-center shadow-md mx-auto">
                 <i data-lucide="lock" class="text-[#0b1f3a] w-8 h-8"></i>
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-[#f5d37a] serif">ניהול מערכת ומלאי</h1>
-                <p class="text-xs text-zinc-400 mt-2">הכניסה מורשית למנהלי מערכת בלבד</p>
+                <h1 class="text-2xl font-bold text-navy serif">ניהול מערכת ומלאי</h1>
+                <p class="text-xs text-slate-500 mt-2">הכניסה מורשית למנהלי מערכת בלבד</p>
             </div>
             <form onsubmit="handleLogin(event)" class="space-y-4">
                 <input type="password" id="admin-password-input" placeholder="הזן סיסמת מנהל" required
-                    class="w-full p-4 bg-zinc-800/80 rounded-2xl border border-zinc-700 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent text-center text-white">
+                    class="w-full p-4 bg-slate-50 rounded-2xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-gold focus:border-transparent text-center text-slate-800">
                 <button type="submit" class="w-full py-4 gold-gradient text-navy font-bold rounded-2xl shadow-lg transition-transform hover:scale-[1.01] active:scale-95">
                     התחבר למערכת
                 </button>
@@ -110,30 +110,30 @@
     </div>
 
     <!-- 2. לוח הבקרה הראשי (Dashboard Panel) - מוסתר כברירת מחדל -->
-    <div id="admin-dashboard" class="hidden min-h-screen flex flex-col bg-zinc-950">
+    <div id="admin-dashboard" class="hidden min-h-screen flex flex-col bg-[#f8fafc]">
         <!-- תפריט עליון קבוע באדמין -->
-        <nav class="sticky top-0 z-50 bg-[#1e1e1e] border-b border-zinc-800 px-4 md:px-8 py-5 shadow-lg">
+        <nav class="sticky top-0 z-50 bg-white border-b border-slate-200 px-4 md:px-8 py-5 shadow-sm">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 gold-gradient rounded-xl flex items-center justify-center shadow-md">
                         <i data-lucide="settings" class="text-[#0b1f3a] w-5 h-5"></i>
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold serif text-[#f5d37a]" id="brand-title">מערכת ניהול</h2>
-                        <p class="text-[9px] uppercase tracking-wider text-zinc-500">Inventory & Orders Dashboard</p>
+                        <h2 class="text-xl font-bold serif text-navy" id="brand-title">מערכת ניהול</h2>
+                        <p class="text-[9px] uppercase tracking-wider text-slate-500">Inventory & Orders Dashboard</p>
                     </div>
                 </div>
                 
                 <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-                    <button id="admin-back-inv" onclick="renderAdminTable()" class="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-[#f5d37a] rounded-xl text-xs font-bold transition-colors hidden">חזור לניהול פריטים</button>
-                    <button id="admin-view-toggle" onclick="showOrdersHistory()" class="px-4 py-2 bg-[#132f55] text-[#f5d37a] rounded-xl hover:bg-zinc-800 text-xs font-bold transition-colors">היסטוריית הזמנות</button>
-                    <button onclick="handleLogout()" class="p-2 text-red-400 bg-red-950/20 rounded-full hover:bg-red-900/30 transition-colors" title="התנתק"><i data-lucide="log-out" class="w-5 h-5"></i></button>
+                    <button id="admin-back-inv" onclick="renderAdminTable()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-navy rounded-xl text-xs font-bold transition-colors hidden">חזור לניהול פריטים</button>
+                    <button id="admin-view-toggle" onclick="showOrdersHistory()" class="px-4 py-2 bg-navy text-white rounded-xl hover:bg-slate-800 text-xs font-bold transition-colors">היסטוריית הזמנות</button>
+                    <button onclick="handleLogout()" class="p-2 text-red-500 bg-red-50 rounded-full hover:bg-red-100 transition-colors" title="התנתק"><i data-lucide="log-out" class="w-5 h-5"></i></button>
                 </div>
             </div>
         </nav>
 
         <main class="flex-1 max-w-7xl mx-auto w-full p-4 md:p-8">
-            <div id="admin-content" class="bg-[#1e1e1e] rounded-[2rem] border border-zinc-800 p-6 md:p-10 shadow-xl"></div>
+            <div id="admin-content" class="bg-white rounded-[2rem] border border-slate-200 p-6 md:p-10 shadow-sm"></div>
         </main>
     </div>
 
@@ -166,7 +166,6 @@
                     document.getElementById('login-screen').classList.add('hidden');
                     document.getElementById('admin-dashboard').classList.remove('hidden');
                     
-                    // טעינת המלאי פעם ראשונה לאחר כניסה
                     await fetchInventory();
                     showToast('התחברת בהצלחה ללוח המנהל');
                 } else {
@@ -253,25 +252,70 @@
             const content = document.getElementById('admin-content');
             const varCols = getVariationColumns();
             
+            // ייצור רשימה של קטגוריות ייחודיות לצורך תיבת הסינון
+            const categories = [...new Set(inventory.map(item => item['קטגוריה'] || item.קטגוריה).filter(Boolean))];
+            const categoryOptions = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+
             const varInputsHTML = varCols.map(col => {
                 const cleanName = col.replace('וריאציה_', '');
-                return `<input type="text" id="new-${col}" placeholder="${cleanName}" class="p-3 bg-zinc-800/60 border border-zinc-700 text-white rounded-xl text-sm outline-none text-right">`;
+                return `<input type="text" id="new-${col}" placeholder="${cleanName}" class="p-3 bg-slate-50 border border-slate-200 text-slate-800 rounded-xl text-sm outline-none text-right">`;
             }).join('');
 
             content.innerHTML = `
-                <div id="admin-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12 p-6 bg-zinc-900/50 rounded-3xl border border-dashed border-zinc-800">
+                <div id="admin-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 p-6 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
                     <input type="hidden" id="edit-id">
-                    <input type="text" id="new-name" placeholder="שם פריט" class="p-3 bg-zinc-800/60 border border-zinc-700 text-white rounded-xl text-sm outline-none text-right">
-                    <input type="number" id="new-qty" placeholder="מלאי" class="p-3 bg-zinc-800/60 border border-zinc-700 text-white rounded-xl text-sm outline-none text-right">
-                    <input type="text" id="new-cat" placeholder="קטגוריה" class="p-3 bg-zinc-800/60 border border-zinc-700 text-white rounded-xl text-sm outline-none text-right">
-                    <input type="text" id="new-img" placeholder="קישור תמונה" class="p-3 bg-zinc-800/60 border border-zinc-700 text-white rounded-xl text-sm outline-none text-right">
+                    <input type="text" id="new-name" placeholder="שם פריט" class="p-3 bg-white border border-slate-200 text-slate-800 rounded-xl text-sm outline-none text-right">
+                    <input type="number" id="new-qty" placeholder="מלאי" class="p-3 bg-white border border-slate-200 text-slate-800 rounded-xl text-sm outline-none text-right">
+                    <input type="text" id="new-cat" placeholder="קטגוריה" class="p-3 bg-white border border-slate-200 text-slate-800 rounded-xl text-sm outline-none text-right">
+                    <input type="text" id="new-img" placeholder="קישור תמונה" class="p-3 bg-white border border-slate-200 text-slate-800 rounded-xl text-sm outline-none text-right">
                     ${varInputsHTML}
                     <button onclick="saveItem()" id="save-btn" class="gold-gradient rounded-xl font-bold py-4 text-zinc-950 shadow-md md:col-span-4 transition-transform hover:scale-[1.01] active:scale-95">שמור פריט</button>
                 </div>
+                
+                <!-- שורת חיפוש וסינון מהירה -->
+                <div class="flex flex-col sm:flex-row gap-4 mb-6 p-4 bg-slate-50 rounded-2xl border border-slate-200">
+                    <div class="flex-1 relative">
+                        <input type="text" id="admin-search-input" oninput="filterAdminList()" placeholder="חפש מוצר לפי שם..." class="w-full p-3 pr-10 bg-white border border-slate-200 text-slate-800 rounded-xl text-sm outline-none text-right">
+                        <div class="absolute right-3 top-3.5 text-slate-400">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                        </div>
+                    </div>
+                    <div class="w-full sm:w-64">
+                        <select id="admin-category-filter" onchange="filterAdminList()" class="w-full p-3 bg-white border border-slate-200 text-slate-800 rounded-xl text-sm outline-none text-right">
+                            <option value="all">כל הקטגוריות</option>
+                            ${categoryOptions}
+                        </select>
+                    </div>
+                </div>
+
                 <div id="admin-table-list" class="space-y-3"></div>`;
             
+            // הרצה ראשונית של הסינון כדי להציג את כל המוצרים
+            filterAdminList();
+        }
+
+        function filterAdminList() {
+            const searchVal = document.getElementById('admin-search-input')?.value.toLowerCase().trim() || "";
+            const catVal = document.getElementById('admin-category-filter')?.value || "all";
+            
+            const filtered = inventory.filter(item => {
+                const matchesSearch = (item['שם_פריט'] || "").toLowerCase().includes(searchVal);
+                const itemCat = item['קטגוריה'] || item.קטגוריה || "";
+                const matchesCategory = (catVal === "all" || itemCat === catVal);
+                return matchesSearch && matchesCategory;
+            });
+
             const list = document.getElementById('admin-table-list');
-            list.innerHTML = inventory.map((item, idx) => {
+            if (!list) return;
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="py-12 text-center text-slate-400 font-bold">לא נמצאו פריטים תואמים</div>`;
+                return;
+            }
+
+            list.innerHTML = filtered.map((item) => {
+                // מציאת האינדקס האמיתי של הפריט מתוך מערך המלאי המרכזי כדי שהעריכה תבוצע בהתאמה מלאה
+                const idx = inventory.findIndex(i => i['שם_פריט'] === item['שם_פריט']);
                 const isHidden = item.status === 'hidden';
                 const itemVarKeys = Object.keys(item).filter(k => k.startsWith('וריאציה_') && item[k]);
                 const varBadges = itemVarKeys.map(k => {
@@ -280,22 +324,23 @@
 
                 const itemPNameEscaped = escapeHtmlParam(item['שם_פריט']);
                 return `
-                <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-zinc-900 border border-zinc-800 rounded-2xl hover:border-gold/30 transition-colors ${isHidden ? 'opacity-50' : ''}">
-                    <img src="${formatImageUrl(item['תמונה'])}" onerror="this.src='${DEFAULT_IMG}'" class="w-16 h-16 rounded-lg object-cover border border-zinc-800">
+                <div class="flex flex-col sm:flex-row items-center gap-4 p-4 bg-white border border-slate-200 rounded-2xl hover:border-gold/30 transition-colors ${isHidden ? 'opacity-50' : ''}">
+                    <img src="${formatImageUrl(item['תמונה'])}" onerror="this.src='${DEFAULT_IMG}'" class="w-16 h-16 rounded-lg object-cover border border-slate-200">
                     <div class="flex-1 text-right w-full sm:w-auto">
-                        <div class="font-bold text-sm text-white">${item['שם_פריט']} (מלאי: ${item.מלאי})</div>
+                        <div class="font-bold text-sm text-slate-800">${item['שם_פריט']} (מלאי: ${item.מלאי})</div>
                         <div class="flex flex-wrap gap-1 mt-1">${varBadges}</div>
-                        ${isHidden ? '<div class="mt-1"><span class="text-[9px] bg-zinc-800 px-2 py-0.5 rounded text-zinc-500">מוסתר מהקטלוג</span></div>' : ''}
+                        ${isHidden ? '<div class="mt-1"><span class="text-[9px] bg-slate-100 px-2 py-0.5 rounded text-slate-400">מוסתר מהקטלוג</span></div>' : ''}
                     </div>
                     <div class="flex gap-2 justify-end w-full sm:w-auto">
-                        <button onclick="toggleItemVisibility('${itemPNameEscaped}', '${item.status}')" class="p-2 hover:bg-zinc-800 rounded-lg text-white" title="${isHidden ? 'הצג' : 'הסתר'}">
-                            <i data-lucide="${isHidden ? 'eye-off' : 'eye'}" class="w-4 h-4 ${isHidden ? 'text-zinc-500' : 'text-gold'}"></i>
+                        <button onclick="toggleItemVisibility('${itemPNameEscaped}', '${item.status}')" class="p-2 hover:bg-slate-100 rounded-lg text-slate-700" title="${isHidden ? 'הצג' : 'הסתר'}">
+                            <i data-lucide="${isHidden ? 'eye-off' : 'eye'}" class="w-4 h-4 ${isHidden ? 'text-slate-400' : 'text-gold'}"></i>
                         </button>
-                        <button onclick="editItem(${idx})" class="p-2 hover:bg-zinc-800 rounded-lg text-white"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
-                        <button onclick="deleteItem('${itemPNameEscaped}')" class="p-2 text-red-500 hover:bg-red-950/20 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <button onclick="editItem(${idx})" class="p-2 hover:bg-slate-100 rounded-lg text-slate-700"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+                        <button onclick="deleteItem('${itemPNameEscaped}')" class="p-2 text-red-500 hover:bg-red-50 rounded-lg"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                     </div>
                 </div>`;
             }).join('');
+            
             try { if (window.lucide) lucide.createIcons(); } catch (e) {}
         }
 
@@ -304,7 +349,7 @@
             const item = inventory.find(i => i['שם_פריט'] === name);
             if (item) item.status = newStatus;
             
-            renderAdminTable();
+            filterAdminList();
             
             try {
                 await fetch(SCRIPT_URL, { 
@@ -349,19 +394,19 @@
 
                 let html = `
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
-                        <h3 class="font-bold text-lg serif text-gold">היסטוריית הזמנות מפורטת</h3>
-                        <button onclick="renderAdminTable()" class="px-5 py-2.5 gold-gradient text-zinc-950 rounded-xl text-xs font-bold shadow-md hover:scale-[1.01] transition-transform">חזור לניהול פריטים</button>
+                        <h3 class="font-bold text-lg serif text-[#1A1C2C]">היסטוריית הזמנות מפורטת</h3>
+                        <button onclick="renderAdminTable()" class="px-5 py-2.5 bg-navy text-white rounded-xl text-xs font-bold shadow-md hover:scale-[1.01] transition-transform">חזור לניהול פריטים</button>
                     </div>
-                    <div class="overflow-x-auto rounded-2xl border border-zinc-800 shadow-sm">
-                        <table class="w-full text-sm border-collapse bg-zinc-900 text-white">
-                            <thead class="bg-zinc-800 text-gold text-right">
+                    <div class="overflow-x-auto rounded-2xl border border-slate-200 shadow-sm">
+                        <table class="w-full text-sm border-collapse bg-white text-slate-800">
+                            <thead class="bg-slate-100 text-slate-700 text-right">
                                 <tr>
-                                    <th class="p-4 border-b border-zinc-700 text-right">לקוח</th>
-                                    <th class="p-4 border-b border-zinc-700 text-right">טלפון</th>
-                                    <th class="p-4 border-b border-zinc-700 text-center">התחלה</th>
-                                    <th class="p-4 border-b border-zinc-700 text-center">סיום</th>
-                                    <th class="p-4 border-b border-zinc-700 text-right">פריטים</th>
-                                    <th class="p-4 border-b border-zinc-700 text-center">קוד הזמנה</th>                            
+                                    <th class="p-4 border-b border-slate-200 text-right">לקוח</th>
+                                    <th class="p-4 border-b border-slate-200 text-right">טלפון</th>
+                                    <th class="p-4 border-b border-slate-200 text-center">התחלה</th>
+                                    <th class="p-4 border-b border-slate-200 text-center">סיום</th>
+                                    <th class="p-4 border-b border-slate-200 text-right">פריטים</th>
+                                    <th class="p-4 border-b border-slate-200 text-center">קוד הזמנה</th>                            
                                 </tr>
                             </thead>
                             <tbody>`;
@@ -374,13 +419,13 @@
                     const code = o.קוד_הזמנה || o['קוד_הזמנה'] || o.orderCode || '---';
 
                     html += `
-                        <tr class="border-b border-zinc-800 hover:bg-zinc-800/40 transition-colors text-right">
-                            <td class="p-4 font-bold">${o.שם_לקוח || o['שם_לקוח']}</td>
-                            <td class="p-4 font-mono text-xs text-zinc-400">${o.טלפון || o['טלפון']}</td>
-                            <td class="p-4 text-center text-xs bg-zinc-950/20 font-bold">${cleanPickup}</td>
-                            <td class="p-4 text-center text-xs bg-zinc-950/20 font-bold">${cleanReturn}</td>
-                            <td class="p-4 text-[11px] leading-relaxed max-w-xs text-right">${(o.פריטים || o['פריטים'] || "").replace(/, /g, '<br>')}</td>
-                            <td class="p-4 text-center font-bold text-gold bg-zinc-950/30">${code}</td>
+                        <tr class="border-b border-slate-100 hover:bg-slate-50 transition-colors text-right">
+                            <td class="p-4 font-bold text-slate-800">${o.שם_לקוח || o['שם_לקוח']}</td>
+                            <td class="p-4 font-mono text-xs text-slate-500">${o.טלפון || o['טלפון']}</td>
+                            <td class="p-4 text-center text-xs bg-slate-50 font-bold text-slate-800">${cleanPickup}</td>
+                            <td class="p-4 text-center text-xs bg-slate-50 font-bold text-slate-800">${cleanReturn}</td>
+                            <td class="p-4 text-[11px] leading-relaxed max-w-xs text-right text-slate-700">${(o.פריטים || o['פריטים'] || "").replace(/, /g, '<br>')}</td>
+                            <td class="p-4 text-center font-bold text-[#C5A059] bg-slate-50/50">${code}</td>
                         </tr>`;
                 });
                 
