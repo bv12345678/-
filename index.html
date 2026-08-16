@@ -1992,17 +1992,17 @@
             document.getElementById('legal-modal').classList.add('hidden');
         }
 
-        function updateGreetingAndDateTime() {
-            const hr = new Date().getHours();
-            let gr = "יום נעים";
-            if (hr >= 5 && hr < 12) gr = "בוקר טוב";
-            else if (hr >= 12 && hr < 17) gr = "צהריים טובים";
-            else if (hr >= 17 && hr < 21) gr = "אחר הצהריים נעימים";
-            else gr = "ערב טוב";
-            
-            const greetEl = document.getElementById('current-greeting');
-            if (greetEl) greetEl.innerText = gr + " 🌟";
-        }
+  function updateGreetingAndDateTime() {
+    const hr = new Date().getHours();
+    let gr = "יום נעים";
+    if (hr >= 5 && hr < 12) gr = "בוקר טוב";
+    else if (hr >= 12 && hr < 17) gr = "צהריים טובים";
+    else if (hr >= 17 && hr < 21) gr = "אחר הצהריים נעימים";
+    else gr = "ערב טוב";
+    
+    const greetEl = document.getElementById('current-greeting');
+    if (greetEl) greetEl.innerText = gr;
+}
 
         document.addEventListener('DOMContentLoaded', () => {
             init();
