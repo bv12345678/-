@@ -407,11 +407,7 @@
                         <i data-lucide="list" class="w-4 h-4"></i>
                     </button>
                 </div>
-
-                <!-- החלפת ערכת נושא -->
-                <button onclick="toggleDarkMode()" class="p-2 bg-gray-100 dark:bg-zinc-800 rounded-xl hover:bg-gray-200 dark:hover:bg-zinc-700 transition-all" aria-label="החלף למצב כהה/בהיר">
-                    <i data-lucide="moon" class="w-4.5 h-4.5 text-navy dark:text-white"></i>
-                </button>        
+                
 
                 <!-- כפתור מעבר לעגלה -->
                 <button id="cart-btn-icon" onclick="showView('cart')" class="relative bg-white dark:bg-zinc-800 p-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-all" aria-label="עגלת קניות">
@@ -445,10 +441,7 @@
             <i data-lucide="search" class="text-gold w-5 h-5"></i>
             <span class="font-bold">חיפוש/עריכת הזמנה</span>
         </button>
-        <button onclick="toggleDarkMode(); toggleMobileMenu()" class="flex items-center gap-3 text-white p-3 rounded-xl hover:bg-white/10 border border-white/5">
-            <i data-lucide="moon" class="text-gold w-5 h-5"></i>
-            <span id="theme-text" class="font-bold">מצב כהה</span>
-        </button>
+    
     </div>
 
     <!-- באנר כותרת (Hero Section) -->
@@ -2017,39 +2010,7 @@
             updateGreetingAndDateTime();
             setInterval(updateGreetingAndDateTime, 60000);
         });
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark');
-            const isDarkMode = document.body.classList.contains('dark');
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-            
-            document.querySelectorAll('[data-lucide="moon"], [data-lucide="sun"]').forEach(icon => {
-                icon.setAttribute('data-lucide', isDarkMode ? 'sun' : 'moon');
-            });
-            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
-
-            const themeText = document.getElementById('theme-text');
-            if (themeText) {
-                themeText.innerText = isDarkMode ? 'מצב בהיר' : 'מצב כהה';
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = safeGetItem('theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.body.classList.add('dark');
-            }
-            const isDark = document.body.classList.contains('dark');
-            document.querySelectorAll('[data-lucide="moon"], [data-lucide="sun"]').forEach(icon => {
-                icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
-            });
-            try { if (window.lucide) lucide.createIcons(); } catch (e) { console.error(e); }
-
-            const themeText = document.getElementById('theme-text');
-            if (themeText) {
-                themeText.innerText = isDark ? 'מצב בהיר' : 'מצב כהה';
-            }
-        });  
+  
     </script>
 </body>
 </html>
